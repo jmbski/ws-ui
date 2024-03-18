@@ -4,7 +4,7 @@
     </p-tabMenu>
     <ng-container *ngFor="let tabData of tabbedResponseData; let i = index;">
         <div [class]="{'hidden': i !== activeTab}" >
-            <gdo-table [tableConfig]="tabData.tableConfig"></gdo-table>
+            <ws-table [tableConfig]="tabData.tableConfig"></ws-table>
         </div>
     </ng-container>
 </ng-container>

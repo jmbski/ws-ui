@@ -3,7 +3,7 @@ import { ANGULAR_COMMON, PRIME_COMMON } from '@common';
 import { TopNavComponent } from '@components';
 
 @Component({
-    selector: 'gdo-page-layout',
+    selector: 'ws-page-layout',
     standalone: true,
     imports: [
         TopNavComponent,

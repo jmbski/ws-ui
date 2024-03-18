@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular
 import { TopNavComponent } from '../_index';
 
 @Component({
-    selector: 'gdo-page-template',
+    selector: 'ws-page-template',
     standalone: true,
     imports: [
         TopNavComponent,

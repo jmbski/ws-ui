@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
 
 @Component({
-    selector: 'gdo-table',
+    selector: 'ws-table',
     standalone: true,
     imports: [
         ButtonModule,
@@ -22,8 +22,8 @@ import { MultiSelectModule } from 'primeng/multiselect';
         MultiSelectModule,
         TableModule,
     ],
-    templateUrl: './gdo-table.component.html',
-    styleUrl: './gdo-table.component.scss'
+    templateUrl: './ws-table.component.html',
+    styleUrl: './ws-table.component.scss'
 })
 export class GdoTableComponent implements LocalObject {
     public readonly LOCAL_ID: string = 'table-component' + nanoid();

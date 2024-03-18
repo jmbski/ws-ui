@@ -3,7 +3,7 @@ import { ANGULAR_COMMON, IsBooleanString, IsNumericString, PRIME_COMMON, StringT
 import { ColumnDefinition, TableConfig } from '@components';
 import { RecordObject, ToLabelCase } from '@models';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { GdoTableComponent } from '../gdo-table/gdo-table.component';
+import { GdoTableComponent } from '../ws-table/ws-table.component';
 import { MenuItem } from 'primeng/api';
 
 export interface TabbedResponseData {
@@ -16,7 +16,7 @@ export interface TabbedResponseTableConfig {
 }
 
 @Component({
-    selector: 'gdo-tabbed-response-table',
+    selector: 'ws-tabbed-response-table',
     standalone: true,
     imports: [
         GdoTableComponent,
@@ -144,7 +144,7 @@ export class TabbedResponseTableComponent {
         return width;
     }
 
-    public xmlElementToColumnDef(element: Element, tagPrefix: string = 'gdo:'): ColumnDefinition {
+    public xmlElementToColumnDef(element: Element, tagPrefix: string = 'ws:'): ColumnDefinition {
         const { tagName, textContent } = element;
         const columnDef: ColumnDefinition = {
             field: tagName.replace(tagPrefix, ''),
@@ -166,7 +166,7 @@ export class TabbedResponseTableComponent {
         }
     }
 
-    public parseXmlToTabbedResponseData(xmlString: string, tagPrefix: string = 'gdo:'): TabbedResponseData[] {
+    public parseXmlToTabbedResponseData(xmlString: string, tagPrefix: string = 'ws:'): TabbedResponseData[] {
         const data: TabbedResponseData[] = [];
         if(this.config) {
             const { xmlCollectionTags } = this.config;

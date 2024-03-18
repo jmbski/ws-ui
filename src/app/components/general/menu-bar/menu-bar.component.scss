@@ -2,7 +2,7 @@
 
 $menu-base-zindex: 2001;
 
-.gdo {
+.ws {
     &-button {
         &-scroll {
             height: 2rem;
@@ -26,7 +26,7 @@ $menu-base-zindex: 2001;
         }
 
         &-cover {
-            @extend .gdo-menubar;
+            @extend .ws-menubar;
             z-index: calc($menu-base-zindex + 8);
             position: absolute;
             height: 2rem;
@@ -79,7 +79,7 @@ $menu-base-zindex: 2001;
             }
 
             &-mobile {
-                @extend .gdo-menubar-submenu;
+                @extend .ws-menubar-submenu;
                 background-color: var(--surface-600);
             }
         }

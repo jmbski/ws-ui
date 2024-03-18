@@ -5,7 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ElementRenderService } from '@services';
 
 @Component({
-    selector: 'gdo-element-renderer',
+    selector: 'ws-element-renderer',
     standalone: true,
     imports: [
         ViewContainerRefDirective,

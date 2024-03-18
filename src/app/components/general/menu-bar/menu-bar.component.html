@@ -1,11 +1,11 @@
 <ng-container *ngIf="!this.useMobile; else mobileMenu">
-    <div class="gdo-menubar justify-content-evenly">
-        <div *ngIf="!showMenu" class="gdo-menubar-cover"></div>
+    <div class="ws-menubar justify-content-evenly">
+        <div *ngIf="!showMenu" class="ws-menubar-cover"></div>
         <ng-container *ngFor="let item of model$ | async">
-            <div class="gdo-menubar-item">
+            <div class="ws-menubar-item">
                 <button 
                     type="button" 
-                    class="gdo-button-scroll"
+                    class="ws-button-scroll"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                 >
@@ -13,12 +13,12 @@
                 </button>
     
                 <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
-                    <div class="gdo-menubar-submenu">
+                    <div class="ws-menubar-submenu">
                         
                         <ng-container *ngFor="let subItem of item.items">
-                            <span class="gdo-menubar-submenu-item">{{subItem.label}}</span>
+                            <span class="ws-menubar-submenu-item">{{subItem.label}}</span>
                         </ng-container>
-                        <gdo-svg></gdo-svg>
+                        <ws-svg></ws-svg>
                         
                     </div>
                 </div>
@@ -27,12 +27,12 @@
     </div>
 </ng-container>
 <ng-template #mobileMenu>
-    <div class="gdo-menubar ">
+    <div class="ws-menubar ">
         <ng-container *ngFor="let item of model$ | async">
-            <div #topMenuItem class="gdo-menubar-item w-full">
+            <div #topMenuItem class="ws-menubar-item w-full">
                 <button 
                     type="button" 
-                    class="gdo-button-scroll sticky top-0"
+                    class="ws-button-scroll sticky top-0"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                     (click)="handleItemClick(item)"
@@ -40,40 +40,40 @@
                     {{item.label}}
                 </button>
     
-                <div class="gdo-menubar-submenu-wrapper">
+                <div class="ws-menubar-submenu-wrapper">
                     <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
-                        <div class="gdo-menubar-submenu overflow-x-hidden">
+                        <div class="ws-menubar-submenu overflow-x-hidden">
                             
                             <ng-container *ngFor="let menuItem of item.items">
                                 <span #subMenuItem
-                                    class="gdo-menubar-submenu-item"
+                                    class="ws-menubar-submenu-item"
                                     aria-controls="collapseBasicSub"
                                     (click)="handleItemClick(menuItem)"
                                 >
                                     {{menuItem.label}}
                                 </span>
                                 <!-- <button #subMenuItem
-                                    class="gdo-menubar-submenu-item"
+                                    class="ws-menubar-submenu-item"
                                     aria-controls="collapseBasicSub"
                                     (click)="handleItemClick(menuItem, $event)">
                                     {{menuItem.label}}
                                 </button> -->
     
                                 <div id="collapseBasicSub" [collapse]="!menuItem.isExpanded" [isAnimated]="true">
-                                    <div class="gdo-menubar-submenu overflow-x-hidden">
+                                    <div class="ws-menubar-submenu overflow-x-hidden">
                                         
                                         <ng-container *ngFor="let subItem of menuItem.items">
-                                            <span class="gdo-menubar-submenu-item mobile-item">{{subItem.label}}</span>
+                                            <span class="ws-menubar-submenu-item mobile-item">{{subItem.label}}</span>
                                         </ng-container>
                                         
                                     </div>
                                 </div>
                             </ng-container>
     
-                            <!-- <gdo-svg></gdo-svg> -->
+                            <!-- <ws-svg></ws-svg> -->
                             <div class="spacer"></div>
                             <!-- <div class="triangle"></div> -->
-                            <gdo-svg></gdo-svg>
+                            <ws-svg></ws-svg>
                             
                         </div>
                     </div>

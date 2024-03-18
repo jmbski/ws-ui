@@ -5,7 +5,7 @@ import { ComponentClassBase, ElementType } from '@models';
 import { ImageModule } from 'primeng/image';
 
 @Component({
-    selector: 'gdo-image',
+    selector: 'ws-image',
     standalone: true,
     imports: [
         CommonModule,

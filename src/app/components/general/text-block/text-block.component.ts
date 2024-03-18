@@ -17,7 +17,7 @@ function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
 }
 
 @Component({
-    selector: 'gdo-text-block',
+    selector: 'ws-text-block',
     standalone: true,
     imports: [
         ...ANGULAR_COMMON

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 
 @Component({
-    selector: 'gdo-svg',
+    selector: 'ws-svg',
     standalone: true,
     imports: [],
     templateUrl: './svg.component.html',
@@ -79,7 +79,7 @@ export class SvgComponent {
         /* afterNextRender(() => {
             if(this.el?.nativeElement) {
                 const element: HTMLElement = this.el.nativeElement;
-                const rootElement = element.closest('.gdo-menubar-item');
+                const rootElement = element.closest('.ws-menubar-item');
                 
                 if(rootElement instanceof HTMLElement) {
                     this.widthVal = `${rootElement?.offsetWidth}`;

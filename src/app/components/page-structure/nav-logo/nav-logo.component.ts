@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { PrimaryTheme, SecondaryTheme, ThemeName } from '@services';
 
 @Component({
-    selector: 'gdo-nav-logo',
+    selector: 'ws-nav-logo',
     standalone: true,
     imports: [],
     templateUrl: './nav-logo.component.html',

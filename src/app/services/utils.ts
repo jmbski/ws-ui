@@ -129,30 +129,30 @@ export class Utils implements LocalObject {
      * Generates a random set of data for testing purposes in xml format and returns it as a string.
      * The data represents an array of objects, each with a set of properties and values. These are intended
      * to be parsed into row data for a table. The structure of the xml is as follows:
-     *  <gdo:data-collection>
-     *      <gdo:member>
-     *          <gdo:collection-name>
-     *              <gdo:property>value</gdo:property>
+     *  <ws:data-collection>
+     *      <ws:member>
+     *          <ws:collection-name>
+     *              <ws:property>value</ws:property>
      *              etc...
-     *          </gdo:collection-name>
-     *      </gdo:member>
-     *      <gdo:member>
-     *          <gdo:collection-name-2>
-     *              <gdo:property>value</gdo:property>
+     *          </ws:collection-name>
+     *      </ws:member>
+     *      <ws:member>
+     *          <ws:collection-name-2>
+     *              <ws:property>value</ws:property>
      *              etc...
-     *          </gdo:collection-name-2>
-     *      </gdo:member>
+     *          </ws:collection-name-2>
+     *      </ws:member>
      *      etc...
-     *  </gdo:data-collection>
+     *  </ws:data-collection>
      * 
      * 
      * @returns - A string representing the xml data
      */
     public static generateXMLData(structure: XMLCollectionDef[]): string {
-        let xmlString: string = '<gdo:data-collection>';
+        let xmlString: string = '<ws:data-collection>';
         structure.forEach((collection: XMLCollectionDef) => {
             for(let i = 0; i < collection.count; i++) {
-                xmlString += `<gdo:member><gdo:${collection.name}>`;
+                xmlString += `<ws:member><ws:${collection.name}>`;
                 collection.properties.forEach((property: XMLPropertyDef) => {
                     let value: string = '';
                     switch(property.type) {
@@ -173,12 +173,12 @@ export class Utils implements LocalObject {
                             value = Utils.GetRandomSentence();
                             break;
                     }
-                    xmlString += `<gdo:${property.name}>${value}</gdo:${property.name}>`;
+                    xmlString += `<ws:${property.name}>${value}</ws:${property.name}>`;
                 });
-                xmlString += `</gdo:${collection.name}></gdo:member>`;
+                xmlString += `</ws:${collection.name}></ws:member>`;
             }
         });
-        xmlString += '</gdo:data-collection>';
+        xmlString += '</ws:data-collection>';
         return xmlString;
 
     }

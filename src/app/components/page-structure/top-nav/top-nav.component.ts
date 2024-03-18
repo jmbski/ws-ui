@@ -9,7 +9,7 @@ import { WSMenuItem } from '@models';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 @Component({
-    selector: 'gdo-top-nav',
+    selector: 'ws-top-nav',
     standalone: true,
     imports: [
         MenuBarComponent,

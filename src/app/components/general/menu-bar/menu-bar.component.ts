@@ -23,7 +23,7 @@ export interface MenuBarConfig {
 }
 
 @Component({
-    selector: 'gdo-menu-bar',
+    selector: 'ws-menu-bar',
     standalone: true,
     imports: [
         CollapseModule,
@@ -188,7 +188,7 @@ export class MenuBarComponent {
         //const applyMaxHeight = maxPossible > window.innerHeight;
 
         if(containerElement) {
-            const menubarItems: HTMLElement[] = Array.from(element.querySelectorAll('.gdo-menubar-submenu-wrapper'));
+            const menubarItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-submenu-wrapper'));
 
             if(menubarItems.length > 0) {
                 const { bottom } = containerElement.getBoundingClientRect();
@@ -216,24 +216,24 @@ export class MenuBarComponent {
         this.updateMenuScrolling();
 
         if(!this.useMobile) {
-            const gdoMenuItems: HTMLElement[] = Array.from(element.querySelectorAll('.gdo-menubar-item'));
+            const wsMenuItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-item'));
             
-            gdoMenuItems.forEach((gdoMenuItem: HTMLElement, index: number) => {
-                this.modelElementMap.set(gdoMenuItem, models[index]);
+            wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
+                this.modelElementMap.set(wsMenuItem, models[index]);
             });
 
-            gdoMenuItems.forEach((gdoMenuItem: HTMLElement, index: number) => {
+            wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
                 const model = models[index];
-                const subMenuItems: HTMLElement[] = <HTMLElement[]>Array.from(gdoMenuItem.getElementsByClassName('gdo-menubar-submenu'));
+                const subMenuItems: HTMLElement[] = <HTMLElement[]>Array.from(wsMenuItem.getElementsByClassName('ws-menubar-submenu'));
                 subMenuItems.forEach((subMenuItem: HTMLElement) => {
-                    subMenuItem.style.maxWidth = `${gdoMenuItem.offsetWidth}px`;
+                    subMenuItem.style.maxWidth = `${wsMenuItem.offsetWidth}px`;
                 });
-                gdoMenuItem.addEventListener('mouseenter', () => {
+                wsMenuItem.addEventListener('mouseenter', () => {
                     model.isExpanded = true;
                     cd.detectChanges();
                 });
     
-                gdoMenuItem.addEventListener('mouseleave', () => {
+                wsMenuItem.addEventListener('mouseleave', () => {
                     model.isExpanded = false;
                     cd.detectChanges();
                 });

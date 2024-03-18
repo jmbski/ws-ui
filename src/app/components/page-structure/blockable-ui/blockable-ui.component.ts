@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/
 import { BlockableUI } from 'primeng/api';
 
 @Component({
-    selector: 'gdo-blockable-ui',
+    selector: 'ws-blockable-ui',
     standalone: true,
     imports: [],
     templateUrl: './blockable-ui.component.html',
