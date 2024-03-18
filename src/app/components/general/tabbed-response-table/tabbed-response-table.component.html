@@ -1,0 +1,10 @@
+<ng-container *ngIf="tabbedResponseData.length > 0">
+    <p-tabMenu 
+        [model]="tabMenuModel">
+    </p-tabMenu>
+    <ng-container *ngFor="let tabData of tabbedResponseData; let i = index;">
+        <div [class]="{'hidden': i !== activeTab}" >
+            <gdo-table [tableConfig]="tabData.tableConfig"></gdo-table>
+        </div>
+    </ng-container>
+</ng-container>

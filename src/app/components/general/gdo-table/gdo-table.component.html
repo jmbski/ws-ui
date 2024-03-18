@@ -1,0 +1,63 @@
+<ng-container *ngIf="rowData.length > 0">
+    <div class="app-table-wrapper">
+        <p-table #tableRef
+            [columns]="columnDefs"
+            [value]="rowData"
+            [paginator]="paginatorOptions?.usePaginator"
+            [rows]="paginatorOptions?.rowsPerPage"
+            [rowsPerPageOptions]="paginatorOptions?.rowsPerPageOptions"
+            [paginatorPosition]="paginatorOptions?.paginatorPosition ?? 'bottom'"
+            [showCurrentPageReport]="paginatorOptions?.showCurrentPageReport"
+            [columnResizeMode]="columnResizeMode ?? 'fit'"
+            [resizableColumns]="enableResizeColumns"
+            [reorderableColumns]="enableReorderColumns"
+            [scrollable]="scrollable ?? true"
+            [dataKey]="dataKey"
+            [selectionMode]="selectionMode"
+            [selection]="selectedRows"
+            [tableStyle]="tableStyle"
+            [globalFilterFields]="filterFields"
+        >
+        <ng-container *ngIf="filterFields">
+            <ng-template pTemplate="caption">
+                <div class="flex">
+                    <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(tableRef)"></button>
+                    <span class="p-input-icon-left ml-auto">
+                        <i class="pi pi-search"></i>
+                        <!-- <input pInputText type="text" (input)="filterInput($event)" placeholder="Search keyword" /> -->
+                        
+                    </span>
+                </div>
+            </ng-template>
+        </ng-container>
+        <ng-template pTemplate="header" let-columns>
+            <tr>
+                <ng-container *ngFor="let col of columns">
+                    <th
+                        *ngIf="!col.hidden"
+                        [pSortableColumn]="col.field"
+                        [style.width.px]="col.width"
+                        pResizableColumn="col.resizable && enableResizeColumns"
+                        pReorderableColumn="col.reorderable && enableReorderColumns"
+                    >
+                        {{ col.header }}
+                        <p-sortIcon *ngIf="col.sortable"
+                            [field]="col.field"
+                        ></p-sortIcon>
+                    </th>
+                </ng-container>
+            </tr>
+        </ng-template>
+
+        <ng-template pTemplate="body" let-rowData let-columns="columns">
+            <tr>
+                <ng-container *ngFor="let col of columns">
+                    <td *ngIf="!col.hidden">
+                        {{ rowData[col.field] }}
+                    </td>
+                </ng-container>
+            </tr>
+        </ng-template>
+        </p-table>
+    </div>
+</ng-container>

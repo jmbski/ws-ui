@@ -1,0 +1,9 @@
+<div class="grid grid-nogutter">
+        <ng-container *ngFor="let element of model$ | async">
+    
+            <div [class]="element.layoutClass ?? 'grid-row-std'">
+                <ng-container [viewContainer]="element.id"></ng-container>
+            </div>
+    
+        </ng-container>
+</div>
