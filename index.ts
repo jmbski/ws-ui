@@ -12,7 +12,7 @@ import { COMPONENTS } from '@components';
 export class WarskaldUIModule {}
 
 export * from './src/app/components/_index';
-export * from '@services';
-export * from '@models';
-export * from '@common';
+export * from './src/app/services/_index';
+export * from './src/app/models/_index';
+export * from './src/app/common/_index';
 //export * from './src/app/components/page-structure/page-layout/page-layout.component';
