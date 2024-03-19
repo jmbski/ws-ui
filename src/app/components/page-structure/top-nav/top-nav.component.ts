@@ -244,3 +244,5 @@ export class TopNavComponent {
     
     
 }
+
+export type TopNavConfig = Partial<TopNavComponent>;

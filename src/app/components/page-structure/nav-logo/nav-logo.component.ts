@@ -102,3 +102,5 @@ export class NavLogoComponent {
     
     
 }
+
+export type NavLogoConfig = Partial<NavLogoComponent>;
