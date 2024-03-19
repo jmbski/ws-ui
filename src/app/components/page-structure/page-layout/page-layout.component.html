@@ -1,6 +1,21 @@
-<div class="app-page-layout">
-    <ws-top-nav [template]="topNavTemplate"></ws-top-nav>
-    <div class="app-page-content">
+<div 
+    [class]="pageLayoutStyle?.baseClass ?? 'app-page-layout'" 
+    [ngClass]="pageLayoutStyle?.optionalClass"
+    [style]="pageLayoutStyle?.style">
+    
+    <ng-container *ngIf="customTopNavDef; else wsTopNav">
+        <ws-dynamic [componentDef]="customTopNavDef"></ws-dynamic>
+    </ng-container>
+
+    <ng-template #wsTopNav>
+        <ws-top-nav [config]="wsTopNavConfig"></ws-top-nav>
+    </ng-template>
+
+    <div 
+        [class]="pageContentStyle?.baseClass ?? 'app-page-content'" 
+        [ngClass]="pageContentStyle?.optionalClass"
+        [style]="pageContentStyle?.style">
+        
         <ng-content></ng-content>
     </div>
 </div>

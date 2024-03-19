@@ -1,0 +1,11 @@
+<ng-container *ngIf="isTemplateRef(component); else componentRef">
+    <ng-container *ngTemplateOutlet="component">
+    </ng-container>
+</ng-container>
+<ng-template #componentRef>
+    <ng-container *ngIf="isComponentClass(component)">
+        <ng-container *ngComponentOutlet="component; inputs: componentConfig;">
+            
+        </ng-container>
+    </ng-container>
+</ng-template>

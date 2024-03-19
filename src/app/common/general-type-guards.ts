@@ -1,3 +1,4 @@
+import { TemplateRef, Type } from '@angular/core';
 import { CssStyleObject, GeneralFunction, RecordObject, TypedRecord } from '@models';
 import { isEmpty } from 'lodash';
 
@@ -235,4 +236,12 @@ export function IsCssStyleObject(obj: unknown): obj is CssStyleObject {
 
 export function IsStyle(obj: unknown): obj is string | CssStyleObject {
     return IsString(obj) || IsCssStyleObject(obj);
+}
+
+export function IsTemplateRef(obj: unknown): obj is TemplateRef<unknown> {
+    return obj instanceof TemplateRef;
+}
+
+export function IsComponentClass(obj: unknown): obj is Type<unknown> {
+    return obj instanceof Type;
 }

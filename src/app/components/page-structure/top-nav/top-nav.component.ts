@@ -5,8 +5,9 @@ import { NavLogoComponent } from '../nav-logo/nav-logo.component';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { MenuBarComponent } from '@components';
-import { WSMenuItem } from '@models';
+import { ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from '@models';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { DynamicComponent } from '../../general/dynamic/dynamic.component';
 
 @Component({
     selector: 'ws-top-nav',
@@ -15,6 +16,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
         MenuBarComponent,
         MenubarModule,
         NavLogoComponent,
+        DynamicComponent,
         ...ANGULAR_COMMON,
     ],
     templateUrl: './top-nav.component.html',
@@ -39,7 +41,13 @@ export class TopNavComponent {
     
     
     // #region standard inputs
-    @Input() template: TemplateRef<unknown> | null = null;
+    @Input() topNavDef?: ComponentDef<unknown>;
+
+    @Input() navMenuDef?: ComponentDef<unknown>;
+
+    @Input() navMenuWrapper?: StyleGroup;
+
+    @Input() logoDef?: ComponentDef<unknown>;
 
     private _model: WSMenuItem[] = [];
     @Input() 
@@ -50,11 +58,36 @@ export class TopNavComponent {
     get model(): WSMenuItem[] {
         return this._model;
     }
+
+    @Input() topNavStyle?: StyleGroup;
+
+    @Input() topNavShadowStyle?: StyleGroup;
+
+    @Input() topNavWrapperStyle?: StyleGroup;
+
+    @Input() headerText?: string;
+
+    @Input() headerTextStyle?: StyleGroup;
+
+    @Input() headerStyle?: StyleGroup;
+
+    
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
+
+    private _config?: Partial<TopNavComponent>;
+    @Input()
+    get config() {
+        return this._config;
+    }
+    set config(input: Partial<TopNavComponent> | undefined) {
+        delete input?.config;
+        this._config = input;
+        Object.assign(this, input);
+    }
     
     // #endregion get/set inputs
     

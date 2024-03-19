@@ -1,5 +1,5 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { NgStyleValues } from './styles';
+import { NgStyleValues } from './style-types';
 import { TemplateRef, Type } from '@angular/core';
 
 /**
@@ -57,12 +57,15 @@ export interface SelectButtonItem {
     value: string;
 }
 
-
-
-export type CssStyleObject = Partial<CSSStyleDeclaration>;
-
 export interface LocalObject {
     readonly LOCAL_ID: string;
 }
 
 export type ElementSelector = string | TemplateRef<unknown> | HTMLElement;
+
+export type ComponentType = Type<unknown> | TemplateRef<unknown>;
+
+export interface ComponentDef<T> {
+    component: ComponentType;
+    config?: Partial<T>;
+}

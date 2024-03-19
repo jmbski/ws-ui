@@ -1,5 +1,21 @@
-<div class="app-top-nav-logo">
-	<a routerLink="/">
-		<img class="app-top-nav-logo" [src]="logoImage" alt="Companions of the Griffon D'Ore Arms" />
-	</a>
+<div [class]="wrapperStyleClass" [style]="wrapperStyle">
+	<ng-container *ngIf="isLink; else imageOnly">
+        <a [routerLink]="linkUrl">
+            <img  
+                [class]="imgStyleClass" 
+                [src]="logoImage" 
+                [alt]="logoAltText"
+                [style]="imgStyle"
+            />
+        </a>
+    </ng-container>
+
+    <ng-template #imageOnly>
+        <img  
+            [class]="imgStyleClass" 
+            [src]="logoImage" 
+            [alt]="logoAltText"
+            [style]="imgStyle"
+        />
+    </ng-template>
 </div>

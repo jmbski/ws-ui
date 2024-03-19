@@ -1,20 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { CssStyleObject } from '@models';
+import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
+import { IsComponentClass, IsTemplateRef } from '@common';
+import { ComponentDef } from '@models';
 
 @Component({
-    selector: 'ws-nav-logo',
+    selector: 'ws-dynamic',
     standalone: true,
     imports: [
         CommonModule,
-        RouterModule,
     ],
-    templateUrl: './nav-logo.component.html',
-    styleUrl: './nav-logo.component.scss',
-    changeDetection: ChangeDetectionStrategy.OnPush
+    templateUrl: './dynamic.component.html',
+    styleUrl: './dynamic.component.scss'
 })
-export class NavLogoComponent {
+export class DynamicComponent {
 
     // #region public properties
     
@@ -27,43 +25,39 @@ export class NavLogoComponent {
     
     
     // #region getters/setters
+
+    get component() {
+        return this.componentDef?.component;
+    }
+
+    get componentConfig() {
+        return this.componentDef?.config;
+    } 
     
     // #endregion getters/setters
     
     
     // #region standard inputs
-    
-    @Input() logoImage: string = 'assets/images/default_logo.webp';
 
-    @Input() logoAltText?: string = 'Default Logo';
-
-    @Input() imgStyleClass?: string = 'app-top-nav-logo';
-
-    @Input() imgStyle?: string | CssStyleObject;
-
-    @Input() wrapperStyleClass?: string = 'app-top-nav-logo';
-
-    @Input() wrapperStyle?: string | CssStyleObject;
-
-    @Input() isLink?: boolean = true;
-
-    @Input() linkUrl?: string = '/';
+    @Input() componentDef?: ComponentDef<unknown>;
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
     
-    private _config?: Partial<NavLogoComponent>;
+    
+    private _config?: Partial<DynamicComponent>;
     @Input()
     get config() {
         return this._config;
     }
-    set config(input: Partial<NavLogoComponent> | undefined) {
+    set config(input: Partial<DynamicComponent> | undefined) {
+        delete input?.config;
         this._config = input;
         Object.assign(this, input);
     }
-    
+
     // #endregion get/set inputs
     
     
@@ -87,6 +81,10 @@ export class NavLogoComponent {
     
     
     // #region public methods
+
+    public isTemplateRef = IsTemplateRef;
+
+    public isComponentClass = IsComponentClass;
     
     // #endregion public methods
     

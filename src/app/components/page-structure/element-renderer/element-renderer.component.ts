@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
 import { ANGULAR_COMMON, PRIME_COMMON, ViewContainerRefDirective } from '@common';
-import { ComponentClassBase, IComponentConfig, ElementModel, IsTextBlock } from '@models';
+import { ComponentClassBase, IComponentConfig, ElementModel } from '@models';
 import { BehaviorSubject } from 'rxjs';
 import { ElementRenderService } from '@services';
 
@@ -101,7 +101,6 @@ export class ElementRendererComponent extends ComponentClassBase {
     
     
     // #region public methods
-    public isTextBlock = IsTextBlock;
     
     // #endregion public methods
     

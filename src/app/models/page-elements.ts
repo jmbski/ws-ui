@@ -1,11 +1,5 @@
 import { ViewContainerRefDirective } from '@common';
 import { CssStyleObject, RecordObject } from '@models';
-import { TemplateRef, Type } from '@angular/core';
-
-
-
-
-export type ComponentType = string | Type<unknown> | TemplateRef<unknown>;
 
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.

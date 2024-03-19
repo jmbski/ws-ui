@@ -1,12 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { ANGULAR_COMMON, PRIME_COMMON } from '@common';
 import { TopNavComponent } from '@components';
+import { ComponentDef, CssStyleObject, StyleGroup } from '@models';
+import { DynamicComponent } from '../../general/dynamic/dynamic.component';
 
 @Component({
     selector: 'ws-page-layout',
     standalone: true,
     imports: [
         TopNavComponent,
+        DynamicComponent,
         ...ANGULAR_COMMON,
         ...PRIME_COMMON,
     ],
@@ -32,12 +35,32 @@ export class PageLayoutComponent {
     
     
     // #region standard inputs
+
     @Input() topNavTemplate: TemplateRef<unknown> | null = null;
+
+    @Input() pageLayoutStyle?: StyleGroup;
+
+    @Input() pageContentStyle?: StyleGroup;
+
+    @Input() customTopNavDef?: ComponentDef<unknown>;
+
+    @Input() wsTopNavConfig?: Partial<TopNavComponent>;
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
+
+    
+    private _config?: Partial<PageLayoutComponent>;
+    @Input()
+    get config() {
+        return this._config;
+    }
+    set config(input: Partial<PageLayoutComponent> | undefined) {
+        this._config = input;
+        Object.assign(this, input);
+    }
     
     // #endregion get/set inputs
     

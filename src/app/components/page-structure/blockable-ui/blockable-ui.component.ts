@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { BlockableUI } from 'primeng/api';
 
 @Component({
