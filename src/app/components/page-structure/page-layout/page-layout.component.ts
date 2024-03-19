@@ -97,4 +97,4 @@ export class PageLayoutComponent {
     
 }
 
-export type TopNavConfig = Partial<TopNavComponent>;
+export type PageLayoutConfig = Partial<PageLayoutComponent>;
