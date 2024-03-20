@@ -39,6 +39,9 @@
         ],
         "@services": [
             "src/app/services/_index.ts"
+        ],
+        "ws-ui/*": [
+            "src/app/*/_index.ts"
         ]
     }
   },

@@ -1,7 +1,7 @@
 import {
     LocalObject,
     WSMenuItem,
-} from '@models';
+} from 'ws-ui/models';
 import { round } from 'lodash';
 import { LoremIpsum } from 'lorem-ipsum';
 
