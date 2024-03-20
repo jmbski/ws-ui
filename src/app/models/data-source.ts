@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs';
 import { nanoid } from 'nanoid';
-import { GeneralFunction, LocalObject } from '@models';
+import { GeneralFunction, LocalObject } from 'src/app/models/_index';
 
 
 export class RegisterDataSourceParams {

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
-import { ANGULAR_COMMON, PRIME_COMMON, ViewContainerRefDirective } from '@common';
-import { ComponentClassBase, IComponentConfig, ElementModel } from '@models';
+import { ANGULAR_COMMON, PRIME_COMMON, ViewContainerRefDirective } from 'src/app/common/_index';
+import { ComponentClassBase, IComponentConfig, ElementModel } from 'src/app/models/_index';
 import { BehaviorSubject } from 'rxjs';
-import { ElementRenderService } from '@services';
+import { ElementRenderService } from 'src/app/services/_index';
 
 @Component({
     selector: 'ws-element-renderer',

@@ -40,6 +40,12 @@
         "@services": [
             "src/app/services/_index.ts"
         ],
+        "components": [
+          "./dist/components"
+        ],
+        "ws-ui-out": [
+          "./dist/warskald-ui",
+        ],
         "ws-ui/*": [
             "src/app/*/_index.ts"
         ]

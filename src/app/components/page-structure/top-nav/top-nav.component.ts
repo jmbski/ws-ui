@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { ANGULAR_COMMON, AppDeviceInfo, UseMobile } from '@common';
+import { ANGULAR_COMMON, AppDeviceInfo, UseMobile } from 'src/app/common/_index';
 import { NavLogoComponent } from '../nav-logo/nav-logo.component';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { MenuBarComponent } from '@components';
-import { ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from '@models';
+import { ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from 'src/app/models/_index';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicComponent } from '../../general/dynamic/dynamic.component';
 

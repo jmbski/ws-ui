@@ -1,6 +1,6 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { UnionTypeOf, stringLiterals } from '@models';
+import { UnionTypeOf, stringLiterals } from 'src/app/models/_index';
 import { BehaviorSubject } from 'rxjs';
 
 export const ThemeNames = stringLiterals('viva-dark', 'viva-light', 'medieval-wood', 'blank', 'layout');

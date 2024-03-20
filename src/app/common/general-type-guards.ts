@@ -1,5 +1,5 @@
 import { TemplateRef, Type } from '@angular/core';
-import { CssStyleObject, GeneralFunction, RecordObject, TypedRecord } from '@models';
+import { CssStyleObject, GeneralFunction, RecordObject, TypedRecord } from 'src/app/models/_index';
 import { isEmpty } from 'lodash';
 
 /**

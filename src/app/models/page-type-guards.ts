@@ -1,4 +1,4 @@
-import { ComponentClassBase, ContainerConfig, ElementType, IComponentConfig, TextBlockConfig } from '@models';
+import { ComponentClassBase, ContainerConfig, ElementType, IComponentConfig, TextBlockConfig } from 'src/app/models/_index';
 import { Exists, ExistsProp, HasValue, IsArray, IsBoolean, IsRecordObject, IsString, IsStyle, IsUndefined, ObjectIsType, ObjectTypeMapping, OptionalArrayProp, OptionalBooleanProp, OptionalExistsProp, OptionalRecordObjectProp, OptionalStringProp, OptionalStyleProp, StringProp } from '../common/general-type-guards';
 import { ImageConfig } from '@angular/common';
 

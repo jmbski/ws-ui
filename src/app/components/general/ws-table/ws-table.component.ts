@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { LocalObject, RecordObject } from '@models';
+import { LocalObject, RecordObject } from 'src/app/models/_index';
 import { nanoid } from 'nanoid';
 import { ColumnDefinition, TableConfig } from '@components';
 import { Table, TableModule } from 'primeng/table';

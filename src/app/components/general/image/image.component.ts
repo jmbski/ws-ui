@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ElementComponentsMap } from '@common';
-import { ComponentClassBase, ElementType } from '@models';
+import { ElementComponentsMap } from 'src/app/common/_index';
+import { ComponentClassBase, ElementType } from 'src/app/models/_index';
 import { ImageModule } from 'primeng/image';
 
 @Component({

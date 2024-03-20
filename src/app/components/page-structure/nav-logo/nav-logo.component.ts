@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { CssStyleObject } from '@models';
+import { CssStyleObject } from 'src/app/models/_index';
 
 @Component({
     selector: 'ws-nav-logo',

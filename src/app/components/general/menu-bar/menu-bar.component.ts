@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, TemplateRef } from '@angular/core';
-import { ANGULAR_COMMON, LayoutChangeObserver$, UseMobile } from '@common';
-import { CssStyleObject, ElementSelector, WSMenuItem } from '@models'; 
+import { ANGULAR_COMMON, LayoutChangeObserver$, UseMobile } from 'src/app/common/_index';
+import { CssStyleObject, ElementSelector, WSMenuItem } from 'src/app/models/_index'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
 import { NgStyleValues } from 'src/app/models/styles';

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {
     DataSource, DataSourceCallback, DataSourceMessage, GeneralFunction, LocalObject, RegisterDataSourceParams 
-} from '@models';
+} from 'src/app/models/_index';
 import { Subscription } from 'rxjs';
 import { Utils } from './utils';
 

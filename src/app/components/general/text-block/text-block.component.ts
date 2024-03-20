@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { ANGULAR_COMMON } from '@common';
-import { ComponentClassBase, DefaultConfigParser, ElementType, IComponentConfig, IsTextBlock } from '@models';
+import { ANGULAR_COMMON } from 'src/app/common/_index';
+import { ComponentClassBase, DefaultConfigParser, ElementType, IComponentConfig, IsTextBlock } from 'src/app/models/_index';
 
 
 function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {

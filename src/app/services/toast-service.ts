@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LocalObject } from '@models';
+import { LocalObject } from 'src/app/models/_index';
 import { Message, MessageService } from 'primeng/api';
 
 @Injectable({providedIn: 'root'})

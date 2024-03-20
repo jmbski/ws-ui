@@ -1,4 +1,4 @@
-import { ElementConfig } from '@models';
+import { ElementConfig } from 'src/app/models/_index';
 
 export class DomEventManager {
 

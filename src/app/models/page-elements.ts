@@ -1,5 +1,5 @@
-import { ViewContainerRefDirective } from '@common';
-import { CssStyleObject, RecordObject } from '@models';
+import { ViewContainerRefDirective } from 'src/app/common/_index';
+import { CssStyleObject, RecordObject } from 'src/app/models/_index';
 
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.

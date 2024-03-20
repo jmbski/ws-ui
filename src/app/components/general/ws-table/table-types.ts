@@ -1,4 +1,4 @@
-import { RecordObject, TypedRecord } from '@models';
+import { RecordObject, TypedRecord } from 'src/app/models/_index';
 
 export interface ColumnDefinition {
     field: string;

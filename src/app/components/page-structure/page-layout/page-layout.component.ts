@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
-import { ANGULAR_COMMON, PRIME_COMMON } from '@common';
+import { ANGULAR_COMMON, PRIME_COMMON } from 'src/app/common/_index';
 import { TopNavComponent, TopNavConfig } from '@components';
-import { ComponentDef, CssStyleObject, StyleGroup } from '@models';
+import { ComponentDef, CssStyleObject, StyleGroup } from 'src/app/models/_index';
 import { DynamicComponent } from '../../general/dynamic/dynamic.component';
 
 @Component({

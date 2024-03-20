@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ANGULAR_COMMON, IsBooleanString, IsNumericString, PRIME_COMMON, StringToDate } from '@common';
+import { ANGULAR_COMMON, IsBooleanString, IsNumericString, PRIME_COMMON, StringToDate } from 'src/app/common/_index';
 import { ColumnDefinition, TableConfig } from '@components';
-import { RecordObject, ToLabelCase } from '@models';
+import { RecordObject, ToLabelCase } from 'src/app/models/_index';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { GdoTableComponent } from '../ws-table/ws-table.component';
 import { MenuItem } from 'primeng/api';

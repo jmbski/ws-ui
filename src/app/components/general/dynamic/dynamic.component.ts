@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { IsComponentClass, IsTemplateRef } from '@common';
-import { ComponentDef } from '@models';
+import { IsComponentClass, IsTemplateRef } from 'src/app/common/_index';
+import { ComponentDef } from 'src/app/models/_index';
 
 @Component({
     selector: 'ws-dynamic',
