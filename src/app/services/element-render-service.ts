@@ -1,6 +1,8 @@
 import { Injectable, ViewContainerRef } from '@angular/core';
-import { ComponentClassBase, IComponentConfig, ElementModel, LocalObject } from '@models';
+
 import { ElementComponentsMap } from '../common/constants';
+import { LocalObject } from '../models/general';
+import { ElementModel, ComponentClassBase } from '../models/page-elements';
 
 @Injectable({providedIn: 'root'})
 export class ElementRenderService implements LocalObject{

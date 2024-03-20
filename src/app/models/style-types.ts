@@ -1,5 +1,3 @@
-import { ModdableType, TypedRecord, GeneralFunction, WSParams } from '@models';
-
 /**
  * Matches the type for the Angular NgClass properties
  */

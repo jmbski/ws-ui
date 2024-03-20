@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
 import { ANGULAR_COMMON, PRIME_COMMON } from '@common';
-import { TopNavComponent } from '@components';
+import { TopNavComponent, TopNavConfig } from '@components';
 import { ComponentDef, CssStyleObject, StyleGroup } from '@models';
 import { DynamicComponent } from '../../general/dynamic/dynamic.component';
 
@@ -44,7 +44,7 @@ export class PageLayoutComponent {
 
     @Input() customTopNavDef?: ComponentDef<unknown>;
 
-    @Input() wsTopNavConfig?: Partial<TopNavComponent>;
+    @Input() wsTopNavConfig?: TopNavConfig;
     
     // #endregion standard inputs
     
@@ -52,12 +52,12 @@ export class PageLayoutComponent {
     // #region get/set inputs
 
     
-    private _config?: Partial<PageLayoutComponent>;
+    private _config?: PageLayoutConfig;
     @Input()
     get config() {
         return this._config;
     }
-    set config(input: Partial<PageLayoutComponent> | undefined) {
+    set config(input: PageLayoutConfig | undefined) {
         this._config = input;
         Object.assign(this, input);
     }
