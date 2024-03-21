@@ -1,6 +1,7 @@
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { RecordObject } from './general';
 import { CssStyleObject } from './style-types';
+import { Type } from '@angular/core';
 
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.
@@ -37,6 +38,8 @@ export enum ElementType {
     IMAGE = 'image',
     COMPONENT = 'component'
 }
+
+export type ElementComponentMap = Record<string, Type<unknown>>;
 
 /**
  * Represents an element to render on a page
@@ -179,6 +182,6 @@ export function DefaultConfigParser(this: ComponentClassBase, config: IComponent
     });
 }
 export interface ElementModel {
-    container: ViewContainerRefDirective;
+    classType?: Type<unknown>;
     config?: IComponentConfig;
 }

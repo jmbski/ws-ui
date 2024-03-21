@@ -60,6 +60,4 @@ export const COMMON_PRIME_MODULES = [
 
 export const GlobalResizeObserver: BehaviorSubject<ResizeObserver | undefined> = new BehaviorSubject<ResizeObserver | undefined>(undefined);
 
-export type ElementComponentMap = Record<string, Type<unknown>>;
-
 export const LayoutChangeObserver$: Subject<void> = new Subject<void>();

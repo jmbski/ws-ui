@@ -36,9 +36,14 @@ def build_index_ts(path: str):
     file_path = os.path.join(path, '_index.ts')
     files = os.listdir(path)
     
+    dirs = [file for file in files if os.path.isdir(os.path.join(path, file))]
+    
     files = [file for file in files if file.endswith('.ts') and file != '_index.ts' and not file.endswith('.spec.ts')]
     
+    
     export_lines = [f'export * from \'./{file[:-3]}\';' for file in files]
+    export_lines.extend([f'export * from \'./{file}/_index\';' for file in dirs])
+    export_lines.sort()
     
     with open(file_path, 'w') as writer:
         writer.write('\n'.join(export_lines))

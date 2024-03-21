@@ -1,0 +1,13 @@
+<div class="grid grid-nogutter">
+        <ng-container *ngFor="let element of model$ | async">
+    
+            <ng-container *ngIf="element.config && element.classType != null">
+                <div [class]="element.config.layoutClass ?? 'grid-row-std'">
+                    <ng-container *ngComponentOutlet="element.classType; input: element.config;">
+                        
+                    </ng-container>
+                </div>
+            </ng-container>
+    
+        </ng-container>
+</div>
