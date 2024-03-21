@@ -1,10 +1,14 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ANGULAR_COMMON, IsBooleanString, IsNumericString, PRIME_COMMON, StringToDate } from 'src/app/common/_index';
-import { ColumnDefinition, TableConfig } from '@components';
-import { RecordObject, ToLabelCase } from 'src/app/models/_index';
+import { 
+    IsBooleanString, 
+    IsNumericString, 
+    StringToDate 
+} from 'warskald-ui/type-guards';
+import { ColumnDefinition, TableConfig, WsTableComponent } from 'warskald-ui/components/ws-table';
+import { RecordObject, ToLabelCase } from 'warskald-ui/models';
 import { TabMenuModule } from 'primeng/tabmenu';
-import { GdoTableComponent } from '../ws-table/ws-table.component';
 import { MenuItem } from 'primeng/api';
+import { CommonModule } from '@angular/common';
 
 export interface TabbedResponseData {
     tabName: string,
@@ -19,10 +23,9 @@ export interface TabbedResponseTableConfig {
     selector: 'ws-tabbed-response-table',
     standalone: true,
     imports: [
-        GdoTableComponent,
+        WsTableComponent,
         TabMenuModule,
-        ...PRIME_COMMON,
-        ...ANGULAR_COMMON,
+        CommonModule,
     ],
     templateUrl: './tabbed-response-table.component.html',
     styleUrl: './tabbed-response-table.component.scss'

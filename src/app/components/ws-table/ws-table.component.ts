@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { LocalObject, RecordObject } from 'src/app/models/_index';
+import { LocalObject, RecordObject } from 'warskald-ui/models';
 import { nanoid } from 'nanoid';
-import { ColumnDefinition, TableConfig } from '@components';
+import { ColumnDefinition, TableConfig } from './table-types';
 import { Table, TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
@@ -25,7 +25,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
     templateUrl: './ws-table.component.html',
     styleUrl: './ws-table.component.scss'
 })
-export class GdoTableComponent implements LocalObject {
+export class WsTableComponent implements LocalObject {
     public readonly LOCAL_ID: string = 'table-component' + nanoid();
 
     // #region public properties

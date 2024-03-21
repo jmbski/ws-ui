@@ -7,10 +7,12 @@ NG_PACKAGR_PATH = os.path.abspath('./node_modules/ng-packagr/ng-package.schema.j
 NG_PACKAGE_EXCLUDED_DIRS = [
     os.path.join(COMPONENTS_DIR, 'components'),
     os.path.join(COMPONENTS_DIR, 'styles'),
+    os.path.join(COMPONENTS_DIR, 'styles', 'themes'),
 ]
 
 INDEX_EXCLUDED_DIRS = [
     os.path.join(COMPONENTS_DIR, 'styles'),
+    os.path.join(COMPONENTS_DIR, 'styles', 'themes'),
 ]
 
 
@@ -34,7 +36,7 @@ def build_index_ts(path: str):
     file_path = os.path.join(path, '_index.ts')
     files = os.listdir(path)
     
-    files = [file for file in files if file.endswith('.ts') and file != '_index.ts']
+    files = [file for file in files if file.endswith('.ts') and file != '_index.ts' and not file.endswith('.spec.ts')]
     
     export_lines = [f'export * from \'./{file[:-3]}\';' for file in files]
     

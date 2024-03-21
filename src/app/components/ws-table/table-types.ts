@@ -1,4 +1,4 @@
-import { RecordObject, TypedRecord } from 'src/app/models/_index';
+import { RecordObject, TypedRecord } from 'warskald-ui/models';
 
 export interface ColumnDefinition {
     field: string;
