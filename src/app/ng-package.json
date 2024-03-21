@@ -3,6 +3,9 @@
   "dest": "../../dist/warskald-ui",
   "deleteDestPath": true,
   "lib": {
-    "entryFile": "src/app/_index.ts"
-  }
+    "entryFile": "_index.ts"
+  },
+  "assets": [
+    "./styles/**/*.*css"
+  ]
 }
