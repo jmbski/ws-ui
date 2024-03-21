@@ -1,14 +1,35 @@
 /* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
-  "extends": "../../tsconfig.json",
-  "compilerOptions": {
-    "outDir": "../../out-tsc/lib",
-    "declaration": true,
-    "declarationMap": true,
-    "inlineSources": true,
-    "types": []
-  },
-  "exclude": [
-    "**/*.spec.ts"
-  ]
-}
+    "extends": "../../tsconfig.json",
+    "compilerOptions": {
+      "outDir": "../../out-tsc/lib",
+      "declaration": true,
+      "declarationMap": true,
+      "inlineSources": true,
+      "types": [],
+      "paths": {
+        "warskald-ui/*": [
+            "src/app/*/_index.ts"
+        ]
+      }
+    },
+    "exclude": [
+      "**/*.spec.ts",
+      "../../out-tsc/lib/**/*",
+      "**/dist/**/*"
+    ],
+    "angularCompilerOptions": {
+        "annotateForClosureCompiler": false,
+        "strictMetadataEmit": true,
+        "skipTemplateCodegen": true,
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInjectionParameters": true,
+        "strictInputAccessModifiers": true,
+        "flatModuleOutFile": "warskald-ui.js",
+        "flatModuleId": "warskald-ui"
+    },
+    "files": [
+        "./_index.ts"
+    ]
+  }
+  

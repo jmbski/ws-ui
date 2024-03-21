@@ -1,0 +1,10 @@
+{
+	"fontSize": "10px",
+	"graphVizOptions": {
+		"G": {
+			"rankdir": "LR"
+		}
+	},
+    "tsConfig": "tsconfig.json",
+    "layout": "dot"
+}

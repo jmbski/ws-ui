@@ -16,10 +16,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ElementType } from '../models/page-elements';
-import { ElementRendererComponent } from '../components/page-structure/element-renderer/element-renderer.component';
-import { ImageComponent } from '../components/general/image/image.component';
-import { TextBlockComponent } from '../components/general/text-block/text-block.component';
 
 
 export interface AppDeviceSettings {
@@ -65,13 +61,5 @@ export const COMMON_PRIME_MODULES = [
 export const GlobalResizeObserver: BehaviorSubject<ResizeObserver | undefined> = new BehaviorSubject<ResizeObserver | undefined>(undefined);
 
 export type ElementComponentMap = Record<string, Type<unknown>>;
-
-const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
-export const ElementComponentsMap: ElementComponentMap = {
-    [COMPONENT]: ElementRendererComponent,
-    [CONTAINER]: ElementRendererComponent,
-    [IMAGE]: ImageComponent,
-    [TEXT_BLOCK]: TextBlockComponent,
-};
 
 export const LayoutChangeObserver$: Subject<void> = new Subject<void>();

@@ -1,5 +1,6 @@
-import { ViewContainerRefDirective } from 'src/app/common/_index';
-import { CssStyleObject, RecordObject } from 'src/app/models/_index';
+import { ViewContainerRefDirective } from 'warskald-ui/directives';
+import { RecordObject } from './general';
+import { CssStyleObject } from './style-types';
 
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.
