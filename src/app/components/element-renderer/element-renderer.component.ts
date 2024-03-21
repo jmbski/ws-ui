@@ -1,15 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Type, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { ComponentClassBase, IComponentConfig, ElementModel, ElementType } from 'warskald-ui/models';
+import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImageComponent } from 'warskald-ui/components/image';
 import { TextBlockComponent } from 'warskald-ui/components/text-block';
 import { IsString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
-
-
-export type ElementComponentMap = Record<string, Type<unknown>>;
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
 
