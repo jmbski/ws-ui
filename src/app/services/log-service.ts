@@ -121,7 +121,7 @@ export class LogService {
     private getCallerFunctionName(): string {
         const error = new Error();
         // in stack trace, line [2] pertains to the caller
-        const stacktraceLine = error.stack?.split('\n')[2] ?? '0 1 2 3 4 unknown';
+        const stacktraceLine = error.stack?.split('\n')[3] ?? '0 1 2 3 4 unknown';
 
         // clean up the stack trace line and return function's name
         return stacktraceLine.split(' ')[5];
