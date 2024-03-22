@@ -10,6 +10,9 @@
       "paths": {
         "warskald-ui/*": [
             "src/app/*/_index.ts"
+        ],
+        "ws-components": [
+            "src/app/components/_index.ts"
         ]
       }
     },

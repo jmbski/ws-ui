@@ -69,3 +69,5 @@ export interface ComponentDef<T> {
     component: ComponentType;
     config?: Partial<T>;
 }
+
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';

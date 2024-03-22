@@ -1,8 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
 import { ComponentDef, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
+import { LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-page-layout',
@@ -59,6 +60,7 @@ export class PageLayoutComponent {
     set config(input: PageLayoutConfig | undefined) {
         this._config = input;
         Object.assign(this, input);
+        this.logSvc.log('testing', 'config set', this._config);
     }
     
     // #endregion get/set inputs
@@ -75,6 +77,12 @@ export class PageLayoutComponent {
     
     
     // #region constructor and lifecycle hooks
+    constructor(
+        public cd: ChangeDetectorRef,
+        public logSvc: LogService,
+    ) {
+        
+    }
     
     // #endregion constructor and lifecycle hooks
     
