@@ -1,8 +1,8 @@
 {
   "name": "warskald-ui",
-  "version": "0.0.19",
+  "version": "0.0.22",
   "keywords": [
-      "angular"
+    "angular"
   ],
   "license": "GPL-3.0-only",
   "peerDependencies": {
@@ -13,7 +13,7 @@
     "zone.js": "~0.14.3"
   },
   "exports": {
-      "./styles/": "./styles/"
+    "./styles/": "./styles/"
   },
   "module": "warskald-ui.js",
   "typings": "warskald-ui.d.ts",
