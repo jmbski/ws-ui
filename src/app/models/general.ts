@@ -10,7 +10,7 @@ export type TypedRecord<T> = Record<string, T>;
 /**
  * A string indexed object.
  */
-export type RecordObject = TypedRecord<unknown>;
+export type WeakObject = TypedRecord<unknown>;
 
 /**
  * Function that generates a union type of string literals.
@@ -69,5 +69,3 @@ export interface ComponentDef<T> {
     component: ComponentType;
     config?: Partial<T>;
 }
-
-export type LogLevel = 'debug' | 'info' | 'warn' | 'error';

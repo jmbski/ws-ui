@@ -6,13 +6,23 @@ NG_PACKAGR_PATH = os.path.abspath('./node_modules/ng-packagr/ng-package.schema.j
 
 NG_PACKAGE_EXCLUDED_DIRS = [
     os.path.join(COMPONENTS_DIR, 'components'),
-    os.path.join(COMPONENTS_DIR, 'styles'),
-    os.path.join(COMPONENTS_DIR, 'styles', 'themes'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'images'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'images', 'icons'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'images', 'textures'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'fonts'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'styles'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'styles', 'themes'),
+    os.path.join(COMPONENTS_DIR, 'showcase'),
 ]
 
 INDEX_EXCLUDED_DIRS = [
-    os.path.join(COMPONENTS_DIR, 'styles'),
-    os.path.join(COMPONENTS_DIR, 'styles', 'themes'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'images'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'images', 'icons'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'images', 'textures'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'fonts'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'styles'),
+    os.path.join(COMPONENTS_DIR, 'assets', 'styles', 'themes'),
+    os.path.join(COMPONENTS_DIR, 'showcase'),
 ]
 
 

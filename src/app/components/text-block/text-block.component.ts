@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { nanoid } from 'nanoid';
 import { 
     ComponentClassBase, 
     DefaultConfigParser, 
     ElementType, 
     IComponentConfig, 
 } from 'warskald-ui/models';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 import { IsTextBlock } from 'warskald-ui/type-guards';
 
 
@@ -32,7 +34,11 @@ function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
     styleUrl: './text-block.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextBlockComponent extends ComponentClassBase {
+export class TextBlockComponent extends ComponentClassBase implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'TextBlockComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
     public override elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
@@ -94,7 +100,8 @@ export class TextBlockComponent extends ComponentClassBase {
 
     ngOnInit() {
         this.cd.detectChanges();
-        console.log('border', this.config?.illuminatedBorder);
+        // console.log('border', this.config?.illuminatedBorder);
+        LogService.debug(this, 'entering', 'config:', this.config);
     }
 
     // #endregion constructor and lifecycle hooks

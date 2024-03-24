@@ -1,4 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
+import { nanoid } from 'nanoid';
+import { LoggableObject, LogLevel } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-svg',
@@ -8,7 +10,12 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Even
     styleUrl: './svg.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SvgComponent {
+export class SvgComponent implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'SvgComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
+    
     public widthVal: string = '0';
     public heightVal: string = '48';
 

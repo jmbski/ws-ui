@@ -1,14 +1,16 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { 
-    IsBooleanString, 
-    IsNumericString, 
-    StringToDate 
+    isBooleanString, 
+    isNumericString, 
+    stringToDate 
 } from 'warskald-ui/type-guards';
 import { ColumnDefinition, TableConfig, WsTableComponent } from 'warskald-ui/components/ws-table';
-import { RecordObject, ToLabelCase } from 'warskald-ui/models';
+import { WeakObject, ToLabelCase } from 'warskald-ui/models';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { nanoid } from 'nanoid';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 export interface TabbedResponseData {
     tabName: string,
@@ -30,7 +32,11 @@ export interface TabbedResponseTableConfig {
     templateUrl: './tabbed-response-table.component.html',
     styleUrl: './tabbed-response-table.component.scss'
 })
-export class TabbedResponseTableComponent {
+export class TabbedResponseTableComponent implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'TabbedResponseTableComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
 
@@ -86,10 +92,11 @@ export class TabbedResponseTableComponent {
     }
 
     ngAfterViewInit() {
+        LogService.debug(this, 'entering', 'xmlString:', this.xmlString, 'config:', this.config);
         if(this.xmlString) {
             this.tabbedResponseData = this.parseXmlToTabbedResponseData(this.xmlString);
             this.tabMenuModel = this.tabbedResponseData.map((data: TabbedResponseData, index: number) => {
-                const state: RecordObject = {
+                const state: WeakObject = {
                     index,
                     data,
                 };
@@ -102,6 +109,8 @@ export class TabbedResponseTableComponent {
                     }
                 };
             });
+
+            LogService.debug(this, 'tabbedResponseData:', this.tabbedResponseData, 'tabMenuModel:', this.tabMenuModel);
             this.cd.detectChanges();
         }
     }
@@ -112,27 +121,36 @@ export class TabbedResponseTableComponent {
     // #region public methods
 
     public onTabChange(event: unknown) {
-        console.log(event);
+        LogService.debug(this, 'entering', 'event:', event);
     }
 
     public parseElementValue(textContent: string | null): string {
+        LogService.debug(this, 'entering', 'textContent:', textContent);
         
         if(!textContent) {
+            LogService.debug(this, 'exiting', 'string');
             return 'string';
         }
-        if(IsBooleanString(textContent)) {
+        if(isBooleanString(textContent)) {
+            LogService.debug(this, 'exiting', 'boolean');
             return 'boolean';
         }
-        if(IsNumericString(textContent)) {
+        if(isNumericString(textContent)) {
+            LogService.debug(this, 'exiting', 'number');
             return 'number';
         }
-        if(StringToDate(textContent)) {
+        if(stringToDate(textContent)) {
+            LogService.debug(this, 'exiting', 'date');
             return 'date';
         }
+
+        LogService.debug(this, 'exiting', 'string');
         return 'string';
     }
 
     public measureTextWidth(text: string, fontSize: number): number {
+        LogService.debug(this, 'entering', 'text:', text, 'fontSize:', fontSize);
+
         const el = document.createElement('div');
         el.style.position = 'absolute'; 
         el.style.left = '-9999px'; 
@@ -144,10 +162,14 @@ export class TabbedResponseTableComponent {
         const width = el.clientWidth + 32; // 32 is the padding
     
         document.body.removeChild(el);
+
+        LogService.debug(this, 'exiting', 'width:', width);
         return width;
     }
 
     public xmlElementToColumnDef(element: Element, tagPrefix: string = 'ws:'): ColumnDefinition {
+        LogService.debug(this, 'entering', 'element:', element, 'tagPrefix:', tagPrefix);
+
         const { tagName, textContent } = element;
         const columnDef: ColumnDefinition = {
             field: tagName.replace(tagPrefix, ''),
@@ -159,17 +181,24 @@ export class TabbedResponseTableComponent {
             width: this.measureTextWidth(tagName, 16) + 'px',
         };
         
+        LogService.debug(this, 'exiting', 'columnDef:', columnDef);
         return columnDef;
     }
 
     public addXmlColumnDef(columnDefs: ColumnDefinition[], element: Element): void {
+        LogService.debug(this, 'entering', 'columnDefs:', columnDefs, 'element:', element);
+
         const columnDef = this.xmlElementToColumnDef(element);
         if(columnDefs.findIndex((def: ColumnDefinition) => def.field === columnDef.field) === -1) {
             columnDefs.push(columnDef);
         }
+
+        LogService.debug(this, 'exiting', 'columnDefs:', columnDefs);
     }
 
     public parseXmlToTabbedResponseData(xmlString: string, tagPrefix: string = 'ws:'): TabbedResponseData[] {
+        LogService.debug(this, 'entering', 'xmlString:', xmlString, 'tagPrefix:', tagPrefix);
+
         const data: TabbedResponseData[] = [];
         if(this.config) {
             const { xmlCollectionTags } = this.config;
@@ -185,7 +214,7 @@ export class TabbedResponseTableComponent {
                 const collection: Element[] = Array.from(xmlDoc.getElementsByTagName(xmlTag));
                 
                 collection.forEach((element: Element) => {
-                    const rowItem: RecordObject = {};
+                    const rowItem: WeakObject = {};
                     const children = Array.from(element.children);
                     children.forEach((child: Element) => {
                         const { tagName, textContent } = child;
@@ -197,6 +226,7 @@ export class TabbedResponseTableComponent {
                     tableConfig.rowData.push(rowItem);
                 });
 
+                LogService.debug(this, 'tableConfig:', tableConfig, 'tag:', tag);
                 data.push({
                     tabName: tag,
                     tableConfig,
@@ -204,6 +234,7 @@ export class TabbedResponseTableComponent {
             });
         }
         
+        LogService.debug(this, 'exiting', 'data:', data);
         return data;
     }
     

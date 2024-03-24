@@ -5,8 +5,10 @@ import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImageComponent } from 'warskald-ui/components/image';
 import { TextBlockComponent } from 'warskald-ui/components/text-block';
-import { IsString } from 'warskald-ui/type-guards';
+import { isString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { nanoid } from 'nanoid';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
 
@@ -23,7 +25,11 @@ const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
     styleUrl: './element-renderer.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElementRendererComponent extends ComponentClassBase {
+export class ElementRendererComponent extends ComponentClassBase implements LoggableObject{
+
+    readonly LOCAL_ID: string = 'ElementRendererComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
 
@@ -51,8 +57,12 @@ export class ElementRendererComponent extends ComponentClassBase {
         return this._elements;
     }
     set elements(input: IComponentConfig[]) {
+        LogService.debug(this, 'setting elements', 'input:', input);
+
         this._elements = input;
         this.model$.next(this.toModels(input));
+
+    //        LogService.debug(this, 'exiting', `model$: ${this.model$.value}`);
     }
     
     private _elementConfig?: IComponentConfig;
@@ -101,9 +111,11 @@ export class ElementRendererComponent extends ComponentClassBase {
     // #region public methods
 
     public toModels(elements: IComponentConfig[]): ElementModel[] {
-        return elements.map((element: IComponentConfig) => {
+        LogService.debug(this, 'entering', 'elements:', elements);
+
+        const elementModels = elements.map((element: IComponentConfig) => {
             const { type } = element;
-            if(IsString(type)) {
+            if(isString(type)) {
                 const classType = ElementComponentsMap[type];
                 const model: ElementModel = {
                     classType,
@@ -113,6 +125,9 @@ export class ElementRendererComponent extends ComponentClassBase {
             }
             return {} as ElementModel;
         });
+
+        LogService.debug(this, 'exiting', 'elementModels:', elementModels);
+        return elementModels;
     }
     
     // #endregion public methods

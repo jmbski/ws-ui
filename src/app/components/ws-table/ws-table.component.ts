@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { LocalObject, RecordObject } from 'warskald-ui/models';
+import { WeakObject } from 'warskald-ui/models';
 import { nanoid } from 'nanoid';
 import { ColumnDefinition, TableConfig } from './table-types';
 import { Table, TableModule } from 'primeng/table';
@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-table',
@@ -25,12 +26,15 @@ import { MultiSelectModule } from 'primeng/multiselect';
     templateUrl: './ws-table.component.html',
     styleUrl: './ws-table.component.scss'
 })
-export class WsTableComponent implements LocalObject {
-    public readonly LOCAL_ID: string = 'table-component' + nanoid();
+export class WsTableComponent implements LoggableObject {
 
+    readonly LOCAL_ID: string = 'WsTableComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
+    
     // #region public properties
 
-    public selectedRows: RecordObject[] = [];
+    public selectedRows: WeakObject[] = [];
     
     // #endregion public properties
     
@@ -93,7 +97,7 @@ export class WsTableComponent implements LocalObject {
 
     @Input() columnDefs: ColumnDefinition[] = [];
 
-    @Input() rowData: RecordObject[] = [];
+    @Input() rowData: WeakObject[] = [];
     
     // #endregion standard inputs
     
@@ -106,10 +110,14 @@ export class WsTableComponent implements LocalObject {
         return this._tableConfig;
     }
     set tableConfig(input: TableConfig | undefined) {
+        LogService.debug(this, 'entering', 'input:', input);
+
         this._tableConfig = input;
         this.columnDefs = input?.columnDefs ?? [];
         this.rowData = input?.rowData ?? [];
         this.cd.detectChanges();
+
+        LogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs
@@ -146,9 +154,8 @@ export class WsTableComponent implements LocalObject {
     }
 
     public filterInput(event: Event) {
-        /* if(event.target && this.tableRef) {
-            this.tableRef.filterGlobal(event.target, 'contains');
-        } */
+        LogService.debug(this, 'entering', 'event:', event);
+        
         if(event instanceof InputEvent) {
             this.tableRef?.filterGlobal((<HTMLInputElement>event.target).value, 'contains');
         }

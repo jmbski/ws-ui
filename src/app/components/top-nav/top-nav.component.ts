@@ -6,6 +6,8 @@ import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
 import { ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from 'warskald-ui/models';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
+import { nanoid } from 'nanoid';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-top-nav',
@@ -21,7 +23,12 @@ import { DynamicComponent } from 'warskald-ui/components/dynamic';
     styleUrl: './top-nav.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopNavComponent {
+export class TopNavComponent implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'TopNavComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
+    
     // #region public properties
     public model$: BehaviorSubject<WSMenuItem[]> = new BehaviorSubject<WSMenuItem[]>([]);
     
@@ -50,6 +57,8 @@ export class TopNavComponent {
     private _model: WSMenuItem[] = [];
     @Input() 
     set model(value: WSMenuItem[]) {
+        LogService.debug(this, 'value:', value);
+
         this._model = value.slice();
         this.model$.next(value);
     }
@@ -82,9 +91,13 @@ export class TopNavComponent {
         return this._config;
     }
     set config(input: Partial<TopNavComponent> | undefined) {
+        LogService.debug(this, 'entering', 'input:', input);
+
         delete input?.config;
         this._config = input;
         Object.assign(this, input);
+
+        LogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs
@@ -207,12 +220,18 @@ export class TopNavComponent {
                 isExpanded: false,
             }
         ];
+
+        LogService.debug(this, 'this.model:', this.model);
     }
 
     ngAfterViewInit() {
         const appTopNav: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav');
+        LogService.debug(this, 'appTopNav:', appTopNav);
+
         if(appTopNav) {
             const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
+            LogService.debug(this, 'appTopNavShadow:', appTopNavShadow);
+            
             if(appTopNavShadow) {
                 appTopNavShadow.style.height = `${appTopNav.offsetHeight}px`;
             }

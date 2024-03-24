@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ComponentClassBase } from 'warskald-ui/models';
 import { ImageModule } from 'primeng/image';
+import { LoggableObject, LogLevel } from 'warskald-ui/services';
+import { nanoid } from 'nanoid';
 
 @Component({
     selector: 'ws-image',
@@ -13,8 +15,12 @@ import { ImageModule } from 'primeng/image';
     templateUrl: './image.component.html',
     styleUrl: './image.component.scss'
 })
-export class ImageComponent extends ComponentClassBase {
+export class ImageComponent extends ComponentClassBase implements LoggableObject {
 
+    readonly LOCAL_ID: string = 'ImageComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
+    
     // #region public properties
     
     // #endregion public properties

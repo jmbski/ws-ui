@@ -1,5 +1,5 @@
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { RecordObject } from './general';
+import { WeakObject } from './general';
 import { CssStyleObject } from './style-types';
 import { Type } from '@angular/core';
 
@@ -74,7 +74,7 @@ export interface IComponentConfig {
     /**
      * The options to apply to the element
      */
-    options?: RecordObject;
+    options?: WeakObject;
 
     /**
      * The children of the element
@@ -128,7 +128,7 @@ export class ComponentClassBase implements IComponentConfig {
     /**
      * The options to apply to the element
      */
-    public options?: RecordObject;
+    public options?: WeakObject;
 
     /**
      * The children of the element

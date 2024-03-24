@@ -8,6 +8,8 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { nanoid } from 'nanoid';
 
 
 export interface MenuBarConfig {
@@ -36,7 +38,11 @@ export interface MenuBarConfig {
     styleUrl: './menu-bar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuBarComponent {
+export class MenuBarComponent implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'MenuBarComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
     public model$: BehaviorSubject<WSMenuItem[]> = new BehaviorSubject<WSMenuItem[]>([]);
@@ -81,6 +87,8 @@ export class MenuBarComponent {
         return this.useMobile ? this.mobileMenuItems : this.stdMenuItems;
     }
     set model(input: WSMenuItem[]) {
+        LogService.debug(this, 'entering', 'input', input);
+
         this.mobileMenuItems = input;
         this.stdMenuItems = input[0]?.items || [];
         /* if(UseMobile()) {
@@ -147,6 +155,8 @@ export class MenuBarComponent {
     
 
     public calculateMaxPossibleHeightOfMenuItems(containerElement?: HTMLElement | null) {
+        LogService.debug(this, 'entering', 'containerElement', containerElement);
+
         const buttonHeight: number = 40; // 2 rem min height, + 0.5rem padding
         containerElement ??= this.getContainerElement();
         const containerBottom = containerElement?.getBoundingClientRect().bottom ?? 0;
@@ -156,15 +166,19 @@ export class MenuBarComponent {
         const maxMenuItems = (largestItems.items?.length ?? 0) + this.stdMenuItems.length;
         const maxHeight = maxMenuItems * buttonHeight + containerBottom;
 
+        LogService.debug(this, 'exiting', 'maxHeight', maxHeight);
         return maxHeight;
     }
 
     public getContainerElement() {
+        LogService.debug(this, 'entering');
+
         let containerElement: HTMLElement | null = null;
         if(this.containerElement) {
 
             if(this.containerElement instanceof TemplateRef) {
                 const { nativeElement } = this.containerElement.elementRef;
+                LogService.debug(this, 'containerElement is TemplateRef, nativeElement:', nativeElement);
                 if(nativeElement instanceof HTMLElement) {
                     containerElement = nativeElement;
                 }
@@ -172,23 +186,29 @@ export class MenuBarComponent {
 
             else if(this.containerElement instanceof HTMLElement) {
                 containerElement = this.containerElement;
+                LogService.debug(this, 'containerElement is HTMLElement, containerElement:', containerElement);
             }
 
             else {
                 containerElement = document.querySelector(this.containerElement);
+                LogService.debug(this, 'containerElement is querySelector, containerElement:', containerElement);
             }
         }
 
+        LogService.debug(this, 'exiting', 'containerElement:', containerElement);
         return containerElement;
     }
 
     public updateMenuScrolling() {
+        LogService.debug(this, 'entering');
+
         const element: HTMLElement = this.el.nativeElement;
         const containerElement = this.getContainerElement();
         //const maxPossible = this.calculateMaxPossibleHeightOfMenuItems(containerElement);
         //const applyMaxHeight = maxPossible > window.innerHeight;
 
         if(containerElement) {
+            LogService.debug(this, 'containerElement:', containerElement);
             const menubarItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-submenu-wrapper'));
 
             if(menubarItems.length > 0) {
@@ -198,6 +218,8 @@ export class MenuBarComponent {
                 const spacerHeight = 32; // 2rem
                 const pageHeight = window.innerHeight;
                 const maxHeight = pageHeight - bottom + svgHeight + spacerHeight;
+
+                LogService.debug(this, 'svgHeight:', svgHeight, 'spacerHeight:', spacerHeight, 'pageHeight:', pageHeight, 'maxHeight:', maxHeight);
                 menubarItems.forEach((submenu: HTMLElement) => {
                     submenu.style.maxHeight = `${maxHeight}px`;
                     submenu.style.overflowY = 'auto';
@@ -208,6 +230,8 @@ export class MenuBarComponent {
     }
 
     public configureMenuLayout() {
+        LogService.debug(this, 'entering');
+
         const element: HTMLElement = this.el.nativeElement;
 
         const models = this.model;
@@ -217,8 +241,11 @@ export class MenuBarComponent {
         this.updateMenuScrolling();
 
         if(!this.useMobile) {
+            LogService.debug(this, 'not mobile, configuring menu layout');
+
             const wsMenuItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-item'));
-            
+            LogService.debug(this, 'wsMenuItems:', wsMenuItems);
+
             wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
                 this.modelElementMap.set(wsMenuItem, models[index]);
             });
@@ -226,6 +253,8 @@ export class MenuBarComponent {
             wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
                 const model = models[index];
                 const subMenuItems: HTMLElement[] = <HTMLElement[]>Array.from(wsMenuItem.getElementsByClassName('ws-menubar-submenu'));
+                LogService.debug(this, 'subMenuItems:', subMenuItems, 'model:', model);
+
                 subMenuItems.forEach((subMenuItem: HTMLElement) => {
                     subMenuItem.style.maxWidth = `${wsMenuItem.offsetWidth}px`;
                 });
@@ -246,7 +275,7 @@ export class MenuBarComponent {
     }
 
     public handleItemClick(model: WSMenuItem) {
-        
+        LogService.debug(this, 'entering', 'model:', model);
 
         if(model) {
             model.isExpanded = !model.isExpanded;
@@ -260,6 +289,7 @@ export class MenuBarComponent {
             }
             this.cd.detectChanges();
         }
+        LogService.debug(this, 'exiting');
     }
     
     // #endregion public methods

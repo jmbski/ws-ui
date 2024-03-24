@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { nanoid } from 'nanoid';
 import { CssStyleObject } from 'warskald-ui/models';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-nav-logo',
@@ -14,7 +16,11 @@ import { CssStyleObject } from 'warskald-ui/models';
     styleUrl: './nav-logo.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavLogoComponent {
+export class NavLogoComponent implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'NavLogoComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
     
@@ -60,8 +66,12 @@ export class NavLogoComponent {
         return this._config;
     }
     set config(input: Partial<NavLogoComponent> | undefined) {
+        LogService.debug(this, 'entering', 'input:', input);
+
         this._config = input;
         Object.assign(this, input);
+
+        LogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs

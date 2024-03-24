@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef } from '@angular/core';
+import { nanoid } from 'nanoid';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'pull-to-refresh',
@@ -10,7 +12,12 @@ import { Component, ViewChild, ElementRef } from '@angular/core';
     templateUrl: './pull-to-refresh.component.html',
     styleUrl: './pull-to-refresh.component.scss',
 })
-export class PullToRefreshComponent {
+export class PullToRefreshComponent implements LoggableObject {
+
+    readonly LOCAL_ID: string = 'PullToRefreshComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
+    
     @ViewChild('pullToRefresh') pullToRefresh?: ElementRef;
 
     refreshTranslate: number = -100;
@@ -26,8 +33,14 @@ export class PullToRefreshComponent {
     }
 
     ngAfterViewInit() {
+        LogService.debug(this, 'ngAfterViewInit');
+
         this.resizeObserver = new ResizeObserver((data: ResizeObserverEntry[]) => {
+            LogService.debug(this, 'entering resizeObserver', 'data:', data);
+
             this.pullHeightStart = data[0].contentRect.height * 0.15;
+
+            LogService.debug(this, 'exiting resizeObserver', 'this.pullHeightStart:', this.pullHeightStart);
         });
 
         this.updateTranslateStyle();
@@ -49,6 +62,7 @@ export class PullToRefreshComponent {
                 touchstartY = e.touches[0].clientY;
                 validStart = touchstartY <= this.pullHeightStart;
             });
+
             document.addEventListener('touchmove', (e) => {
                 const touchY = e.touches[0].clientY;
                 const touchDiff = touchY - touchstartY;
@@ -63,7 +77,10 @@ export class PullToRefreshComponent {
 
                 }
             });
+
             document.addEventListener('touchend', () => {
+                LogService.debug(this, 'touchend', 'this.refreshTranslate:', this.refreshTranslate);
+
                 if (this.refreshTranslate >= 0) {
                     location.reload();
                 }
@@ -73,6 +90,8 @@ export class PullToRefreshComponent {
                 }, 300);
                 this.refreshTranslate = -100;
                 this.updateTranslateStyle();
+
+                LogService.debug(this, 'exiting touchend');
             });
         }
 
@@ -80,9 +99,11 @@ export class PullToRefreshComponent {
 
 
     public updateTranslateStyle() {
+        LogService.debug(this, 'this.refreshTranslate:', this.refreshTranslate);
         const element: HTMLElement = this.pullToRefresh?.nativeElement as HTMLElement;
 
         if(element) {
+            LogService.debug(this, 'element:', element);
             element.style.translate = this.refreshTranslatePx;
         }
     }

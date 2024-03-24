@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, InjectionToken } from '@angular/core';
 import {
     DataSource, 
     DataSourceMessage, 
@@ -7,16 +7,14 @@ import {
     RegisterDataSourceParams 
 } from 'warskald-ui/models';
 import { Subscription } from 'rxjs';
+import { LoggableObject, LogLevel, LogService } from './log-service';
 
-export enum StdSrcNames {
-    LINE_ITEMS = 'line-items',
-    CATEGORY_TEMPLATES = 'category-templates',
-    ACTIVE_TEMPLATE = 'active-template',
-}
+export const DEFAULT_SRC_NAMES = new InjectionToken<string[]>('DEFAULT_SRC_NAMES');
 
 @Injectable({providedIn: 'root'})
-export class DataService implements LocalObject {
+export class DataService implements LoggableObject {
     public readonly LOCAL_ID: string = 'data-service';
+    public localLogLevel?: LogLevel = LogLevel.Error;
     // #region public properties
 
     public dataSources: Map<string, DataSource> = new Map<string, DataSource>();
@@ -56,23 +54,31 @@ export class DataService implements LocalObject {
     
     // #region constructor and lifecycle hooks
     constructor(
+        @Inject(DEFAULT_SRC_NAMES) private defaultSrcNames?: string[],
     ) {
-        Object.values(StdSrcNames).forEach((dataSource) => {
-            this.registerDataSource({id: dataSource});
-        });
+        LogService.debug(this, 'entering', `defaultSrcNames: ${this.defaultSrcNames}`);
+
+        if(this.defaultSrcNames) {
+            Object.values(this.defaultSrcNames).forEach((dataSource) => {
+                this.registerDataSource({id: dataSource});
+            });
+        }
 
         document.addEventListener('keyup', (event: KeyboardEvent) => {
-            console.log('key pressed:', event.key, event.code);
             if(event.key === '~') {
                 this.debugSources();
             }
         });
+
+        LogService.debug(this, 'exiting');
     }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
     public registerDataSource(params: RegisterDataSourceParams): Promise<DataSource> {
+        LogService.debug(this, 'entering', `params: ${params}`);
+
         const {
             id, message, value, emitFirstValue, emitIfUndefined 
         } = params;
@@ -88,6 +94,7 @@ export class DataService implements LocalObject {
             this.dataSources.set(id, dataSource);
         }
 
+        LogService.debug(this, 'exiting', dataSource);
         return new Promise<DataSource>(resolve => {
             resolve(dataSource);
         
@@ -95,18 +102,23 @@ export class DataService implements LocalObject {
     }
 
     public getDataSource(id: string): DataSource | undefined {
+        LogService.debug(this, 'entering', `id: ${id}`);
         return this.dataSources.get(id);
     }
 
     public removeDataSource(id: string): void {
+        LogService.debug(this, 'entering', `id: ${id}`);
         this.dataSources.delete(id);
     }
 
     public clearDataSources(): void {
+        LogService.debug(this, 'entering');
         this.dataSources.clear();
     }
 
-    public subscribeToDataSource(id: string,  subscriber: LocalObject, callback: GeneralFunction<unknown>): Subscription | undefined{
+    public subscribeToDataSource(id: string,  subscriber: LocalObject, callback: GeneralFunction<unknown>): Subscription | undefined {
+        LogService.debug(this, 'entering', `id: ${id}, subscriber: ${subscriber}, callback: ${callback}`);
+
         const dataSource: DataSource | undefined = this.getDataSource(id);
         
         if(!dataSource) {
@@ -119,22 +131,33 @@ export class DataService implements LocalObject {
         }
         
         else {
+            LogService.debug(this, 'exiting', dataSource.value$);
+
             return dataSource.value$.subscribe(message => {
                 message.readValue(subscriber, callback);
             });
         }
+
+        LogService.debug(this, 'exiting undefined');
         return undefined;
     }
 
     public getDataSourceValue(id: string): unknown {
+        LogService.debug(this, 'entering', `id: ${id}`);
+
         const dataSource: DataSource | undefined = this.getDataSource(id);
         if(dataSource) {
+            LogService.debug(this, 'exiting', dataSource.getValue());
             return dataSource.getValue();
         }
+
+        LogService.debug(this, 'exiting undefined');
         return undefined;
     }
 
     public updateDataSource(id: string, content: DataSourceMessage | unknown): void {
+        LogService.debug(this, 'entering', `id: ${id}, content: ${content}`);
+
         const dataSource: DataSource | undefined = this.getDataSource(id);
         const dsMessage: DataSourceMessage = content instanceof DataSourceMessage ? content : new DataSourceMessage(content);
         if(dataSource) {
@@ -143,6 +166,8 @@ export class DataService implements LocalObject {
         else {
             this.registerDataSource({id, message: dsMessage});
         }
+
+        LogService.debug(this, 'exiting');
     }
 
     public debugSources(): void {

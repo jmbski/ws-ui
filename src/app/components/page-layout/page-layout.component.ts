@@ -1,9 +1,12 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
-import { ComponentDef, StyleGroup } from 'warskald-ui/models';
+import { ComponentDef, LocalObject, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
-import { LogService } from 'warskald-ui/services';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { nanoid } from 'nanoid';
+
+
 
 @Component({
     selector: 'ws-page-layout',
@@ -17,7 +20,10 @@ import { LogService } from 'warskald-ui/services';
     styleUrl: './page-layout.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PageLayoutComponent {
+export class PageLayoutComponent implements LoggableObject {
+    LOCAL_ID: string = 'PageLayoutComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Debug;
 
     // #region public properties
     
@@ -58,9 +64,16 @@ export class PageLayoutComponent {
         return this._config;
     }
     set config(input: PageLayoutConfig | undefined) {
+        const { localLogLevel, canLog } = input ?? {};
+        this.localLogLevel = localLogLevel ?? this.localLogLevel;
+        this.canLog = canLog ?? this.canLog;
+        
+        LogService.debug(this, 'entering', input);
+
         this._config = input;
         Object.assign(this, input);
-        this.logSvc.log('testing', 'config set', this._config);
+
+        LogService.debug(this, 'exiting', this._config);
     }
     
     // #endregion get/set inputs
@@ -79,9 +92,8 @@ export class PageLayoutComponent {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
-        public logSvc: LogService,
     ) {
-        
+
     }
     
     // #endregion constructor and lifecycle hooks

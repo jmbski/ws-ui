@@ -1,4 +1,4 @@
-import { RecordObject, TypedRecord } from 'warskald-ui/models';
+import { WeakObject, TypedRecord } from 'warskald-ui/models';
 
 export interface ColumnDefinition {
     field: string;
@@ -23,7 +23,7 @@ export interface ColumnDefinition {
 
 export interface TableData {
     columns: ColumnDefinition[];
-    data: RecordObject[];
+    data: WeakObject[];
 }
 
 export interface TablePaginatorConfig {
@@ -50,7 +50,7 @@ export interface TableConfig {
     containerElement?: HTMLElement | string;
     filterFields?: string[];
     columnDefs: ColumnDefinition[];
-    rowData: RecordObject[];
+    rowData: WeakObject[];
 
     [key: string]: unknown;
 }

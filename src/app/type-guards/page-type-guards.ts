@@ -7,9 +7,9 @@ import {
 } from 'warskald-ui/models';
 
 import { 
-    IsArray, 
-    IsString, 
-    ObjectIsType, 
+    isArray, 
+    isString, 
+    objectIsType, 
     ObjectTypeMapping, 
     OptionalBooleanProp, 
     OptionalExistsProp, 
@@ -24,7 +24,7 @@ import { ImageConfig } from '@angular/common';
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
 
 export function IsElementType(value: unknown): value is ElementType {
-    return IsString(value) && (<string[]>Object.values(ElementType)).includes(value);
+    return isString(value) && (<string[]>Object.values(ElementType)).includes(value);
 }
 
 export const IComponentConfigTypeMap: ObjectTypeMapping = {
@@ -40,11 +40,11 @@ export const IComponentConfigTypeMap: ObjectTypeMapping = {
 };
 
 export function IsIComponentConfig(value: unknown): value is IComponentConfig {
-    return ObjectIsType(value, IComponentConfigTypeMap);
+    return objectIsType(value, IComponentConfigTypeMap);
 }
 
 export function IsIComponentConfigArray(value: unknown): value is IComponentConfig[] {
-    return IsArray(value) && value.every(IsIComponentConfig);
+    return isArray(value) && value.every(IsIComponentConfig);
 }
 
 export function IsTextBlockEnum(value: unknown): value is ElementType.TEXT_BLOCK {
@@ -70,7 +70,7 @@ export function IsElementTypeOf<T extends ElementType>(value: unknown, elementTy
 
 export const TextBlockTypeMap: ObjectTypeMapping = {
     elementType: { typeGuard: IsTextBlockEnum },
-    content: { typeGuard: IsString },
+    content: { typeGuard: isString },
     illuminated: OptionalBooleanProp,
     illuminatedColor: OptionalStringProp,
     illuminatedBorder: OptionalStringProp,
@@ -93,27 +93,27 @@ export const ImageTypeMap: ObjectTypeMapping = {
  * @returns true if the input is a text block config, false otherwise
  */
 export function IsTextBlock(value: unknown): value is TextBlockConfig {
-    return IsIComponentConfig(value) && ObjectIsType(value, TextBlockTypeMap);
+    return IsIComponentConfig(value) && objectIsType(value, TextBlockTypeMap);
 }
 
 export function IsTextBlockArray(value: unknown): value is TextBlockConfig[] {
-    return IsArray(value) && value.every(IsTextBlock);
+    return isArray(value) && value.every(IsTextBlock);
 }
 
 export function IsContainer(value: unknown): value is ContainerConfig {
-    return IsIComponentConfig(value) && ObjectIsType<ContainerConfig>(value, ContainerTypeMap);
+    return IsIComponentConfig(value) && objectIsType<ContainerConfig>(value, ContainerTypeMap);
 }
 
 export function IsContainerArray(value: unknown): value is ContainerConfig[] {
-    return IsArray(value) && value.every(IsContainer);
+    return isArray(value) && value.every(IsContainer);
 }
 
 export function IsImage(value: unknown): value is ImageConfig {
-    return IsIComponentConfig(value) && ObjectIsType<ImageConfig>(value, ImageTypeMap);
+    return IsIComponentConfig(value) && objectIsType<ImageConfig>(value, ImageTypeMap);
 }
 
 export function IsImageArray(value: unknown): value is ImageConfig[] {
-    return IsArray(value) && value.every(IsImage);
+    return isArray(value) && value.every(IsImage);
 }
 
 export function IsComponent(value: unknown): value is ComponentClassBase {
@@ -121,5 +121,5 @@ export function IsComponent(value: unknown): value is ComponentClassBase {
 }
 
 export function IsComponentArray(value: unknown): value is IComponentConfig[] {
-    return IsArray(value) && value.every(IsComponent);
+    return isArray(value) && value.every(IsComponent);
 }

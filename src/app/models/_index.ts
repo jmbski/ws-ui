@@ -1,4 +1,5 @@
 export * from './data-source';
+export * from './dynamic-injector';
 export * from './extensions';
 export * from './general';
 export * from './page-elements';

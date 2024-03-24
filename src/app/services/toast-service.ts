@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
-import { LocalObject } from 'warskald-ui/models';
 import { Message, MessageService } from 'primeng/api';
+import { LoggableObject, LogLevel, LogService } from './log-service';
+import { nanoid } from 'nanoid';
 
 @Injectable({providedIn: 'root'})
-export class ToastService implements LocalObject {
-    public readonly LOCAL_ID: string = 'toast-service';
-    
+export class ToastService implements LoggableObject {
+    LOCAL_ID: string = 'ToastService_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
+
     // #region public properties
     
     // #endregion public properties
@@ -53,10 +56,13 @@ export class ToastService implements LocalObject {
     // #region public methods
 
     public showToast(message: Message) {
+        LogService.debug(this, 'message:', message);
         this.messageService.add(message);
     }
 
     public showSuccess(detail: string, summary?: string, ): void {
+        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+
         this.messageService.add({
             severity: 'success',
             summary: summary ?? 'Success',
@@ -65,6 +71,8 @@ export class ToastService implements LocalObject {
     }
 
     public showInfo(detail: string, summary?: string, ): void {
+        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+
         this.messageService.add({
             severity: 'info',
             summary: summary ?? 'Info',
@@ -73,6 +81,8 @@ export class ToastService implements LocalObject {
     }
 
     public showWarn(detail: string, summary?: string, ): void {
+        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+
         this.messageService.add({
             severity: 'warn',
             summary: summary ?? 'Warning',
@@ -81,6 +91,8 @@ export class ToastService implements LocalObject {
     }
 
     public showError(detail: string, summary?: string, ): void {
+        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+        
         this.messageService.add({
             severity: 'error',
             summary: summary ?? 'Error',

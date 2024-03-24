@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "ws-ui": {
+    "ws-ui-showcase": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -39,7 +39,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/ws-ui",
+            "outputPath": "dist/ws-ui-showcase",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -49,11 +49,55 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/app/assets"
             ],
             "styles": [
-              "src/styles.scss"
+                "src/app/assets/styles/general.scss",
+                "node_modules/primeng/resources/primeng.min.css",
+                "node_modules/primeflex/primeflex.css",
+                "node_modules/primeicons/primeicons.css",
+                "node_modules/font-awesome/css/font-awesome.min.css",
+                {
+                    "input": "node_modules/primeng/resources/primeng.min.css",
+                    "bundleName": "primeng",
+                    "inject": false
+                },
+                {
+                    "input": "node_modules/primeicons/primeicons.css",
+                    "bundleName": "prime-icons",
+                    "inject": false
+                },
+                {
+                    "input": "src/app/assets/styles/themes/viva-dark.scss",
+                    "bundleName": "viva-dark",
+                    "inject": false
+                },
+                {
+                    "input": "src/app/assets/styles/themes/viva-light.scss",
+                    "bundleName": "viva-light",
+                    "inject": false
+                },
+                {
+                    "input": "src/app/assets/styles/themes/medieval-wood.scss",
+                    "bundleName": "medieval-wood",
+                    "inject": false
+                },
+                {
+                    "input": "src/app/assets/styles/themes/blank-theme.css",
+                    "bundleName": "blank",
+                    "inject": false
+                },
+                {
+                    "input": "src/app/assets/styles/layout.scss",
+                    "bundleName": "layout",
+                    "inject": false
+                }
             ],
+            "stylePreprocessorOptions": {
+                "includePaths": [
+                    "src/app/assets/styles"
+                ]
+            },
             "scripts": []
           },
           "configurations": {
@@ -61,13 +105,13 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "4mb"
                 },
                 {
                   "type": "anyComponentStyle",
-                  "maximumWarning": "2kb",
-                  "maximumError": "4kb"
+                  "maximumWarning": "3mb",
+                  "maximumError": "6mb"
                 }
               ],
               "outputHashing": "all"
@@ -84,10 +128,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "ws-ui:build:production"
+              "buildTarget": "ws-ui-showcase:build:production"
             },
             "development": {
-              "buildTarget": "ws-ui:build:development"
+              "buildTarget": "ws-ui-showcase:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -95,7 +139,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "ws-ui:build"
+            "buildTarget": "ws-ui-showcase:build"
           }
         },
         "test": {
@@ -109,10 +153,10 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/app/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/app/assets/styles/general.scss"
             ],
             "scripts": []
           }

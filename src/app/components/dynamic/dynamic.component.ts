@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { IsComponentClass, IsTemplateRef } from 'warskald-ui/type-guards';
-import { ComponentDef } from 'warskald-ui/models';
+import { isComponentClass, isTemplateRef } from 'warskald-ui/type-guards';
+import { ComponentDef, LocalObject } from 'warskald-ui/models';
+import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { nanoid } from 'nanoid';
 
 @Component({
     selector: 'ws-dynamic',
@@ -12,7 +14,10 @@ import { ComponentDef } from 'warskald-ui/models';
     templateUrl: './dynamic.component.html',
     styleUrl: './dynamic.component.scss'
 })
-export class DynamicComponent {
+export class DynamicComponent implements LoggableObject {
+    readonly LOCAL_ID: string = 'DynamicComponent_' + nanoid();
+    canLog?: boolean = true;
+    localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
     
@@ -53,9 +58,15 @@ export class DynamicComponent {
         return this._config;
     }
     set config(input: Partial<DynamicComponent> | undefined) {
+        LogService.debug(this, 'entering', 'input:', input);
+
         delete input?.config;
         this._config = input;
         Object.assign(this, input);
+
+        this.cd.markForCheck();
+
+        LogService.debug(this, 'exiting');
     }
 
     // #endregion get/set inputs
@@ -75,16 +86,15 @@ export class DynamicComponent {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        
     }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
 
-    public isTemplateRef = IsTemplateRef;
+    public isTemplateRef = isTemplateRef;
 
-    public isComponentClass = IsComponentClass;
+    public isComponentClass = isComponentClass;
     
     // #endregion public methods
     
