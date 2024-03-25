@@ -1,6 +1,7 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { NgStyleValues } from './style-types';
-import { TemplateRef, Type } from '@angular/core';
+import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
+import { LoggableObject } from '../services/log-service';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -68,4 +69,10 @@ export type ComponentType = Type<unknown> | TemplateRef<unknown>;
 export interface ComponentDef<T> {
     component: ComponentType;
     config?: Partial<T>;
+}
+
+export interface BaseComponentClass extends LoggableObject {
+    cd: ChangeDetectorRef;
+
+    [key: string]: unknown;
 }

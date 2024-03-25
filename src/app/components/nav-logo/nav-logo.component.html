@@ -1,21 +1,21 @@
-<div [class]="wrapperStyleClass" [style]="wrapperStyle">
+<div [ngClass]="wrapperStyleClasses" [style]="wrapperStyle?.style">
 	<ng-container *ngIf="isLink; else imageOnly">
         <a [routerLink]="linkUrl">
             <img  
-                [class]="imgStyleClass" 
+                [ngClass]="imgStyleClasses"
                 [src]="logoImage" 
                 [alt]="logoAltText"
-                [style]="imgStyle"
+                [style]="imgStyle?.style"
             />
         </a>
     </ng-container>
 
     <ng-template #imageOnly>
         <img  
-            [class]="imgStyleClass" 
+            [ngClass]="imgStyleClasses"
             [src]="logoImage" 
             [alt]="logoAltText"
-            [style]="imgStyle"
+            [style]="imgStyle?.style"
         />
     </ng-template>
 </div>

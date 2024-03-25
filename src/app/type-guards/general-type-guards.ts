@@ -1,5 +1,5 @@
 import { TemplateRef, Type } from '@angular/core';
-import { CssStyleObject, GeneralFunction, WeakObject, TypedRecord } from 'warskald-ui/models';
+import { CssStyleObject, GeneralFunction, WeakObject, TypedRecord, StyleGroup } from 'warskald-ui/models';
 import { isEmpty } from 'lodash';
 
 /**
@@ -244,4 +244,18 @@ export function isTemplateRef(obj: unknown): obj is TemplateRef<unknown> {
 
 export function isComponentClass(obj: unknown): obj is Type<unknown> {
     return obj instanceof Type;
+}
+
+export const StyleGroupTypeMap: ObjectTypeMapping = {
+    baseClass: OptionalStringProp,
+    optionalClass: OptionalStringProp,
+    style: OptionalStyleProp,
+};
+
+export function isStyleGroup(obj: unknown): obj is StyleGroup {
+    return objectIsType<StyleGroup>(obj, StyleGroupTypeMap);
+}
+
+export function isStyleGroupArray(obj: unknown): obj is StyleGroup[] {
+    return Array.isArray(obj) && obj.every(isStyleGroup);
 }

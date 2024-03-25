@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { nanoid } from 'nanoid';
-import { CssStyleObject } from 'warskald-ui/models';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { CssStyleObject, StyleGroup } from 'warskald-ui/models';
+import { LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-nav-logo',
@@ -23,6 +23,14 @@ export class NavLogoComponent implements LoggableObject {
     localLogLevel?: LogLevel = LogLevel.Error;
 
     // #region public properties
+
+    public defaultImgStyleClass: string = 'app-top-nav-logo';
+
+    public defaultWrapperStyleClass: string = 'app-top-nav-logo';
+
+    public imgStyleClasses: string[] = [this.defaultImgStyleClass];
+
+    public wrapperStyleClasses: string[] = [this.defaultWrapperStyleClass];
     
     // #endregion public properties
     
@@ -43,13 +51,11 @@ export class NavLogoComponent implements LoggableObject {
 
     @Input() logoAltText?: string = 'Default Logo';
 
-    @Input() imgStyleClass?: string = 'app-top-nav-logo';
+    /* @Input() imgStyle?: StyleGroup;
 
-    @Input() imgStyle?: string | CssStyleObject;
-
-    @Input() wrapperStyleClass?: string = 'app-top-nav-logo';
-
-    @Input() wrapperStyle?: string | CssStyleObject;
+    @Input() wrapperStyle?: StyleGroup = {
+        baseClass: 'app-top-nav-logo',
+    }; */
 
     @Input() isLink?: boolean = true;
 
@@ -59,6 +65,34 @@ export class NavLogoComponent implements LoggableObject {
     
     
     // #region get/set inputs
+
+    private _imgStyle?: StyleGroup;
+    @Input()
+    get imgStyle() {
+        return this._imgStyle;
+    }
+    set imgStyle(input: StyleGroup | undefined) {
+        LogService.debug(this, 'entering', 'input:', input);
+
+        this._imgStyle = input;
+        this.imgStyleClasses = Utils.MergeStyleGroupClasses(this.imgStyle, this.defaultImgStyleClass);
+
+        LogService.debug(this, 'exiting', 'this.imgStyleClasses:', this.imgStyleClasses);
+    }
+
+    private _wrapperStyle?: StyleGroup;
+    @Input()
+    get wrapperStyle() {
+        return this._wrapperStyle;
+    }
+    set wrapperStyle(input: StyleGroup | undefined) {
+        LogService.debug(this, 'entering', 'input:', input);
+
+        this._wrapperStyle = input;
+        this.wrapperStyleClasses = Utils.MergeStyleGroupClasses(this.wrapperStyle, this.defaultWrapperStyleClass);
+
+        LogService.debug(this, 'exiting', 'this.wrapperStyleClasses:', this.wrapperStyleClasses);
+    }
     
     private _config?: Partial<NavLogoComponent>;
     @Input()
@@ -70,6 +104,10 @@ export class NavLogoComponent implements LoggableObject {
 
         this._config = input;
         Object.assign(this, input);
+
+        console.log('imgStyle:', this.imgStyle, this.imgStyleClasses);
+
+        this.cd.detectChanges();
 
         LogService.debug(this, 'exiting');
     }

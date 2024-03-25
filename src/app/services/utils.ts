@@ -1,8 +1,13 @@
 import {
+    BaseComponentClass,
+    capitalizeFirst,
     LocalObject,
+    StyleGroup,
     WSMenuItem,
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
+import { isString, isStyleGroup } from 'warskald-ui/type-guards';
+import { LogService } from './log-service';
 
 export interface XMLPropertyDef {
     name: string;
@@ -253,5 +258,58 @@ export class Utils implements LocalObject {
         return lorem.generateParagraphs(1);
     }
 
+    public static MergeStyleGroupClasses(styleGroup?: StyleGroup, defaultClass?: string): string[] {
+        const classes: string[] = [];
+        const { optionalClass } = styleGroup ?? {};
+        const baseClass = styleGroup?.baseClass ?? defaultClass;
 
+        if (baseClass) {
+            classes.push(baseClass);
+        }
+        
+        if (optionalClass) {
+            classes.push(optionalClass);
+        }
+
+        return classes;
+    }
+
+
+}
+
+export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: boolean = true) {
+    LogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
+    
+    for(const propName in this) {
+        if(propName.endsWith('Styles') || !onlyStylePropNames) {
+            const property = this[propName];
+            LogService.debug(this, 'property:', propName, property);
+
+            if(isStyleGroup(property)) {
+                const strippedPropName: string = propName.replace('Styles', '');
+                const formattedPropName: string = capitalizeFirst(strippedPropName);
+                const defaultClassPropName: string = `default${formattedPropName}StyleClass`;
+                const classPropName: string = `${strippedPropName}StyleClasses`;
+
+                let defaultClass: string | undefined = undefined;
+                const defaultClassProp = this[defaultClassPropName];
+
+                LogService.debug(this, 
+                    'strippedPropName:', strippedPropName, 
+                    'formattedPropName:', formattedPropName, 
+                    'defaultClassPropName:', defaultClassPropName, 
+                    'classPropName:', classPropName
+                );
+
+                if(isString(defaultClassProp)) {
+                    defaultClass = defaultClassProp;
+                }
+
+                this[classPropName] = Utils.MergeStyleGroupClasses(property, defaultClass);
+                
+                LogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
+            }
+        }
+    }
+    this.cd.detectChanges();
 }

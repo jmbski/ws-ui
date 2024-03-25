@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, TemplateRef } from '@angular/core';
 import { LayoutChangeObserver$, UseMobile } from 'warskald-ui/common';
-import { ElementSelector, WSMenuItem } from 'warskald-ui/models'; 
+import { ElementSelector, StyleGroup, WSMenuItem } from 'warskald-ui/models'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
 import { NgStyleValues } from 'warskald-ui/models';
@@ -8,11 +8,11 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { initStyleGroups, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
-export interface MenuBarConfig {
+/* export interface MenuBarConfig {
     model: WSMenuItem[];
 
     menuBarClass?: string;
@@ -23,7 +23,7 @@ export interface MenuBarConfig {
 
     [key: string]: unknown;
 
-}
+} */
 
 @Component({
     selector: 'ws-menu-bar',
@@ -42,7 +42,7 @@ export class MenuBarComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'MenuBarComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: LogLevel = LogLevel.Debug;
 
     // #region public properties
     public model$: BehaviorSubject<WSMenuItem[]> = new BehaviorSubject<WSMenuItem[]>([]);
@@ -58,7 +58,36 @@ export class MenuBarComponent implements LoggableObject {
     public mobileCollapsed: boolean = true;
 
     public mobileMenuItems: WSMenuItem[] = [];
+
     public stdMenuItems: WSMenuItem[] = [];
+
+
+    public defaultMenuBarStyleClass: string = 'ws-menubar';
+
+    public defaultMenuItemStyleClass: string = 'ws-menubar-item';
+
+    public defaultSubMenuStyleClass: string = 'ws-menubar-submenu';
+
+    public defaultMenuBarButtonStyleClass: string = 'ws-button-scroll';
+
+    public defaultSubMenuItemStyleClass: string = 'ws-menubar-submenu-item';
+
+    public defaultMobileItemStyleClass: string = 'mobile-item';
+
+
+    public menuBarStyleClasses: string[] = [this.defaultMenuBarStyleClass];
+
+    public menuItemStyleClasses: string[] = [this.defaultMenuItemStyleClass];
+
+    public subMenuStyleClasses: string[] = [this.defaultSubMenuStyleClass];
+
+    public menuBarButtonStyleClasses: string[] = [this.defaultMenuBarButtonStyleClass];
+
+    public subMenuItemStyleClasses: string[] = [this.defaultSubMenuItemStyleClass];
+
+    public mobileItemStyleClasses: string[] = [this.defaultMobileItemStyleClass];
+
+    [key: string]: unknown;
 
     // #endregion public properties
     
@@ -78,6 +107,18 @@ export class MenuBarComponent implements LoggableObject {
     // #region standard inputs
     
     @Input() containerElement?: ElementSelector;
+
+    @Input() menuBarStyles?: StyleGroup;
+
+    @Input() menuItemStyles?: StyleGroup;
+
+    @Input() subMenuStyles?: StyleGroup;
+
+    @Input() menuBarButtonStyles?: StyleGroup;
+
+    @Input() subMenuItemStyles?: StyleGroup;
+
+    @Input() mobileItemStyles?: StyleGroup;
 
     // #endregion standard inputs
     
@@ -121,6 +162,10 @@ export class MenuBarComponent implements LoggableObject {
         this.useMobile = UseMobile();
     }
 
+    ngOnInit() {
+        initStyleGroups.bind(this)();
+    }
+
     ngAfterViewInit() {
 
         this.showMenu = true;
@@ -141,17 +186,6 @@ export class MenuBarComponent implements LoggableObject {
     
     
     // #region public methods
-
-    /* public handleItemClick(itemElement: HTMLElement) {
-        const model = this.modelElementMap.get(itemElement);
-        
-        if(model) {
-            if(this.useMobile) {
-                model.isExpanded = !model.isExpanded;
-            }
-            this.cd.detectChanges();
-        }
-    } */
     
 
     public calculateMaxPossibleHeightOfMenuItems(containerElement?: HTMLElement | null) {
@@ -306,3 +340,5 @@ export class MenuBarComponent implements LoggableObject {
     
     
 }
+
+export type MenuBarConfig = Partial<MenuBarComponent>;

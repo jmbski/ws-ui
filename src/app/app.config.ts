@@ -8,9 +8,14 @@ export const routes: Routes = [
     { path: '', redirectTo: 'showcase', pathMatch: 'full' },
     { path: 'showcase', loadComponent: () => import('./showcase/showcase.component').then(m => m.ShowcaseComponent) },
 ];
+
 LogService.updateLogServiceSettings({
-    logLevel: LogLevel.Log,
+    logLevel: LogLevel.Error,
+    useLocalLogLevel: true,
     useStrictLocalLogLevel: false,
+    enableReportListener: true,
+    functionAccessMode: 'blacklist',
+    functionBlackList: ['_MenuBarComponent.configureMenuLayout'],
 });
 
 export const appConfig: ApplicationConfig = {

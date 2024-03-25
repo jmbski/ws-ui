@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { LogServiceConfig } from './log-service-config';
 
 /**
  * Log levels in order of severity.
@@ -28,12 +29,10 @@ export interface LoggableObject {
  */
 export type LogSettings = Partial<LoggableObject>;
 
-export interface LogServiceConfig {
-    logLevel?: LogLevel;
-    useLocalLogLevel?: boolean;
-    useCanLog?: boolean;
-    useStrictLocalLogLevel?: boolean;
-}
+/**
+ * Access modes for white/black lists.
+ */
+export type LogAccessMode = 'whitelist' | 'blacklist' | 'none';
 
 /**
  * Service for logging messages to the console.
@@ -42,6 +41,7 @@ export interface LogServiceConfig {
     providedIn: 'root'
 })
 export class LogService {
+
     // #region public properties
 
     /** 
@@ -63,7 +63,59 @@ export class LogService {
      * If true, the service will use the stricter of the global log level and the local log level.
      * If false, the service will use the looser of the global log level and the local log level.
      */
-    public static useStrictLocalLogLevel: boolean = true;
+    public static useStrictLocalLogLevel: boolean = false;
+
+    /**
+     * The list of objects that are allowed to log messages.
+     */
+    public static callerWhiteList: string[] = [];
+
+    /**
+     * The list of objects that are not allowed to log messages.
+     */
+    public static callerBlackList: string[] = [];
+
+    /**
+     * The access mode for the caller white list/black list.
+     */
+    public static callerAccessMode: LogAccessMode = 'none';
+
+    /**
+     * The list of functions that are allowed to log messages.
+     */
+    public static functionWhiteList: string[] = [];
+
+    /**
+     * The list of functions that are not allowed to log messages.
+     */
+    public static functionBlackList: string[] = [];
+
+    /**
+     * The access mode for the function white list/black list.
+     */
+    public static functionAccessMode: LogAccessMode = 'none';
+
+    /**
+     * The list of log levels that are allowed to be logged.
+     */
+    public static logLevelWhiteList: LogLevel[] = [];
+
+    /**
+     * The list of log levels that are not allowed to be logged.
+     */
+    public static logLevelBlackList: LogLevel[] = [];
+
+    /**
+     * The access mode for the log level white list/black list.
+     */
+    public static logLevelAccessMode: LogAccessMode = 'none';
+    
+    /**
+     * The key to press to report the current state of the LogService.
+     */
+    public static reportKey: string = '~';
+
+    static [key: string]: unknown;
     
     // #endregion public properties
     
@@ -119,10 +171,38 @@ export class LogService {
         
         const { localLogLevel, canLog } = caller;
 
+        /** If the caller's canLog flag is false, return immediately before doing anything else */
         if(canLog === false && LogService.useCanLog) {
             return false;
         }
+        
+        /** Check whitelist/blacklist properties in order of priority */
 
+        const hasAccess: boolean = [
+            {accessor: 'caller', prop: caller.LOCAL_ID},
+            {accessor: 'function', prop: LogService._getCallerFunctionName(4)},
+            {accessor: 'logLevel', prop: callLogLevel},
+        ].every(({accessor, prop}) => {
+            
+            const accessMode = LogService[`${accessor}AccessMode`];
+            let allowed: boolean = true;
+
+            if(<LogAccessMode>accessMode !== 'none') {
+                const whitelist = LogService[`${accessor}WhiteList`];
+                const blacklist = LogService[`${accessor}BlackList`];
+                
+                allowed = accessMode === 'whitelist' ?
+                    (<unknown[]>whitelist).includes(prop) :
+                    !(<unknown[]>blacklist).includes(prop);
+            }
+
+            return allowed;
+        });
+
+        if(!hasAccess) {
+            return false;
+        }
+        
         let logLevel = LogService.logLevel;
 
         if(LogService.useLocalLogLevel) {
@@ -158,11 +238,33 @@ export class LogService {
      * @param settings - the new log settings
      */
     public static updateLogServiceSettings(settings: LogServiceConfig) {
-        
-        LogService.logLevel = settings.logLevel ?? LogService.logLevel;
-        LogService.useCanLog = settings.useCanLog ?? LogService.useCanLog;
-        LogService.useLocalLogLevel = settings.useLocalLogLevel ?? LogService.useLocalLogLevel;
-        LogService.useStrictLocalLogLevel = settings.useStrictLocalLogLevel ?? LogService.useStrictLocalLogLevel;
+        Object.keys(settings).forEach((key: string) => {
+            LogService[key] = settings[key] ?? LogService[key];
+        });
+
+        if(settings.enableReportListener) {
+            this.toggleReportListener(true);
+        }
+    }
+
+    /**
+     * Toggles the report listener on or off.
+     * 
+     * @param toggleValue - whether or not to toggle the report listener
+     */
+    public static toggleReportListener(toggleValue?: boolean) {
+        toggleValue = toggleValue ?? !this._reportListener;
+        if(!toggleValue) {
+            window.removeEventListener('keyup', LogService._reportListenHandler);
+            this._reportListener = undefined;
+        } 
+        else {
+            window.addEventListener('keyup', this._reportListenHandler);
+        }
+    }
+
+    public static isAccessMode(value: unknown): value is LogAccessMode {
+        return value === 'whitelist' || value === 'blacklist' || value === 'none';
     }
 
     /**
@@ -176,7 +278,7 @@ export class LogService {
      */
     public static assert(condition: boolean, caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Assert, caller)) {
-            console.assert(condition, `${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.assert(condition, `ASSERT::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -188,7 +290,7 @@ export class LogService {
      */
     public static debug(caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Debug, caller)) {
-            console.debug(`${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.debug(`DEBUG::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -200,7 +302,7 @@ export class LogService {
      */
     public static error(caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Error, caller)) {
-            console.error(`${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.error(`ERROR::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -212,7 +314,7 @@ export class LogService {
      */
     public static info(caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Info, caller)) {
-            console.info(`${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.info(`INFO::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -224,7 +326,7 @@ export class LogService {
      */
     public static log(caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Log, caller)) {
-            console.log(`${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.log(`LOG::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -236,7 +338,7 @@ export class LogService {
      */
     public static trace(caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Trace, caller)) {
-            console.trace(`${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.trace(`TRACE::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -248,7 +350,7 @@ export class LogService {
      */
     public static warn(caller: LoggableObject, ...messages: unknown[]) {
         if(this.canLog(LogLevel.Warn, caller)) {
-            console.warn(`${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
+            console.warn(`WARN::${caller.LOCAL_ID}::${LogService._getCallerFunctionName()}::`, ...messages);
         }
     }
     
@@ -267,14 +369,31 @@ export class LogService {
      * 
      * @returns the name of the function that called the logging function
      */
-    private static _getCallerFunctionName(): string {
+    private static _getCallerFunctionName(functIndex: number = 3): string {
         const error = new Error();
         // in stack trace, line [2] pertains to the caller
-        const stacktraceLine = error.stack?.split('\n')[3] ?? 'unknown';
+        const stacktraceLine = error.stack?.split('\n')[functIndex] ?? 'unknown';
         const functNameRegex: RegExp = /at (.*) \(/;
         const results = functNameRegex.exec(stacktraceLine);
         const functName = results ? results[1] : 'unknown'; 
         return functName;
+    }
+
+    /**
+     * Listens for the report key to be pressed and reports the current state of the LogService.
+     * 
+     * @param event - the keyup event
+     */
+    private static _reportListenHandler(event: KeyboardEvent) {
+        if(event.key === LogService.reportKey) {
+            console.log('\nLOGSERVICE SETTINGS:');
+            for(const key in LogService) {
+                const prop = LogService[key];
+                if(typeof prop !== 'function' && key !== 'ɵprov') {
+                    console.log(key, prop);
+                }
+            }
+        }
     }
     
     // #endregion private methods

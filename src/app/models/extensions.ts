@@ -16,20 +16,21 @@ String.prototype.toFormat = function (this: string, format: StringFormat): strin
     let result: string = '';
     switch (format) {
         case 'camel':
-            result = ToCamelCase(this);
+            result = toCamelCase(this);
             break;
         case 'snake':
             break;
         case 'capitalize-first':
+            result = this.charAt(0).toUpperCase() + this.slice(1);
             break;
         case 'capitalize':
-            result = ToCapitalized(this);
+            result = toCapitalized(this);
             break;
         case 'label':
-            result = ToLabelCase(this);
+            result = toLabelCase(this);
             break;
         case 'hyphenated':
-            result = ToHyphenated(this);
+            result = toHyphenated(this);
             break;
     }
     return result;
@@ -37,11 +38,11 @@ String.prototype.toFormat = function (this: string, format: StringFormat): strin
 
 String.prototype.ReplaceAll = function (this: string, strToReplace: string | RegExp, replaceWith: string): string {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const result: string = StrReplaceAll(this, strToReplace, replaceWith);
+    const result: string = strReplaceAll(this, strToReplace, replaceWith);
     return result;
 };
 
-export function StrReplaceAll(input: string, strToReplace: string | RegExp, replaceWith: string): string {
+export function strReplaceAll(input: string, strToReplace: string | RegExp, replaceWith: string): string {
     let result: string = input;
     if (strToReplace !== replaceWith) {
         if(typeof strToReplace === 'string') {
@@ -57,8 +58,8 @@ export function StrReplaceAll(input: string, strToReplace: string | RegExp, repl
     return result;
 }
 
-export function ToCapitalized(input: string) {
-    const labelString: string = ToLabelCase(input);
+export function toCapitalized(input: string) {
+    const labelString: string = toLabelCase(input);
     let newString: string = '';
 
     for (let i = 0; i < labelString.length; i++) {
@@ -79,7 +80,7 @@ export function ToCapitalized(input: string) {
     return newString;
 }
 
-export function ToCamelCase(input: string): string {
+export function toCamelCase(input: string): string {
     let result: string = '';
     const regex: RegExp = /[-_ ]/g;
     const words: string[] = input.split(regex);
@@ -96,7 +97,7 @@ export function ToCamelCase(input: string): string {
     return result;
 }
 
-export function ToHyphenated(value: string) {
+export function toHyphenated(value: string) {
     return value.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
 }
 
@@ -106,7 +107,7 @@ export function isChar(input: string): boolean {
     return result;
 }
 
-export function ToLabelCase(str: string): string {
+export function toLabelCase(str: string): string {
     // Remove all non-word characters (like hyphens and underscores) and replace camel cased words
     const labelCase = str.replace(/[\W_]+(.)/g, ' $1').replace(/([a-z\d])([A-Z])/g, '$1 $2');
   
@@ -117,4 +118,8 @@ export function ToLabelCase(str: string): string {
     const capitalizedWords = words.map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
     
     return capitalizedWords;
+}
+
+export function capitalizeFirst(input: string): string {
+    return input.charAt(0).toUpperCase() + input.slice(1);
 }

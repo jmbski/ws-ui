@@ -8,6 +8,7 @@ import {
     ElementRendererComponent,
     ImageComponent,
     MenuBarComponent,
+    MenuBarConfig,
     NavLogoComponent,
     NavLogoConfig,
     PageLayoutComponent,
@@ -20,6 +21,7 @@ import {
     TopNavConfig,
     WsTableComponent
 } from 'warskald-ui/components';
+import { WSMenuItem } from 'warskald-ui/models';
 import { LoggableObject, LogLevel } from 'warskald-ui/services';
 
 @Component({
@@ -53,21 +55,7 @@ export class ShowcaseComponent implements LoggableObject {
 
     // #region public properties
 
-    public pageLayoutConfig: PageLayoutConfig = {
-        LOCAL_ID: 'ShowcasePageLayout',
-        wsTopNavConfig: <TopNavConfig>{
-            headerText: 'Iron Lions United',
-            logoDef: {
-                component: NavLogoComponent,
-                config: <NavLogoConfig>{
-                    isLink: true,
-                    linkUrl: '/',
-                    logoImage: '/app/assets/images/lions-east.webp',
-                    logoAltText: 'Iron Lions United',
-                }
-            }
-        },
-    };
+    public pageLayoutConfig?: PageLayoutConfig;
     
     // #endregion public properties
     
@@ -108,12 +96,105 @@ export class ShowcaseComponent implements LoggableObject {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
+
+        this.initPageLayout();
     }
     
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
+
+    public initPageLayout(): void {
+        const menuItems: WSMenuItem[] = [
+            {
+                label: 'About Us',
+                items: [
+                    {
+                        label: 'The Iron Lions',
+                    },
+                    {
+                        label: 'Clubs',
+                    },
+                    {
+                        label: 'Partners & Sponsors',
+                    },
+                ]
+            },
+            {
+                label: 'Events',
+                items: [
+                    {
+                        label: 'Grapes of Wrath',
+                    },
+                    {
+                        label: 'Event Calendar',
+                    },
+                    {
+                        label: 'Upcoming Events',
+                    },
+                    {
+                        label: 'Past Events',
+                    },
+                ]
+            },
+            {
+                label: 'Contact Us',
+                items: [
+                    {
+                        label: 'Contact Information',
+                    },
+                    {
+                        label: 'Books Us For An Event',
+                    },
+                    {
+                        label: 'Join Our Mailing List',
+                    },
+                    {
+                        label: 'Donate',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    }
+                ]
+
+            },
+        ];
+
+        
+
+        this.pageLayoutConfig = {
+            LOCAL_ID: 'ShowcasePageLayout',
+            wsTopNavConfig: <TopNavConfig>{
+                headerText: 'Iron Lions United',
+                logoDef: {
+                    component: NavLogoComponent,
+                    config: <NavLogoConfig>{
+                        config: {
+                            isLink: true,
+                            linkUrl: '/',
+                            logoImage: '/app/assets/images/lions-east.webp',
+                            logoAltText: 'Iron Lions United',
+                            imgStyle: {
+                                optionalClass: 'p-2'
+                            }
+                        }
+                    }
+                },
+                navMenuDef: {
+                    component: MenuBarComponent,
+                    config: <MenuBarConfig>{
+                        model: [
+                            {
+                                label: 'Menu',
+                                items: menuItems
+                            }
+                        ],
+                    },
+                },
+            },
+        };
+    }
     
     // #endregion public methods
     

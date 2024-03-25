@@ -3,7 +3,7 @@ import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
 import { ComponentDef, LocalObject, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
@@ -26,6 +26,14 @@ export class PageLayoutComponent implements LoggableObject {
     localLogLevel?: LogLevel = LogLevel.Debug;
 
     // #region public properties
+
+    public defaultPageLayoutStyleClass: string = 'app-page-layout';
+
+    public defaultPageContentStyleClass: string = 'app-page-content';
+
+    public pageLayoutStyleClasses: string[] = [this.defaultPageLayoutStyleClass];
+
+    public pageContentStyleClasses: string[] = [this.defaultPageContentStyleClass];
     
     // #endregion public properties
     
@@ -44,9 +52,9 @@ export class PageLayoutComponent implements LoggableObject {
 
     @Input() topNavTemplate: TemplateRef<unknown> | null = null;
 
-    @Input() pageLayoutStyle?: StyleGroup;
+    /* @Input() pageLayoutStyle?: StyleGroup;
 
-    @Input() pageContentStyle?: StyleGroup;
+    @Input() pageContentStyle?: StyleGroup; */
 
     @Input() customTopNavDef?: ComponentDef<unknown>;
 
@@ -57,6 +65,33 @@ export class PageLayoutComponent implements LoggableObject {
     
     // #region get/set inputs
 
+    private _pageLayoutStyle?: StyleGroup;
+    @Input()
+    get pageLayoutStyle() {
+        return this._pageLayoutStyle;
+    }
+    set pageLayoutStyle(input: StyleGroup | undefined) {
+        LogService.debug(this, 'entering', input);
+
+        this._pageLayoutStyle = input;
+        this.pageLayoutStyleClasses = Utils.MergeStyleGroupClasses(input, this.defaultPageLayoutStyleClass);
+
+        LogService.debug(this, 'exiting', 'this.pageLayoutStyleClasses:', this.pageLayoutStyleClasses);
+    }
+    
+    private _pageContentStyle?: StyleGroup;
+    @Input()
+    get pageContentStyle() {
+        return this._pageContentStyle;
+    }
+    set pageContentStyle(input: StyleGroup | undefined) {
+        LogService.debug(this, 'entering', input);
+
+        this._pageContentStyle = input;
+        this.pageContentStyleClasses = Utils.MergeStyleGroupClasses(input, this.defaultPageContentStyleClass);
+
+        LogService.debug(this, 'exiting', 'this.pageContentStyleClasses:', this.pageContentStyleClasses);
+    }
     
     private _config?: PageLayoutConfig;
     @Input()

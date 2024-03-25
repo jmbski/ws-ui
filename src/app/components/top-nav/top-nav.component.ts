@@ -3,11 +3,13 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateR
 import { NavLogoComponent } from 'warskald-ui/components/nav-logo';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
-import { ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from 'warskald-ui/models';
+import { BaseComponentClass, capitalizeFirst, ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from 'warskald-ui/models';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { nanoid } from 'nanoid';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { initStyleGroups, LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
+import { isString, property } from 'lodash';
+import { isStyleGroup } from 'warskald-ui/type-guards';
 
 @Component({
     selector: 'ws-top-nav',
@@ -30,7 +32,32 @@ export class TopNavComponent implements LoggableObject {
     localLogLevel?: LogLevel = LogLevel.Error;
     
     // #region public properties
-    public model$: BehaviorSubject<WSMenuItem[]> = new BehaviorSubject<WSMenuItem[]>([]);
+    
+    public defaultNavMenuWrapperClass: string = 'app-top-nav-menu-wrapper';
+
+    public defaultTopNavStyleClass: string = 'app-top-nav';
+
+    public defaultTopNavShadowStyleClass: string = 'app-top-nav-shadow';
+
+    public defaultTopNavWrapperStyleClass: string = 'app-top-nav-wrapper';
+
+    public defaultHeaderTextStyleClass: string = 'app-top-nav-header-text';
+
+    public defaultHeaderStyleClass: string = 'app-top-nav-header';
+
+    public navMenuWrapperClasses: string[] = [this.defaultNavMenuWrapperClass];
+
+    public topNavStyleClasses: string[] = [this.defaultTopNavStyleClass];
+
+    public topNavShadowStyleClasses: string[] = [this.defaultTopNavShadowStyleClass];
+
+    public topNavWrapperStyleClasses: string[] = [this.defaultTopNavWrapperStyleClass];
+
+    public headerTextStyleClasses: string[] = [this.defaultHeaderTextStyleClass];
+
+    public headerStyleClasses: string[] = [this.defaultHeaderStyleClass];
+
+    [key: string]: unknown;
     
     // #endregion public properties
     
@@ -50,33 +77,21 @@ export class TopNavComponent implements LoggableObject {
 
     @Input() navMenuDef?: ComponentDef<unknown>;
 
-    @Input() navMenuWrapper?: StyleGroup;
+    @Input() navMenuWrapperStyles?: StyleGroup;
 
     @Input() logoDef?: ComponentDef<unknown>;
 
-    private _model: WSMenuItem[] = [];
-    @Input() 
-    set model(value: WSMenuItem[]) {
-        LogService.debug(this, 'value:', value);
+    @Input() topNavStyles?: StyleGroup;
 
-        this._model = value.slice();
-        this.model$.next(value);
-    }
-    get model(): WSMenuItem[] {
-        return this._model;
-    }
+    @Input() topNavShadowStyles?: StyleGroup;
 
-    @Input() topNavStyle?: StyleGroup;
-
-    @Input() topNavShadowStyle?: StyleGroup;
-
-    @Input() topNavWrapperStyle?: StyleGroup;
+    @Input() topNavWrapperStyles?: StyleGroup;
 
     @Input() headerText?: string;
 
-    @Input() headerTextStyle?: StyleGroup;
+    @Input() headerTextStyles?: StyleGroup;
 
-    @Input() headerStyle?: StyleGroup;
+    @Input() headerStyles?: StyleGroup;
 
     
     
@@ -96,6 +111,8 @@ export class TopNavComponent implements LoggableObject {
         delete input?.config;
         this._config = input;
         Object.assign(this, input);
+
+        this.initStyleGroups();
 
         LogService.debug(this, 'exiting');
     }
@@ -117,7 +134,7 @@ export class TopNavComponent implements LoggableObject {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        const menuItems: WSMenuItem[] = [
+        /* const menuItems: WSMenuItem[] = [
             {
                 label: 'About',
                 isExpanded: false,
@@ -221,7 +238,7 @@ export class TopNavComponent implements LoggableObject {
             }
         ];
 
-        LogService.debug(this, 'this.model:', this.model);
+        LogService.debug(this, 'this.model:', this.model); */
     }
 
     ngAfterViewInit() {
@@ -245,6 +262,10 @@ export class TopNavComponent implements LoggableObject {
 
     public setMenuItems() {
         
+    }
+
+    public initStyleGroups() {
+        initStyleGroups.bind(this)();
     }
     
     // #endregion public methods

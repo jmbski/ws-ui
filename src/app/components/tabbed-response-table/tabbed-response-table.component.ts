@@ -5,7 +5,7 @@ import {
     stringToDate 
 } from 'warskald-ui/type-guards';
 import { ColumnDefinition, TableConfig, WsTableComponent } from 'warskald-ui/components/ws-table';
-import { WeakObject, ToLabelCase } from 'warskald-ui/models';
+import { WeakObject, toLabelCase } from 'warskald-ui/models';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -173,7 +173,7 @@ export class TabbedResponseTableComponent implements LoggableObject {
         const { tagName, textContent } = element;
         const columnDef: ColumnDefinition = {
             field: tagName.replace(tagPrefix, ''),
-            header: ToLabelCase(tagName.replace(tagPrefix, '')),
+            header: toLabelCase(tagName.replace(tagPrefix, '')),
             sortable: true,
             reorderable: true,
             resizable: true,

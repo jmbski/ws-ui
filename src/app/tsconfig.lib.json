@@ -23,13 +23,15 @@
     ],
     "angularCompilerOptions": {
         "annotateForClosureCompiler": false,
-        "strictMetadataEmit": true,
-        "skipTemplateCodegen": true,
+        "compilationMode": "partial",
         "enableI18nLegacyMessageIdFormat": false,
+        "flatModuleOutFile": "warskald-ui.js",
+        "flatModuleId": "warskald-ui",
+        "skipTemplateCodegen": true,
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
-        "flatModuleOutFile": "warskald-ui.js",
-        "flatModuleId": "warskald-ui"
+        "strictMetadataEmit": true,
+        "strictTemplates": true,
     },
     "files": [
         "./_index.ts"

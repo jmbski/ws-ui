@@ -1,26 +1,25 @@
 <!-- app-top-nav is a vertical flex box -->
 <div 
-    [class]="topNavStyle?.baseClass ?? 'app-top-nav'" 
-    [ngClass]="topNavStyle?.optionalClass" 
-    [style]="topNavStyle?.style">
+    [ngClass]="topNavStyleClasses" 
+    [style]="topNavStyles?.style">
 
     <ng-container *ngIf="topNavDef == null; else templated">
 
         <!-- nav-wrapper is a horizontal flex box -->
-        <div [class]="topNavWrapperStyle?.baseClass ?? 'app-top-nav-wrapper'" [ngClass]="topNavWrapperStyle?.optionalClass" [style]="topNavWrapperStyle?.style">
+        <div [ngClass]="topNavWrapperStyleClasses" [style]="topNavWrapperStyles?.style">
             <ng-container *ngIf="logoDef">
                 <ws-dynamic [componentDef]="logoDef"></ws-dynamic>
             </ng-container>
 
             <!-- nav-header contains the header text in a separate flex box that orients off of screen size -->
-            <div [class]="headerStyle?.baseClass ?? 'app-top-nav-header'" [ngClass]="headerStyle?.optionalClass" [style]="headerStyle?.style">
-                <span [class]="headerTextStyle?.baseClass ?? 'app-top-nav-header-text'" [ngClass]="headerTextStyle?.optionalClass" [style]="headerTextStyle?.style">
+            <div [ngClass]="headerStyleClasses" [style]="headerStyles?.style">
+                <span [ngClass]="headerTextStyleClasses" [style]="headerTextStyles?.style">
                     {{headerText}}
                 </span>
             </div>
         </div>
         <ng-container *ngIf="navMenuDef">
-            <div [class]="navMenuWrapper?.baseClass ?? 'app-top-nav-menu-wrapper'" [ngClass]="navMenuWrapper?.optionalClass" [style]="navMenuWrapper?.style">
+            <div [ngClass]="navMenuWrapperClasses" [style]="navMenuWrapperStyles?.style">
                 <ws-dynamic [componentDef]="navMenuDef"></ws-dynamic>
             </div>
         </ng-container>
@@ -34,7 +33,6 @@
 </div>
 
 <div 
-    [class]="topNavShadowStyle?.baseClass ?? 'app-top-nav-shadow'" 
-    [ngClass]="topNavShadowStyle?.optionalClass"
-    [style]="topNavShadowStyle?.style">
+    [ngClass]="topNavShadowStyleClasses"
+    [style]="topNavShadowStyles?.style">
 </div>
