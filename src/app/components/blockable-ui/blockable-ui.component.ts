@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { BlockableUI } from 'primeng/api';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-blockable-ui',
@@ -20,9 +20,10 @@ export class BlockableUiComponent implements BlockableUI, LoggableObject  {
         LogService.debug(this, 'constructed');
     }
 
+    @Loggable()
     getBlockableElement(): HTMLElement {
         const element = this.el?.nativeElement.children[0];
-        LogService.debug(this, 'getting blockable element', 'element:', element);
+        
         return element;
     }
 }

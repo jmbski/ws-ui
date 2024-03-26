@@ -7,7 +7,8 @@ import {
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
 import { isString, isStyleGroup } from 'warskald-ui/type-guards';
-import { LogService } from './log-service';
+import { LogService } from './log-service/log-service';
+import { _LogPerformance } from '../decorators/log-decorator';
 
 export interface XMLPropertyDef {
     name: string;
@@ -258,6 +259,7 @@ export class Utils implements LocalObject {
         return lorem.generateParagraphs(1);
     }
 
+    
     public static MergeStyleGroupClasses(styleGroup?: StyleGroup, defaultClass?: string): string[] {
         const classes: string[] = [];
         const { optionalClass } = styleGroup ?? {};

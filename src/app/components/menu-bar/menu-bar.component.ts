@@ -8,8 +8,9 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { initStyleGroups, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { initStyleGroups, Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
+
 
 
 /* export interface MenuBarConfig {
@@ -186,33 +187,19 @@ export class MenuBarComponent implements LoggableObject {
     
     
     // #region public methods
-    
 
-    public calculateMaxPossibleHeightOfMenuItems(containerElement?: HTMLElement | null) {
-        LogService.debug(this, 'entering', 'containerElement', containerElement);
-
-        const buttonHeight: number = 40; // 2 rem min height, + 0.5rem padding
-        containerElement ??= this.getContainerElement();
-        const containerBottom = containerElement?.getBoundingClientRect().bottom ?? 0;
-        const largestItems = this.stdMenuItems.reduce((acc, item) => {
-            return (acc.items?.length ?? 0) > (item.items?.length ?? 0) ? acc : item;
-        });
-        const maxMenuItems = (largestItems.items?.length ?? 0) + this.stdMenuItems.length;
-        const maxHeight = maxMenuItems * buttonHeight + containerBottom;
-
-        LogService.debug(this, 'exiting', 'maxHeight', maxHeight);
-        return maxHeight;
-    }
-
+    @Loggable()
     public getContainerElement() {
-        LogService.debug(this, 'entering');
 
         let containerElement: HTMLElement | null = null;
+        LogService.debug(this, 'this.containerElement:', this.containerElement);
+
         if(this.containerElement) {
 
             if(this.containerElement instanceof TemplateRef) {
                 const { nativeElement } = this.containerElement.elementRef;
                 LogService.debug(this, 'containerElement is TemplateRef, nativeElement:', nativeElement);
+
                 if(nativeElement instanceof HTMLElement) {
                     containerElement = nativeElement;
                 }
@@ -229,12 +216,11 @@ export class MenuBarComponent implements LoggableObject {
             }
         }
 
-        LogService.debug(this, 'exiting', 'containerElement:', containerElement);
         return containerElement;
     }
 
+    @Loggable()
     public updateMenuScrolling() {
-        LogService.debug(this, 'entering');
 
         const element: HTMLElement = this.el.nativeElement;
         const containerElement = this.getContainerElement();
@@ -263,8 +249,8 @@ export class MenuBarComponent implements LoggableObject {
 
     }
 
+    @Loggable()
     public configureMenuLayout() {
-        LogService.debug(this, 'entering');
 
         const element: HTMLElement = this.el.nativeElement;
 
@@ -308,8 +294,8 @@ export class MenuBarComponent implements LoggableObject {
         this.cd.detectChanges();
     }
 
+    @Loggable()
     public handleItemClick(model: WSMenuItem) {
-        LogService.debug(this, 'entering', 'model:', model);
 
         if(model) {
             model.isExpanded = !model.isExpanded;
@@ -323,7 +309,6 @@ export class MenuBarComponent implements LoggableObject {
             }
             this.cd.detectChanges();
         }
-        LogService.debug(this, 'exiting');
     }
     
     // #endregion public methods

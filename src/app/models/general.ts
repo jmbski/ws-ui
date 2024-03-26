@@ -1,7 +1,7 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { NgStyleValues } from './style-types';
 import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
-import { LoggableObject } from '../services/log-service';
+import { LoggableObject } from '../services/log-service/log-service.types';
 
 /**
  * Shorthand for a record of string keys and values of type T.

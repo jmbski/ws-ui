@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'pull-to-refresh',
@@ -16,7 +16,7 @@ export class PullToRefreshComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'PullToRefreshComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: LogLevel = LogLevel.Debug;
     
     @ViewChild('pullToRefresh') pullToRefresh?: ElementRef;
 
@@ -97,9 +97,9 @@ export class PullToRefreshComponent implements LoggableObject {
 
     }
 
-
+    @Loggable()
     public updateTranslateStyle() {
-        LogService.debug(this, 'this.refreshTranslate:', this.refreshTranslate);
+        // LogService.debug(this, 'this.refreshTranslate:', this.refreshTranslate);
         const element: HTMLElement = this.pullToRefresh?.nativeElement as HTMLElement;
 
         if(element) {

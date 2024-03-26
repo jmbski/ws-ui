@@ -7,7 +7,8 @@ import {
     RegisterDataSourceParams 
 } from 'warskald-ui/models';
 import { Subscription } from 'rxjs';
-import { LoggableObject, LogLevel, LogService } from './log-service';
+import { LogService } from './log-service/log-service';
+import { LoggableObject, LogLevel } from './log-service/log-service.types';
 
 export const DEFAULT_SRC_NAMES = new InjectionToken<string[]>('DEFAULT_SRC_NAMES');
 

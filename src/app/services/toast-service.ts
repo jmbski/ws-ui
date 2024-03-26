@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
-import { LoggableObject, LogLevel, LogService } from './log-service';
+import { LogService } from './log-service/log-service';
+import { LoggableObject, LogLevel } from './log-service/log-service.types';
 import { nanoid } from 'nanoid';
 
 @Injectable({providedIn: 'root'})

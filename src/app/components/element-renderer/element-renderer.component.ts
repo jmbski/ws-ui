@@ -7,7 +7,7 @@ import { ImageComponent } from 'warskald-ui/components/image';
 import { TextBlockComponent } from 'warskald-ui/components/text-block';
 import { isString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
@@ -110,8 +110,8 @@ export class ElementRendererComponent extends ComponentClassBase implements Logg
     
     // #region public methods
 
+    @Loggable()
     public toModels(elements: IComponentConfig[]): ElementModel[] {
-        LogService.debug(this, 'entering', 'elements:', elements);
 
         const elementModels = elements.map((element: IComponentConfig) => {
             const { type } = element;
@@ -125,8 +125,7 @@ export class ElementRendererComponent extends ComponentClassBase implements Logg
             }
             return {} as ElementModel;
         });
-
-        LogService.debug(this, 'exiting', 'elementModels:', elementModels);
+        
         return elementModels;
     }
     

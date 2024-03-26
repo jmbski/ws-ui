@@ -1,4 +1,4 @@
-import { LogLevel, LogAccessMode } from './log-service';
+import { LogLevel, LogAccessMode, FunctionMap } from './log-service.types';
 
 /**
  * Configuration for the log service.
@@ -77,6 +77,8 @@ export interface LogServiceConfig extends Record<string, unknown> {
      */
     logLevelAccessMode?: LogAccessMode;
 
+
+
     /**
      * If true, the {@link LogService} will add an event listener to the 
      * document that listens for the {@link reportKey} to be pressed. When
@@ -90,4 +92,35 @@ export interface LogServiceConfig extends Record<string, unknown> {
      */
     reportKey?: string;
 
+    /**
+     * If enabled, the log service will add an event listener to the document that listens for the
+     * the {@link toggleKey} to be pressed. When the key is pressed, the LogService will be switched
+     * to the {@link serviceStates}.
+     */
+    enableToggleListener?: boolean;
+
+    /**
+     * If {@link enableToggleKey} is true, pressing this key will switch the LogService to the
+     * {@link serviceStates}.
+     */
+    toggleKey?: string;
+
+    /**
+     * The state that the LogService will be switched to when the {@link toggleKey} is pressed.
+     */
+    toggleState?: LogServiceConfig;
+
+    /**
+     * Additional states that the LogService can be switched to. The key in each record is the identifier
+     * for the state. The value is the configuration for the state.
+     */
+    additonalServiceStates?: Record<string, LogServiceConfig>;
+
+    /**
+     * Additional listeners to add to the LogService. The key in each record is the key to listen for.
+     * The value is the function to call when the key is pressed.
+     */
+    customKeyListeners?: FunctionMap;
 }
+
+

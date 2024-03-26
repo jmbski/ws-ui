@@ -3,7 +3,7 @@ import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
 import { ComponentDef, LocalObject, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
-import { LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
+import { Loggable, LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
@@ -129,12 +129,20 @@ export class PageLayoutComponent implements LoggableObject {
         public cd: ChangeDetectorRef,
     ) {
 
+        const test = this.testFunct(5, 10, 15);
+        console.log('testfunct result', test);
     }
     
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
+
+    @Loggable()
+    public testFunct(...nums: number[]): number {
+        return nums.reduce((acc, curr) => acc + curr, 0);
+    
+    }
     
     // #endregion public methods
     
