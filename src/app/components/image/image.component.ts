@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ComponentClassBase } from 'warskald-ui/models';
+import { ComponentClassBase, LoggableObject, LogLevel } from 'warskald-ui/models';
 import { ImageModule } from 'primeng/image';
-import { LoggableObject, LogLevel } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 @Component({

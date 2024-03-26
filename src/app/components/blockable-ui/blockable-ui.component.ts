@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { BlockableUI } from 'primeng/api';
-import { Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { Loggable, LogService } from 'warskald-ui/services';
+import { LoggableObject, LogLevel } from 'warskald-ui/models';
 
 @Component({
     selector: 'ws-blockable-ui',

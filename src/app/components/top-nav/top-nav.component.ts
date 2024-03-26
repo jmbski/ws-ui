@@ -1,15 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { NavLogoComponent } from 'warskald-ui/components/nav-logo';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
-import { BaseComponentClass, capitalizeFirst, ComponentDef, CssStyleObject, NgStyleValues, StyleGroup, WSMenuItem } from 'warskald-ui/models';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { ComponentDef, LoggableObject, LogLevel, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { nanoid } from 'nanoid';
-import { initStyleGroups, LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
-import { isString, property } from 'lodash';
-import { isStyleGroup } from 'warskald-ui/type-guards';
+import { initStyleGroups, LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-top-nav',

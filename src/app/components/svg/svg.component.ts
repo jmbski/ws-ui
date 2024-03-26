@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { LoggableObject, LogLevel } from 'warskald-ui/services';
+import { LoggableObject, LogLevel } from 'warskald-ui/models';
 
 @Component({
     selector: 'ws-svg',

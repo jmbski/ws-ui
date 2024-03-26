@@ -1,4 +1,4 @@
-import { LogLevel, LogAccessMode, FunctionMap } from './log-service.types';
+import { LogLevel, LogAccessMode, FunctionMap } from 'warskald-ui/models';
 
 /**
  * Configuration for the log service.

@@ -21,8 +21,7 @@ import {
     TopNavConfig,
     WsTableComponent
 } from 'warskald-ui/components';
-import { WSMenuItem } from 'warskald-ui/models';
-import { LoggableObject, LogLevel } from 'warskald-ui/services';
+import { WSMenuItem, LoggableObject, LogLevel } from 'warskald-ui/models';
 
 @Component({
     selector: 'ws-showcase',

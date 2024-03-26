@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { WeakObject } from 'warskald-ui/models';
+import { WeakObject, LoggableObject, LogLevel } from 'warskald-ui/models';
 import { nanoid } from 'nanoid';
 import { ColumnDefinition, TableConfig } from './table-types';
 import { Table, TableModule } from 'primeng/table';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { LogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-table',

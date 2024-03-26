@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, TemplateRef } from '@angular/core';
 import { LayoutChangeObserver$, UseMobile } from 'warskald-ui/common';
-import { ElementSelector, StyleGroup, WSMenuItem } from 'warskald-ui/models'; 
+import { ElementSelector, LoggableObject, LogLevel, StyleGroup, WSMenuItem } from 'warskald-ui/models'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
 import { NgStyleValues } from 'warskald-ui/models';
@@ -8,7 +8,7 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { initStyleGroups, Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { initStyleGroups, Loggable, LogService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { isComponentClass, isTemplateRef } from 'warskald-ui/type-guards';
-import { ComponentDef, LocalObject } from 'warskald-ui/models';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { ComponentDef, LoggableObject, LogLevel, LocalObject } from 'warskald-ui/models';
+import { LogService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 @Component({

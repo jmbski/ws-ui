@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LogServiceConfig } from './log-service-config';
 import { isBoolean } from 'lodash';
-import { GeneralFunction } from '../../models/general';
-import { FunctionMap } from './log-service.types';
-import { LogLevel, LogAccessMode, LoggableObject, LogSettings } from './log-service.types';
+import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LogSettings  } from 'warskald-ui/models';
 
 /**
  * Service for logging messages to the console.

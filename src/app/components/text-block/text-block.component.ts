@@ -7,8 +7,9 @@ import {
     ElementType, 
     IComponentConfig, 
 } from 'warskald-ui/models';
-import { LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { LogService } from 'warskald-ui/services';
 import { IsTextBlock } from 'warskald-ui/type-guards';
+import { LoggableObject, LogLevel } from 'warskald-ui/models';
 
 
 function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {

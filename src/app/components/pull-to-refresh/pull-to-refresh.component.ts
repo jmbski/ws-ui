@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { Loggable, LoggableObject, LogLevel, LogService } from 'warskald-ui/services';
+import { Loggable, LogService } from 'warskald-ui/services';
+import { LoggableObject, LogLevel } from 'warskald-ui/models';
 
 @Component({
     selector: 'pull-to-refresh',

@@ -2,8 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { nanoid } from 'nanoid';
-import { CssStyleObject, StyleGroup } from 'warskald-ui/models';
-import { LoggableObject, LogLevel, LogService, Utils } from 'warskald-ui/services';
+import { CssStyleObject, LoggableObject, LogLevel, StyleGroup } from 'warskald-ui/models';
+import { LogService, Utils } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-nav-logo',
