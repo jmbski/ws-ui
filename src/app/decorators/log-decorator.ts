@@ -1,5 +1,5 @@
 import { LogService } from '../services/log-service/log-service';
-import { LoggableObject } from '../models/log-service.types';
+import { LoggableObject } from '../models/general';
 import { isWeakObject } from '../type-guards/general-type-guards';
 
 export function _LogPerformance(target: unknown, propertyKey: string, descriptor: PropertyDescriptor) {

@@ -1,7 +1,6 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { NgStyleValues } from './style-types';
 import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
-import { LoggableObject } from './log-service.types';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -71,8 +70,42 @@ export interface ComponentDef<T> {
     config?: Partial<T>;
 }
 
+/**
+ * Interface for objects that can be logged.
+ */
+export interface LoggableObject {
+    LOCAL_ID: string;
+    localLogLevel?: LogLevel;
+    canLog?: boolean;
+}
+
 export interface BaseComponentClass extends LoggableObject {
     cd: ChangeDetectorRef;
 
     [key: string]: unknown;
 }
+export type FunctionMap = Record<string, GeneralFunction<unknown>>;
+
+/**
+ * Log levels in order of severity.
+ */
+export enum LogLevel {
+    Trace = 0,
+    Debug = 1,
+    Info = 2,
+    Log = 3,
+    Warn = 4,
+    Error = 5,
+    Assert = 6,
+    None = 7
+}
+/**
+ * Interface for log settings.
+ */
+
+export type LogSettings = Partial<LoggableObject>;
+/**
+ * Access modes for white/black lists.
+ */
+
+export type LogAccessMode = 'whitelist' | 'blacklist' | 'none';

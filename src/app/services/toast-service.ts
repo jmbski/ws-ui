@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
 import { LogService } from './log-service/log-service';
-import { LoggableObject, LogLevel } from '../models/log-service.types';
+import { LogLevel, LoggableObject } from 'warskald-ui/models';
 import { nanoid } from 'nanoid';
 
 @Injectable({providedIn: 'root'})

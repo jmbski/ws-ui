@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@angular/core';
 import { LocalObject, UnionTypeOf, stringLiterals } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { LogService } from './log-service/log-service';
-import { LoggableObject, LogLevel } from '../models/log-service.types';
+import { LoggableObject, LogLevel } from 'warskald-ui/models';
 
 export const ThemeNames = stringLiterals('viva-dark', 'viva-light', 'medieval-wood', 'blank', 'layout');
 export type ThemeName = UnionTypeOf<typeof ThemeNames>;

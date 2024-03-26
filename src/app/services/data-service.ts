@@ -8,7 +8,7 @@ import {
 } from 'warskald-ui/models';
 import { Subscription } from 'rxjs';
 import { LogService } from './log-service/log-service';
-import { LoggableObject, LogLevel } from '../models/log-service.types';
+import { LoggableObject, LogLevel } from 'warskald-ui/models';
 
 export const DEFAULT_SRC_NAMES = new InjectionToken<string[]>('DEFAULT_SRC_NAMES');
 
