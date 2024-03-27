@@ -30,6 +30,9 @@
         "paths": {
             "warskald-ui/*": [
                 "src/app/*/_index.ts"
+            ],
+            "environment": [
+                "src/environments/environment"
             ]
         }
     },

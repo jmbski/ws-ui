@@ -17,7 +17,7 @@ export class PullToRefreshComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'PullToRefreshComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Debug;
+    localLogLevel?: LogLevel = LogLevel.Error;
     
     @ViewChild('pullToRefresh') pullToRefresh?: ElementRef;
 

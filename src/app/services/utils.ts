@@ -8,7 +8,6 @@ import {
 import { LoremIpsum } from 'lorem-ipsum';
 import { isString, isStyleGroup } from 'warskald-ui/type-guards';
 import { LogService } from './log-service/log-service';
-import { _LogPerformance } from '../decorators/log-decorator';
 
 export interface XMLPropertyDef {
     name: string;

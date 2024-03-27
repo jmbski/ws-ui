@@ -1,7 +1,197 @@
 import { Injectable } from '@angular/core';
 import { LogServiceConfig } from './log-service-config';
-import { isBoolean } from 'lodash';
-import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LogSettings  } from 'warskald-ui/models';
+import { isBoolean, isFunction } from 'lodash';
+import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LocalLogSettings, UnionTypeOf, stringLiterals  } from 'warskald-ui/models';
+import { isStringArray } from 'warskald-ui/type-guards';
+
+// direct import of environment variables will be done for the work
+// version, since that will be a local service, not a packaged library
+// import { environment, logServiceConfig } from 'environment';
+
+
+export type ConsoleKey = keyof Console;
+
+export type ConsoleFunctName = Exclude<ConsoleKey, 'Console' | 'profile' | 'profileEnd'>;
+
+export const ConsoleFunctAliases = stringLiterals('Assert', 'Clear', 'Count', 'CountReset', 'Debug', 'Dir', 'Dirxml', 'Error', 'Group', 'GroupCollapsed', 'GroupEnd', 'Info', 'Log', 'Table', 'Time', 'TimeEnd', 'TimeLog', 'TimeStamp', 'Trace', 'Warn');
+
+export type ConsoleFunctAlias = UnionTypeOf<typeof ConsoleFunctAliases>;
+
+export const ConsoleFuncts: Record<ConsoleFunctAlias, ConsoleFunctName> = {
+    Assert: 'assert',
+    Clear: 'clear',
+    Count: 'count',
+    CountReset: 'countReset',
+    Debug: 'debug',
+    Dir: 'dir',
+    Dirxml: 'dirxml',
+    Error: 'error',
+    Group: 'group',
+    GroupCollapsed: 'groupCollapsed',
+    GroupEnd: 'groupEnd',
+    Info: 'info',
+    Log: 'log',
+    Table: 'table',
+    Time: 'time',
+    TimeEnd: 'timeEnd',
+    TimeLog: 'timeLog',
+    TimeStamp: 'timeStamp',
+    Trace: 'trace',
+    Warn: 'warn',
+};
+
+export interface ConsoleFunctDef {
+    logLevel: LogLevel;
+    getArgs: (...args: unknown[]) => unknown[];
+    /** if true, the context string will be included in the getArgs function */
+    contextStringInArgs?: boolean;
+}
+
+export type ConsoleFunctLevelMap = Record<ConsoleFunctName, ConsoleFunctDef>;
+
+function getStringArg(...args: unknown[]): string[] {
+    return typeof args[0] === 'string' ? [args[0] as string] : [];
+}
+
+function getObjectArg(...args: unknown[]): object[] {
+    return typeof args[0] === 'object' ? [args[0] as object] : [];
+}
+
+export const standardConsoleFuncts: unknown[] = [
+    console.debug,
+    console.error,
+    console.info,
+    console.log,
+    console.trace,
+    console.warn
+];
+
+export const consoleFunctDefMap: ConsoleFunctLevelMap = {
+    assert: {
+        logLevel: LogLevel.Assert,
+        getArgs: (condition: unknown, ...args: unknown[]) => [condition, ...args],
+        contextStringInArgs: true,
+    },
+    clear: {
+        logLevel: LogLevel.Debug,
+        getArgs: () => [],
+    },
+    count: {
+        logLevel: LogLevel.Debug,
+        getArgs: getStringArg,
+    },
+    countReset: {
+        logLevel: LogLevel.Debug,
+        getArgs: getStringArg,
+    },
+    debug: {
+        logLevel: LogLevel.Debug,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+    dir: {
+        logLevel: LogLevel.Debug,
+        getArgs: getObjectArg,
+    },
+    dirxml: {
+        logLevel: LogLevel.Debug,
+        getArgs: getObjectArg,
+    },
+    error: {
+        logLevel: LogLevel.Error,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+    group: {
+        logLevel: LogLevel.Debug,
+        getArgs: getStringArg,
+    },
+    groupCollapsed: {
+        logLevel: LogLevel.Debug,
+        getArgs: getStringArg,
+    },
+    groupEnd: {
+        logLevel: LogLevel.Debug,
+        getArgs: () => [],
+    },
+    info: {
+        logLevel: LogLevel.Info,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+    log: {
+        logLevel: LogLevel.Log,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+    table: {
+        logLevel: LogLevel.Debug,
+        getArgs: (...args: unknown[]) => {
+            const [data, columns] = args;
+            if(Array.isArray(data) || typeof data === 'object') {
+                if(isStringArray(columns)) {
+                    return [data, columns];
+                }
+                return [data];
+                
+            }
+            return [];
+        },
+    },
+    time: {
+        logLevel: LogLevel.Debug,
+        getArgs: getStringArg,
+    },
+    timeEnd: {
+        logLevel: LogLevel.Debug,
+        getArgs: getStringArg,
+    },
+    timeLog: {
+        logLevel: LogLevel.Debug,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+    timeStamp: {
+        logLevel: LogLevel.Experimental,
+        getArgs: getStringArg,
+    },
+    trace: {
+        logLevel: LogLevel.Debug,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+    warn: {
+        logLevel: LogLevel.Warn,
+        getArgs: (...args: unknown[]) => args,
+        contextStringInArgs: true,
+    },
+};
+
+export type LogLevelConsoleFunctMap = Record<LogLevel, ConsoleFunctName | null>;
+
+export const logLevelConsoleFunctMap: LogLevelConsoleFunctMap = {
+    [LogLevel.Assert]: 'assert',
+    [LogLevel.Debug]: 'debug',
+    [LogLevel.Error]: 'error',
+    [LogLevel.Info]: 'info',
+    [LogLevel.Log]: 'log',
+    [LogLevel.Trace]: 'trace',
+    [LogLevel.Warn]: 'warn',
+    [LogLevel.None]: null,
+    [LogLevel.Experimental]: null,
+};
+
+export function isLoggingFunction(value: unknown): value is GeneralFunction<void> {
+    return standardConsoleFuncts.includes(value);
+}
+
+export function isConsoleFunction(value: unknown, name: string): value is GeneralFunction<void> {
+    return Object.keys(console).includes(name) && name !== 'Console' && isFunction(value);
+}
+
+export function isConsoleKey(value: unknown): value is ConsoleFunctName {
+    return Object.keys(console).includes(value as string);
+}
 
 /**
  * Service for logging messages to the console.
@@ -162,6 +352,8 @@ export class LogService {
     private static _serviceStates: Record<string, LogServiceConfig> = {
         'defaultState': LogService._defaultState,
     };
+
+    // private static _envSettings: LogServiceConfig = logServiceConfig;
     
     // #endregion private properties
     
@@ -208,7 +400,7 @@ export class LogService {
      * @param caller - The object that is attempting to log a message.
      * @returns - True if the message can be logged, false otherwise.
      */
-    public static canLog(callLogLevel: LogLevel, caller: LoggableObject): boolean {
+    public static canLog(callLogLevel: LogLevel, caller: LoggableObject, functName: string): boolean {
         
         const { localLogLevel, canLog } = caller;
 
@@ -221,7 +413,7 @@ export class LogService {
 
         const hasAccess: boolean = [
             {accessor: 'caller', prop: caller.LOCAL_ID},
-            {accessor: 'function', prop: LogService._getCallerFunctionName(4)},
+            {accessor: 'function', prop: functName},
             {accessor: 'logLevel', prop: callLogLevel},
         ].every(({accessor, prop}) => {
             
@@ -261,7 +453,7 @@ export class LogService {
      * @param caller - the object that is updating its log settings
      * @param settings - the new log settings
      */
-    public static updateLocalLogSettings(caller: LoggableObject, settings: LogSettings) {
+    public static updateLocalLogSettings(caller: LoggableObject, settings: LocalLogSettings) {
         const { canLog, localLogLevel } = settings;
         caller.canLog = canLog ?? caller.canLog;
         caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
@@ -295,7 +487,6 @@ export class LogService {
         }
         
         LogService.toggleKeyListener(true);
-        
     }
 
     /**
@@ -328,8 +519,10 @@ export class LogService {
 
         state = Object.assign({}, LogService._defaultState, state);
 
+
         if(stateName !== 'defaultState') {
             LogService._serviceStates[stateName] = state;
+            LogService._updateLocalStorage();
         }
     }
 
@@ -347,6 +540,11 @@ export class LogService {
         }
     }
 
+    public static deleteState(stateName: string) {
+        delete LogService._serviceStates[stateName];
+        LogService._updateLocalStorage();
+    }
+
     /**
      * Toggles the report listener on or off.
      * 
@@ -354,7 +552,7 @@ export class LogService {
      */
     public static toggleKeyListener(toggleValue?: boolean) {
         toggleValue ??= !LogService.keyListenerActive;
-
+        
         if(!toggleValue) {
             window.removeEventListener('keyup', LogService._keyListenHandler);
             LogService.keyListenerActive = false;
@@ -364,6 +562,28 @@ export class LogService {
             window.removeEventListener('keyup', LogService._keyListenHandler);
             window.addEventListener('keyup', LogService._keyListenHandler);
         }
+    }
+
+    public static initialize(settings?: LogServiceConfig, stateName?: string) {
+
+        settings ??= LogService._defaultState;
+        stateName ??= 'primaryState';
+
+        Object.keys(settings).forEach((key: string) => {
+            // using a bang operator since we know settings will be defined
+            LogService[key] = settings![key] ?? LogService[key];
+        });
+
+        LogService.saveState(stateName, settings);
+
+        LogService.currentStateName = stateName ?? 'latestState';
+
+        if(settings.toggleState) {
+            LogService.saveState('toggleState', settings.toggleState);
+        }
+        
+        LogService.toggleKeyListener(true);
+
     }
 
     /**
@@ -459,11 +679,11 @@ export class LogService {
      * @param messages - additional messages to log
      */
     public static writeLog(caller: LoggableObject, logLevel: LogLevel, functionName: string, ...messages: unknown[]): void {
-        if(LogService.canLog(logLevel, caller)) {
+        if(LogService.canLog(logLevel, caller, functionName)) {
             if(logLevel === LogLevel.Assert) {
                 const [condition, ...additionalMessages] = messages;
                 if(isBoolean(condition)) {
-                    console.assert(condition, `ASSERT::${caller.LOCAL_ID}::${functionName}::`, ...additionalMessages);
+                    console.assert(condition, `\nASSERT::${caller.LOCAL_ID}::${functionName}::`, ...additionalMessages);
                 }
             }
             else {
@@ -473,7 +693,31 @@ export class LogService {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const logFunction = (console as any)[LogLevel[logLevel].toLowerCase()];
                 
-                logFunction(`${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${functionName}::`, ...messages);
+                logFunction(`\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${functionName}::`, ...messages);
+            }
+        }
+    }
+
+    public static writeLog2(caller: LoggableObject, consoleFunct: ConsoleFunctName, callingFunctName: string, ...args: unknown[]): void {
+        const { getArgs, logLevel, contextStringInArgs } = consoleFunctDefMap[consoleFunct];
+
+        if(LogService.canLog(logLevel, caller, callingFunctName)) {
+            const logFunction = console[consoleFunct];
+            const contextString = contextStringInArgs ? 
+                `\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
+                `\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${consoleFunct}::`;
+
+            const logArgs = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
+
+            if(!contextStringInArgs) {
+                const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
+                const levelLogFunction = console[levelConsoleFunctName];
+                if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
+                    levelLogFunction(contextString, ...logArgs);
+                }
+            }
+            if(isConsoleFunction(logFunction, consoleFunct)) {
+                logFunction(...logArgs);
             }
         }
     }
@@ -537,6 +781,11 @@ export class LogService {
             }
         }
     }
+
+    private static _updateLocalStorage(): void {
+        localStorage.setItem('logServiceStates', JSON.stringify(LogService._serviceStates));
+        localStorage.setItem('currentStateName', LogService.currentStateName);
+    }
     
     // #endregion private methods
 }
@@ -588,11 +837,78 @@ export function Loggable(logLevel?: LogLevel, ...messages: unknown[]): GeneralFu
                 argsOutput.push(`${argName}:`, args[index]);
             });
 
-            LogService.writeLog(this, logLevel ?? LogLevel.Debug, propertyKey, 'entering', ...argsOutput, ...messages);
+            LogService.writeLog(this, logLevel ?? LogLevel.Debug, propertyKey, 'entering;', 'args:', ...argsOutput, ...messages);
 
             const returnVal = originalMethod.apply(this, args);
 
-            LogService.writeLog(this, logLevel ?? LogLevel.Debug, propertyKey, 'exiting', 'returnVal:', returnVal, ...messages);
+            LogService.writeLog(this, logLevel ?? LogLevel.Debug, propertyKey, 'exiting;', 'returnVal:', returnVal, ...messages);
+
+            return returnVal;
+        };
+        
+
+        return descriptor;
+    };
+}
+
+export function overloadTest(strArg?: string): void;
+export function overloadTest(numArg?: number): void;
+export function overloadTest(arg1?: number | string): void {
+    
+    if(typeof arg1 === 'string') {
+        console.log('is string');
+    }
+    else {
+        console.log('is number');
+    }
+}
+
+
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Clear): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.GroupEnd): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Count, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.CountReset, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Group, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.GroupCollapsed, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Time, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.TimeEnd, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.TimeStamp, label?: string): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Dir, obj?: object): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Dirxml, obj?: object): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: typeof ConsoleFuncts.Table, obj?: object | unknown[], columns?: string[]): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(consoleFunct?: ConsoleFunctName, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(logLevel?: LogLevel, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor>;
+export function XLoggable(levelOrFunct?: LogLevel | ConsoleFunctName, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor> {
+    
+    return function (target: LoggableObject, propertyKey: string, descriptor: PropertyDescriptor) {
+        const originalMethod = descriptor.value; 
+        descriptor.value = function (this: LoggableObject, ...args: unknown[]) {
+            
+            const methodArgNames = getArgNames(originalMethod);
+            const methodArgsOutput: unknown[] = [];
+            methodArgNames.forEach((argName, index) => {
+                if(argName.startsWith('...')) {
+                    methodArgsOutput.push(`${argName}:`, args.slice(index));
+                    return;
+                }
+                methodArgsOutput.push(`${argName}:`, args[index]);
+            });
+
+            let returnVal: unknown = null;
+
+            levelOrFunct ??= LogLevel.Debug;
+
+            if(isConsoleKey(levelOrFunct)) {
+                LogService.writeLog2(this, levelOrFunct, propertyKey, ...logArgs, ...methodArgsOutput);
+                returnVal = originalMethod.apply(this, args);
+            }
+            else {
+                LogService.writeLog(this, levelOrFunct, propertyKey, 'entering;', 'args:', ...methodArgsOutput, ...logArgs);
+    
+                returnVal = originalMethod.apply(this, args);
+    
+                LogService.writeLog(this, levelOrFunct, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
+            }
 
             return returnVal;
         };

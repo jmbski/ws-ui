@@ -90,22 +90,23 @@ export type FunctionMap = Record<string, GeneralFunction<unknown>>;
  * Log levels in order of severity.
  */
 export enum LogLevel {
-    Trace = 0,
-    Debug = 1,
-    Info = 2,
-    Log = 3,
-    Warn = 4,
-    Error = 5,
-    Assert = 6,
-    None = 7
+    Experimental,
+    Trace,
+    Debug,
+    Info,
+    Log,
+    Warn,
+    Error,
+    Assert,
+    None
 }
+
 /**
  * Interface for log settings.
  */
+export type LocalLogSettings = Partial<LoggableObject>;
 
-export type LogSettings = Partial<LoggableObject>;
 /**
  * Access modes for white/black lists.
  */
-
 export type LogAccessMode = 'whitelist' | 'blacklist' | 'none';

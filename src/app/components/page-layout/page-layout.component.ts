@@ -3,9 +3,8 @@ import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
 import { ComponentDef, LoggableObject, LogLevel, LocalObject, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
-import { Loggable, LogService, Utils } from 'warskald-ui/services';
+import { ConsoleFuncts, Loggable, LogService, Utils, XLoggable } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
-
 
 
 @Component({
@@ -138,7 +137,7 @@ export class PageLayoutComponent implements LoggableObject {
     
     // #region public methods
 
-    @Loggable()
+    @XLoggable(ConsoleFuncts.Debug)
     public testFunct(...nums: number[]): number {
         return nums.reduce((acc, curr) => acc + curr, 0);
     

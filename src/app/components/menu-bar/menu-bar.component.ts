@@ -8,7 +8,7 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { initStyleGroups, Loggable, LogService } from 'warskald-ui/services';
+import { ConsoleFuncts, initStyleGroups, Loggable, LogService, XLoggable } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
@@ -294,7 +294,7 @@ export class MenuBarComponent implements LoggableObject {
         this.cd.detectChanges();
     }
 
-    @Loggable()
+    @XLoggable(ConsoleFuncts.Group, 'handleItemClick')
     public handleItemClick(model: WSMenuItem) {
 
         if(model) {
