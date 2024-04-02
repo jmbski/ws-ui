@@ -330,10 +330,14 @@ export class LogService {
         logLevelBlackList: [],
         logLevelAccessMode: 'none',
         reportKey: '~',
-        enableReportListener: false,
+        enableReportListener: true,
         toggleKey: '`',
-        enableToggleListener: false,
+        enableToggleListener: true,
         customKeyListeners: {},
+        persistCurrentState: true,
+        additonalServiceStates: {},
+        defaultStateName: 'defaultState',
+        toggleState: {},
     };
 
     /**
@@ -349,6 +353,17 @@ export class LogService {
     
     
     // #region getters/setters
+
+    get additionalServiceStates(): Record<string, LogServiceConfig> {
+        return LogService._serviceStates;
+    }
+    set additionalServiceStates(states: Record<string, LogServiceConfig> | undefined) {
+        if(states) {
+            Object.keys(states).forEach((key: string) => {
+                LogService._serviceStates[key] = states[key];
+            });
+        }
+    }
     
     // #endregion getters/setters
     
