@@ -62,6 +62,12 @@ export class MenuBarComponent implements LoggableObject {
 
     public stdMenuItems: WSMenuItem[] = [];
 
+    /** @todo Eventually replace with a configurable object */
+    public useSpacer?: boolean = true;
+
+    /** @todo Eventually replace with a configurable object */
+    public usePennant?: boolean = true;
+
 
     public defaultMenuBarStyleClass: string = 'ws-menubar';
 

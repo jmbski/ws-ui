@@ -18,7 +18,10 @@
                         <ng-container *ngFor="let subItem of item.items">
                             <span class="ws-menubar-submenu-item">{{subItem.label}}</span>
                         </ng-container>
-                        <ws-svg></ws-svg>
+                        @if(usePennant) {
+                            <ws-svg></ws-svg>
+                        }
+                        
                         
                     </div>
                 </div>
@@ -70,10 +73,13 @@
                                 </div>
                             </ng-container>
     
-                            <!-- <ws-svg></ws-svg> -->
-                            <div class="spacer"></div>
-                            <!-- <div class="triangle"></div> -->
-                            <ws-svg></ws-svg>
+                            @if(useSpacer){
+                                <div class="spacer"></div>
+                            }
+
+                            @if(usePennant){
+                                <ws-svg></ws-svg>
+                            }
                             
                         </div>
                     </div>
