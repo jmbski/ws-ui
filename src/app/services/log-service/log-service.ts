@@ -598,11 +598,6 @@ export class LogService {
         }
 
         LogService.saveState(stateName, settings);
-
-        const { additionalServiceStates } = settings;
-        /* if(additionalServiceStates) {
-            LogService.saveStates(additionalServiceStates);
-        } */
         
         if(LogService.persistCurrentState) {
             const currentState = localStorage.getItem('currentStateName');
