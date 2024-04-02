@@ -13,7 +13,7 @@ import {
     ObjectTypeMapping, 
     OptionalBooleanProp, 
     OptionalExistsProp, 
-    OptionalRecordObjectProp, 
+    OptionalWeakObjectProp, 
     OptionalStringProp, 
     OptionalStyleProp, 
     StringProp 
@@ -33,7 +33,7 @@ export const IComponentConfigTypeMap: ObjectTypeMapping = {
     content: OptionalExistsProp,
     style: OptionalStyleProp,
     styleClass: OptionalStringProp,
-    options: OptionalRecordObjectProp,
+    options: OptionalWeakObjectProp,
     children: { typeGuard: IsIComponentConfigArray, optional: true },
     layoutClass: OptionalStringProp,
     layoutStyle: OptionalStyleProp,

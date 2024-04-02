@@ -1,4 +1,5 @@
 import { LogLevel, LogAccessMode, FunctionMap } from 'warskald-ui/models';
+import { ObjectTypeMapping, OptionalBooleanProp, OptionalWeakObjectProp, OptionalStringArrayProp, OptionalStringProp, objectIsType, isWeakObject, isTypedRecord, isFunctionRecord } from 'warskald-ui/type-guards';
 
 /**
  * Configuration for the log service.
@@ -136,4 +137,53 @@ export interface LogServiceConfig extends Record<string, unknown> {
     customKeyListeners?: FunctionMap;
 }
 
+export function isLogLevel(value: unknown): value is LogLevel {
+    return typeof value === 'number' && Object.values(LogLevel).includes(value);
+}
 
+export function isLogLevelArray(value: unknown): value is LogLevel[] {
+    return Array.isArray(value) && value.every(isLogLevel);
+}
+
+export function isLogAccessMode(value: unknown): value is LogAccessMode {
+    return typeof value === 'string' && ['whitelist', 'blacklist', 'none'].includes(value);
+}
+
+const AccessModeProp = { typeGuard: isLogAccessMode, optional: true };
+
+const logServiceTypeMap: ObjectTypeMapping = {
+    logLevel: { typeGuard: isLogLevel, optional: true },
+    useLocalLogLevel: OptionalBooleanProp,
+    useStrictLocalLogLevel: OptionalBooleanProp,
+    useCanLog: OptionalBooleanProp,
+    callerWhiteList: OptionalStringArrayProp,
+    callerBlackList: OptionalStringArrayProp,
+    callerAccessMode: AccessModeProp,
+    functionWhiteList: OptionalStringArrayProp,
+    functionBlackList: OptionalStringArrayProp,
+    functionAccessMode: AccessModeProp,
+    logLevelWhiteList: { typeGuard: isLogLevelArray, optional: true },
+    logLevelBlackList: { typeGuard: isLogLevelArray, optional: true },
+    logLevelAccessMode: AccessModeProp,
+    enableReportListener: OptionalBooleanProp,
+    reportKey: OptionalStringProp,
+    enableToggleListener: OptionalBooleanProp,
+    toggleKey: OptionalStringProp,
+    toggleState: { typeGuard: isLogServiceConfig, optional: true },
+    defaultStateName: OptionalStringProp,
+    persistCurrentState: OptionalBooleanProp,
+    additonalServiceStates: { typeGuard: isLogServiceConfigRecord, optional: true },
+    customKeyListeners: { typeGuard: isFunctionRecord, optional: true}
+};
+
+export function isLogServiceConfig(value: unknown): value is LogServiceConfig {
+    return objectIsType(value, logServiceTypeMap);
+}
+
+export function isLogServiceConfigArray(value: unknown): value is LogServiceConfig[] {
+    return Array.isArray(value) && value.every(isLogServiceConfig);
+}
+
+export function isLogServiceConfigRecord(value: unknown): value is Record<string, LogServiceConfig> {
+    return isTypedRecord(value, isLogServiceConfig);
+}

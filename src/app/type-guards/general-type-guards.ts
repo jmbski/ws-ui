@@ -169,8 +169,8 @@ export const OptionalNumberProp: PropertyTypeGuard = { typeGuard: isNumber, opti
 export const OptionalBooleanProp: PropertyTypeGuard = { typeGuard: isBoolean, optional: true };
 export const OptionalDateProp: PropertyTypeGuard = { typeGuard: isDate, optional: true };
 export const OptionalFunctionProp: PropertyTypeGuard = { typeGuard: isFunction, optional: true };
-export const OptionalRecordObjectProp: PropertyTypeGuard = { typeGuard: isWeakObject, optional: true };
-export const OptionalRecordObjectArrayProp: PropertyTypeGuard = { typeGuard: isWeakObjectArray, optional: true };
+export const OptionalWeakObjectProp: PropertyTypeGuard = { typeGuard: isWeakObject, optional: true };
+export const OptionalWeakObjectArrayProp: PropertyTypeGuard = { typeGuard: isWeakObjectArray, optional: true };
 export const OptionalStringArrayProp: PropertyTypeGuard = { typeGuard: isStringArray, optional: true };
 export const OptionalNumberArrayProp: PropertyTypeGuard = { typeGuard: isNumberArray, optional: true };
 export const OptionalBooleanArrayProp: PropertyTypeGuard = { typeGuard: isBooleanArray, optional: true };
@@ -258,4 +258,8 @@ export function isStyleGroup(obj: unknown): obj is StyleGroup {
 
 export function isStyleGroupArray(obj: unknown): obj is StyleGroup[] {
     return Array.isArray(obj) && obj.every(isStyleGroup);
+}
+
+export function isFunctionRecord(obj: unknown): obj is Record<string, GeneralFunction<unknown>> {
+    return isTypedRecord(obj, isFunction);
 }
