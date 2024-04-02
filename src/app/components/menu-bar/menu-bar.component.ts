@@ -62,12 +62,6 @@ export class MenuBarComponent implements LoggableObject {
 
     public stdMenuItems: WSMenuItem[] = [];
 
-    /** @todo Eventually replace with a configurable object */
-    public useSpacer?: boolean = true;
-
-    /** @todo Eventually replace with a configurable object */
-    public usePennant?: boolean = true;
-
 
     public defaultMenuBarStyleClass: string = 'ws-menubar';
 
@@ -126,6 +120,12 @@ export class MenuBarComponent implements LoggableObject {
     @Input() subMenuItemStyles?: StyleGroup;
 
     @Input() mobileItemStyles?: StyleGroup;
+
+    /** @todo Eventually replace with a configurable object */
+    @Input() useSpacer?: boolean = true;
+
+    /** @todo Eventually replace with a configurable object */
+    @Input() usePennant?: boolean = true;
 
     // #endregion standard inputs
     
