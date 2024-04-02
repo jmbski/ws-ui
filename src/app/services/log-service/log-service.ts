@@ -354,10 +354,10 @@ export class LogService {
     
     // #region getters/setters
 
-    get additionalServiceStates(): Record<string, LogServiceConfig> {
+    static get additionalServiceStates(): Record<string, LogServiceConfig> {
         return LogService._serviceStates;
     }
-    set additionalServiceStates(states: Record<string, LogServiceConfig> | undefined) {
+    static set additionalServiceStates(states: Record<string, LogServiceConfig> | undefined) {
         if(states) {
             Object.keys(states).forEach((key: string) => {
                 LogService._serviceStates[key] = states[key];
@@ -531,6 +531,17 @@ export class LogService {
         }
     }
 
+    /**
+     * Saves multiple states of the service settings.
+     * 
+     * @param states - the states to save
+     */
+    public static saveStates(states: Record<string, LogServiceConfig>) {
+        Object.keys(states).forEach((key: string) => {
+            LogService.saveState(key, states[key]);
+        });
+    }
+
     public static loadState(stateName: string) {
         const state: LogServiceConfig | undefined = LogService._serviceStates[stateName];
         if(state) {
@@ -587,6 +598,11 @@ export class LogService {
         }
 
         LogService.saveState(stateName, settings);
+
+        const { additionalServiceStates } = settings;
+        /* if(additionalServiceStates) {
+            LogService.saveStates(additionalServiceStates);
+        } */
         
         if(LogService.persistCurrentState) {
             const currentState = localStorage.getItem('currentStateName');

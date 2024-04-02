@@ -128,7 +128,7 @@ export interface LogServiceConfig extends Record<string, unknown> {
      * Additional states that the LogService can be switched to. The key in each record is the identifier
      * for the state. The value is the configuration for the state.
      */
-    additonalServiceStates?: Record<string, LogServiceConfig>;
+    additionalServiceStates?: Record<string, LogServiceConfig>;
 
     /**
      * Additional listeners to add to the LogService. The key in each record is the key to listen for.
