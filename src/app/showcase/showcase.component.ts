@@ -22,7 +22,6 @@ import {
     WsTableComponent
 } from 'warskald-ui/components';
 import { WSMenuItem, LoggableObject, LogLevel } from 'warskald-ui/models';
-import { overloadTest } from '../services/log-service/log-service';
 
 @Component({
     selector: 'ws-showcase',
@@ -98,7 +97,6 @@ export class ShowcaseComponent implements LoggableObject {
     ) {
 
         this.initPageLayout();
-        overloadTest(+'5');
     }
     
     // #endregion constructor and lifecycle hooks

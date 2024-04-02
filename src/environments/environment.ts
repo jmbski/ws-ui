@@ -2,7 +2,7 @@ import { LogLevel } from '../app/models/general';
 import { LogServiceConfig } from '../app/services/log-service/log-service-config';
 
 export const logServiceConfig: LogServiceConfig = {
-    logLevel: LogLevel.Trace,
+    logLevel: LogLevel.Error,
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,
     enableReportListener: true,
@@ -12,8 +12,9 @@ export const logServiceConfig: LogServiceConfig = {
             console.log('Custom key listener 1', event);
         }
     },
+    defaultStateName: 'primaryState',
     toggleState: {
-        logLevel: LogLevel.Error,
+        logLevel: LogLevel.Trace,
         useLocalLogLevel: false,
         enableReportListener: true,
         enableToggleListener: true

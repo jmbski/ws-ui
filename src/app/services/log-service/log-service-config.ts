@@ -111,6 +111,19 @@ export interface LogServiceConfig extends Record<string, unknown> {
     toggleState?: LogServiceConfig;
 
     /**
+     * The name of the default state for the LogService.
+     */
+    defaultStateName?: string;
+
+    /**
+     * If true, the LogService will persist the current state to {@link localStorage} when switching 
+     * to a new state.
+     * 
+     * @see https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage
+     */
+    persistCurrentState?: boolean;
+
+    /**
      * Additional states that the LogService can be switched to. The key in each record is the identifier
      * for the state. The value is the configuration for the state.
      */
