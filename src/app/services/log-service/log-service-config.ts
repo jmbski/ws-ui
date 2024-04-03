@@ -1,5 +1,6 @@
 import { LogLevel, LogAccessMode, FunctionMap } from 'warskald-ui/models';
 import { ObjectTypeMapping, OptionalBooleanProp, OptionalWeakObjectProp, OptionalStringArrayProp, OptionalStringProp, objectIsType, isWeakObject, isTypedRecord, isFunctionRecord } from 'warskald-ui/type-guards';
+import { ConsoleFunctName } from './log-service';
 
 /**
  * Configuration for the log service.
@@ -26,6 +27,21 @@ export interface LogServiceConfig extends Record<string, unknown> {
      * Whether or not to use the canLog property of the calling object.
      */
     useCanLog?: boolean;
+
+    /**
+     * The default log function for the application.
+     */
+    defaultLogFunct?: ConsoleFunctName;
+
+    /**
+     * If true, the service will log getter calls.
+     */
+    logGetters?: boolean;
+
+    /**
+     * If true, the service will log setter calls.
+     */
+    logSetters?: boolean;
 
 
 
@@ -156,6 +172,8 @@ const logServiceTypeMap: ObjectTypeMapping = {
     useLocalLogLevel: OptionalBooleanProp,
     useStrictLocalLogLevel: OptionalBooleanProp,
     useCanLog: OptionalBooleanProp,
+    logGetters: OptionalBooleanProp,
+    logSetters: OptionalBooleanProp,
     callerWhiteList: OptionalStringArrayProp,
     callerBlackList: OptionalStringArrayProp,
     callerAccessMode: AccessModeProp,

@@ -1,7 +1,7 @@
 @import 'primeflex/primeflex.scss';
 @import './z-index.scss';
 
-.gdo {
+.ws {
     &-button {
         //z-index: var(--bz-button);
 
@@ -10,7 +10,7 @@
         }
 
         &-scroll {
-            @extend .gdo-button;
+            @extend .ws-button;
 
             min-width: 6rem;
 

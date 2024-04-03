@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
+import { AppDeviceInfo, LayoutChangeObserver$ } from 'warskald-ui/common';
+import { DeviceDetectorService } from 'ngx-device-detector';
 import { 
     BlockableUiComponent, 
     DynamicComponent, 
@@ -22,6 +24,7 @@ import {
     WsTableComponent
 } from 'warskald-ui/components';
 import { WSMenuItem, LoggableObject, LogLevel } from 'warskald-ui/models';
+import { PrimeNGConfig } from 'primeng/api';
 
 @Component({
     selector: 'ws-showcase',
@@ -55,6 +58,8 @@ export class ShowcaseComponent implements LoggableObject {
     // #region public properties
 
     public pageLayoutConfig?: PageLayoutConfig;
+
+    public resizeObserver?: ResizeObserver;
     
     // #endregion public properties
     
@@ -94,9 +99,55 @@ export class ShowcaseComponent implements LoggableObject {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
+        private primengConfig: PrimeNGConfig,
+        private deviceDetector: DeviceDetectorService,
     ) {
 
+        AppDeviceInfo.isMobile = this.deviceDetector.isMobile();
+        AppDeviceInfo.isTablet = this.deviceDetector.isTablet();
         this.initPageLayout();
+    }
+
+    ngOnInit() {
+
+        this.primengConfig.ripple = true;
+
+
+        this.primengConfig.zIndex = {
+            modal: 11100,    // dialog, sidebar
+            overlay: 10000,  // dropdown, overlaypanel
+            menu: 11000,     // overlay menus
+            tooltip: 11050  // tooltip
+        };
+    }
+
+    ngAfterViewInit() {
+
+
+        this.resizeObserver = new ResizeObserver((data: ResizeObserverEntry[]) => {
+            const width: number = data[0].contentRect.width;
+            const height: number = data[0].contentRect.height;
+            
+            if (width <= 761 || height <= 600) {
+                AppDeviceInfo.isMobile = true;
+            }
+            else {
+                AppDeviceInfo.isMobile = false;
+            }
+            
+            LayoutChangeObserver$.next();
+                
+            const appTopNav: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav');
+            if(appTopNav) {
+                const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
+                if(appTopNavShadow) {
+                    appTopNavShadow.style.height = `${appTopNav.offsetHeight}px`;
+                }
+            }
+            this.cd.detectChanges();
+        });
+        /*  */
+        this.resizeObserver.observe(document.body);
     }
     
     // #endregion constructor and lifecycle hooks
@@ -151,6 +202,36 @@ export class ShowcaseComponent implements LoggableObject {
                     },
                     {
                         label: 'Donate',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
                     },
                     {
                         label: 'Harness the Roar of the Lion',

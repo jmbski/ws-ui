@@ -1,9 +1,9 @@
-import { LogService } from 'warskald-ui/services';
+import { ConsoleFuncts, LogService } from 'warskald-ui/services';
 import { LogLevel } from '../app/models/general';
 import { LogServiceConfig } from '../app/services/log-service/log-service-config';
 
 export const logServiceConfig: LogServiceConfig = {
-    logLevel: LogLevel.Error,
+    logLevel: LogLevel.Info,
     defaultStateName: 'primaryState',
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,

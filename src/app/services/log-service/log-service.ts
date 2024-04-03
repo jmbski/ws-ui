@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LogServiceConfig } from './log-service-config';
+import { isLogLevel, LogServiceConfig } from './log-service-config';
 import { isBoolean, isFunction } from 'lodash';
 import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LocalLogSettings, UnionTypeOf, stringLiterals, WeakObject  } from 'warskald-ui/models';
-import { isStringArray } from 'warskald-ui/type-guards';
+import { isString, isStringArray } from 'warskald-ui/type-guards';
 
 // direct import of environment variables will be done for the work
 // version, since that will be a local service, not a packaged library
@@ -140,7 +140,7 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
         getArgs: getStringArg,
     },
     trace: {
-        logLevel: LogLevel.Debug,
+        logLevel: LogLevel.Trace,
         getArgs: (...args: unknown[]) => args,
         contextStringInArgs: true,
     },
@@ -151,7 +151,7 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     },
 };
 
-export type LogLevelConsoleFunctMap = Record<LogLevel, ConsoleFunctName | null>;
+export type LogLevelConsoleFunctMap = Record<LogLevel, ConsoleFunctName | undefined>;
 
 export const logLevelConsoleFunctMap: LogLevelConsoleFunctMap = {
     [LogLevel.Assert]: 'assert',
@@ -161,8 +161,8 @@ export const logLevelConsoleFunctMap: LogLevelConsoleFunctMap = {
     [LogLevel.Log]: 'log',
     [LogLevel.Trace]: 'trace',
     [LogLevel.Warn]: 'warn',
-    [LogLevel.None]: null,
-    [LogLevel.Experimental]: null,
+    [LogLevel.None]: undefined,
+    [LogLevel.Experimental]: undefined,
 };
 
 export function isConsoleFunction(value: unknown, name: string): value is GeneralFunction<void> {
@@ -173,6 +173,9 @@ export function isConsoleKey(value: unknown): value is ConsoleFunctName {
     return Object.keys(console).includes(value as string);
 }
 
+export type LogLevelOrFunct = LogLevel | ConsoleFunctName | undefined;
+
+export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
 /**
  * Service for logging messages to the console.
  */
@@ -203,6 +206,16 @@ export class LogService {
      * If false, the service will use the looser of the global log level and the local log level.
      */
     public static useStrictLocalLogLevel: boolean = false;
+
+    /**
+     * If true, the service will log getter calls.
+     */
+    public static logGetters?: boolean = true;
+
+    /**
+     * If true, the service will log setter calls.
+     */
+    public static logSetters?: boolean = true;
 
     /**
      * The list of objects that are allowed to log messages.
@@ -320,6 +333,8 @@ export class LogService {
         useLocalLogLevel: true,
         useCanLog: true,
         useStrictLocalLogLevel: false,
+        logGetters: true,
+        logSetters: true,
         callerWhiteList: [],
         callerBlackList: [],
         callerAccessMode: 'none',
@@ -363,6 +378,16 @@ export class LogService {
                 LogService._serviceStates[key] = states[key];
             });
         }
+    }
+
+    /**
+     * The default log function for the application.
+     */
+    static get defaultLogFunct(): ConsoleFunctName {
+        return DefaultLogFunct;
+    }
+    static set defaultLogFunct(input: ConsoleFunctName) {
+        DefaultLogFunct = input;
     }
     
     // #endregion getters/setters
@@ -713,19 +738,23 @@ export class LogService {
      * @param functionName - the name of the function that is logging the message
      * @param messages - additional messages to log
      */
-    public static writeLog(caller: LoggableObject, levelOrFunct: ConsoleFunctName | LogLevel, callingFunctName: string, ...args: unknown[]): void {
+    public static writeLog(caller: LoggableObject, levelOrFunct: LogLevelOrFunct = DefaultLogFunct, callingFunctName: string, ...args: unknown[]): void {
+        
+        if(isLogLevel(levelOrFunct)) {
+            levelOrFunct = logLevelConsoleFunctMap[levelOrFunct];
+        }
 
         if(isConsoleKey(levelOrFunct)) {
             const { getArgs, logLevel, contextStringInArgs } = consoleFunctDefMap[levelOrFunct];
-    
+        
             if(LogService.canLog(logLevel, caller, callingFunctName)) {
                 const logFunction = console[levelOrFunct];
                 const contextString = contextStringInArgs ? 
                     `\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
                     `\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${levelOrFunct}::`;
-    
+        
                 const logArgs = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
-    
+        
                 if(!contextStringInArgs) {
                     const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
                     const levelLogFunction = console[levelConsoleFunctName];
@@ -837,6 +866,24 @@ export function getArgNames(fn: GeneralFunction<unknown>): string[] {
     return [];
 }
 
+export function getArgsOutput(funct: GeneralFunction<unknown>, ...args: unknown[]): WeakObject {
+    const argNames = getArgNames(funct);
+    const argsOutput: WeakObject = {};
+    argNames.forEach((argName, index) => {
+        if(argName.startsWith('...')) {
+            argsOutput[`${argName}`] = args.slice(index);
+            return;
+        }
+        
+        argsOutput[`${argName}`] = args[index];
+    });
+
+    return argsOutput;
+}
+
+/* export function isLogLevel(value: unknown): value is LogLevel {
+    return isString(value) && ['Assert', 'Debug', 'Error', 'Info', 'Log', 'Trace', 'Warn', 'None', 'Experimental'].includes(value);
+} */
 /** 
  * Clears the console terminal 
  * 
@@ -991,47 +1038,72 @@ export function Loggable(logLevel?: LogLevel, ...logArgs: unknown[]): GeneralFun
  * @param logArgs - additional arguments to pass to the logging function
  * @returns - A decorator function
  */
-export function Loggable(levelOrFunct?: LogLevel | ConsoleFunctName, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor> {
+export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor> {
     
     return function (target: LoggableObject, propertyKey: string, descriptor: PropertyDescriptor) {
         const originalMethod = descriptor.value; 
-        descriptor.value = function (this: LoggableObject, ...args: unknown[]) {
+        const originalGetter = descriptor.get;
+        const originalSetter = descriptor.set;
+
+        if(originalGetter && LogService.logGetters) {
+            descriptor.get = function (this: LoggableObject) {
+                const value = originalGetter?.call(this);
+                LogService.writeLog(this, levelOrFunct, propertyKey, 'getting', value, ...logArgs);
+                return value;
+            };
+        }
+        
+        if(originalSetter && LogService.logSetters) {
+            descriptor.set = function (this: LoggableObject, value: unknown) {
+                const argsOutput: WeakObject = getArgsOutput(originalSetter, value);
+        
+                LogService.writeLog(this, levelOrFunct!, propertyKey, 'setting', argsOutput, ...logArgs);
+                originalSetter?.call(this, value);
+            };
+        }
+        
+        if(originalMethod instanceof Function && descriptor.writable) {
+            descriptor.value = function (this: LoggableObject, ...args: unknown[]) {
+
+                const argsOutput: WeakObject = getArgsOutput(originalMethod, ...args);
             
-            const methodArgNames = getArgNames(originalMethod);
-            
-            const methodArgsOutput: WeakObject = {};
-            methodArgNames.forEach((argName, index) => {
-                if(argName.startsWith('...')) {
-                    methodArgsOutput[`${argName}`] = args.slice(index);
-                    return;
-                }
+                let returnVal: unknown = null;
                 
-                methodArgsOutput[`${argName}`] = args[index];
-            });
-
-            let returnVal: unknown = null;
-
-            levelOrFunct ??= LogLevel.Debug;
-
-            if(isConsoleKey(levelOrFunct)) {
-                LogService.writeLog(this, levelOrFunct, propertyKey, ...logArgs, methodArgsOutput);
+                LogService.writeLog(this, levelOrFunct!, propertyKey, 'entering;', '\nargs:\n', argsOutput, ...logArgs);
+            
                 returnVal = originalMethod.apply(this, args);
-            }
-            else {
-                const levelFunct = logLevelConsoleFunctMap[levelOrFunct];
-                if(levelFunct) {
-                    LogService.writeLog(this, levelFunct, propertyKey, 'entering;', '\nargs:\n', methodArgsOutput, ...logArgs);
+            
+                LogService.writeLog(this, levelOrFunct!, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
+                            
+                return returnVal;
+            };
+            
         
-                    returnVal = originalMethod.apply(this, args);
-        
-                    LogService.writeLog(this, levelFunct, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
-                }
-            }
-
-            return returnVal;
-        };
+        }
         
 
+        return descriptor;
+    };
+}
+
+export function Loggable2( ...args: unknown[]) {
+    return function (target: LoggableObject, propertyKey: string, descriptor: PropertyDescriptor) {
+        const isFunct = descriptor.value instanceof Function;
+        
+        if(!isFunct) {
+            const originalGetter = descriptor.get;
+            const originalSetter = descriptor.set;
+            descriptor.get = function (this: LoggableObject) {
+                const value = originalGetter?.call(this);
+                LogService.writeLog(this, 'debug', propertyKey, 'getting', value, ...args);
+                return value;
+            };
+
+            descriptor.set = function (this: LoggableObject, value: unknown) {
+                LogService.writeLog(this, 'debug', propertyKey, 'setting', value, ...args);
+                originalSetter?.call(this, value);
+            };
+        }
         return descriptor;
     };
 }

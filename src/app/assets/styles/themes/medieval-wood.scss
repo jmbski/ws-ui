@@ -182,7 +182,7 @@
     background-color: var(--surface-50);
 }
 
-.gdo {
+.ws {
     &-button {
         background-color: var(--surface-e);
         color: var(--primary-color-text);
@@ -196,7 +196,7 @@
         }
 
         &-scroll {
-            @extend .gdo-button;
+            @extend .ws-button;
             background-color: var(--surface-400);
             color: var(--text-color);
 

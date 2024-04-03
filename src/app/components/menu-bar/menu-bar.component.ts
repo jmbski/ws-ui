@@ -8,7 +8,7 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { ConsoleFuncts, initStyleGroups, LogService, Loggable } from 'warskald-ui/services';
+import { ConsoleFuncts, initStyleGroups, LogService, Loggable, Loggable2 } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
@@ -67,6 +67,8 @@ export class MenuBarComponent implements LoggableObject {
 
     public defaultMenuItemStyleClass: string = 'ws-menubar-item';
 
+    public defaultCoverStyleClass: string = 'ws-menubar-cover';
+
     public defaultSubMenuStyleClass: string = 'ws-menubar-submenu';
 
     public defaultMenuBarButtonStyleClass: string = 'ws-button-scroll';
@@ -79,6 +81,8 @@ export class MenuBarComponent implements LoggableObject {
     public menuBarStyleClasses: string[] = [this.defaultMenuBarStyleClass];
 
     public menuItemStyleClasses: string[] = [this.defaultMenuItemStyleClass];
+
+    public coverStyleClasses: string[] = [this.defaultCoverStyleClass];
 
     public subMenuStyleClasses: string[] = [this.defaultSubMenuStyleClass];
 
@@ -107,11 +111,13 @@ export class MenuBarComponent implements LoggableObject {
     
     // #region standard inputs
     
-    @Input() containerElement?: ElementSelector;
+    @Input() containerElement?: ElementSelector = '.app-top-nav-menu-wrapper';
 
     @Input() menuBarStyles?: StyleGroup;
 
     @Input() menuItemStyles?: StyleGroup;
+
+    @Input() coverStyles?: StyleGroup;
 
     @Input() subMenuStyles?: StyleGroup;
 
@@ -131,6 +137,7 @@ export class MenuBarComponent implements LoggableObject {
     
     // #region get/set inputs
     @Input()
+    @Loggable()
     get model() {
         return this.useMobile ? this.mobileMenuItems : this.stdMenuItems;
     }
@@ -234,18 +241,15 @@ export class MenuBarComponent implements LoggableObject {
         //const applyMaxHeight = maxPossible > window.innerHeight;
 
         if(containerElement) {
-            LogService.debug(this, 'containerElement:', containerElement);
             const menubarItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-submenu-wrapper'));
 
+            LogService.debug(this, 'menubarItems:', menubarItems, 'containerElement:', containerElement);
             if(menubarItems.length > 0) {
                 const { bottom } = containerElement.getBoundingClientRect();
-                // svg element height is half the width, the svg shape itself is half the height of the svg element
-                const svgHeight = window.innerWidth / 4; 
-                const spacerHeight = 32; // 2rem
-                const pageHeight = window.innerHeight;
-                const maxHeight = pageHeight - bottom + svgHeight + spacerHeight;
+                const pageHeight: number = window.innerHeight;
+                const maxHeight: number = pageHeight - bottom;
 
-                LogService.debug(this, 'svgHeight:', svgHeight, 'spacerHeight:', spacerHeight, 'pageHeight:', pageHeight, 'maxHeight:', maxHeight);
+                LogService.debug(this, 'bottom:', bottom, 'pageHeight:', pageHeight, 'maxHeight:', maxHeight);
                 menubarItems.forEach((submenu: HTMLElement) => {
                     submenu.style.maxHeight = `${maxHeight}px`;
                     submenu.style.overflowY = 'auto';
@@ -300,7 +304,7 @@ export class MenuBarComponent implements LoggableObject {
         this.cd.detectChanges();
     }
 
-    @Loggable(LogLevel.Info)
+    @Loggable(ConsoleFuncts.Dir, {test: 'test'})
     public handleItemClick(model: WSMenuItem) {
 
         if(model) {

@@ -1,13 +1,13 @@
 @if(!useMobile){
-    <div class="ws-menubar justify-content-evenly">
+    <div [class]="menuBarStyleClasses">
         @if(!showMenu) {
-            <div class="ws-menubar-cover"></div>
+            <div [class]="coverStyleClasses"></div>
         }
         @for(item of model$ | async; track item.label) {
-            <div class="ws-menubar-item">
+            <div [class]="menuItemStyleClasses">
                 <button 
                     type="button" 
-                    class="ws-button-scroll"
+                    [class]="menuBarButtonStyleClasses"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                 >
@@ -15,10 +15,10 @@
                 </button>
     
                 <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
-                    <div class="ws-menubar-submenu">
+                    <div [class]="subMenuStyleClasses">
                         
                         @for(subItem of item.items; track subItem.label) {
-                            <span class="ws-menubar-submenu-item">{{subItem.label}}</span>
+                            <span [class]="subMenuItemStyleClasses">{{subItem.label}}</span>
                         }
                         
                         @if(usePennant) {
@@ -31,9 +31,9 @@
     </div>
 }
 @else {
-    <div class="ws-menubar ">
+    <div [class]="menuBarStyleClasses">
         @if(!showMenu) {
-            <div class="ws-menubar-cover"></div>
+            <div [class]="coverStyleClasses"></div>
         }
 
         @for(item of model$ | async; track item.label) {
@@ -64,7 +64,7 @@
                                 <div id="collapseBasicSub" [collapse]="!menuItem.isExpanded" [isAnimated]="true">
                                     <div class="ws-menubar-submenu overflow-x-hidden">
                                         
-                                        @for(subItem of item.items; track subItem.label) {
+                                        @for(subItem of menuItem.items; track subItem.label) {
                                             <span class="ws-menubar-submenu-item mobile-item">{{subItem.label}}</span>
                                         }
                                         

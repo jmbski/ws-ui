@@ -6675,7 +6675,7 @@ $header-font-size: calc(1.5 * #{$base-font-size});
             height: 2rem;
             z-index: calc($bz-top-nav-content + 1);
 
-            gdo-bs-menu {
+            ws-bs-menu {
                 z-index: calc($bz-top-nav-content + 2);
                 position: relative;
             }
@@ -6701,7 +6701,7 @@ $header-font-size: calc(1.5 * #{$base-font-size});
     }
 }
 
-gdo-nav-logo {
+ws-nav-logo {
     height: 100%;
     display: inline-block;
 }
