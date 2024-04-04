@@ -2,12 +2,14 @@ import {
     BaseComponentClass,
     capitalizeFirst,
     LocalObject,
+    LoggableObject,
+    LogLevel,
     StyleGroup,
     WSMenuItem,
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
-import { isString, isStyleGroup } from 'warskald-ui/type-guards';
-import { LogService } from './log-service/log-service';
+import { isString, isStringArray, isStyleGroup } from 'warskald-ui/type-guards';
+import { Loggable, LogService } from './log-service/log-service';
 
 export interface XMLPropertyDef {
     name: string;
@@ -20,8 +22,10 @@ export interface XMLCollectionDef {
     count: number;
 }
 
-export class Utils implements LocalObject {
-    public readonly LOCAL_ID: string = 'utils';
+export class Utils implements LoggableObject {
+    public readonly LOCAL_ID: string = 'Utils';
+    canLog?: boolean | undefined = true;
+    localLogLevel?: LogLevel | undefined = LogLevel.Debug;
     
     public static printMap(map: Map<unknown, unknown>): void {
         for (const [key, value] of map.entries()) {
@@ -258,11 +262,20 @@ export class Utils implements LocalObject {
         return lorem.generateParagraphs(1);
     }
 
-    
-    public static MergeStyleGroupClasses(styleGroup?: StyleGroup, defaultClass?: string): string[] {
+    public static SplitClasses(classes: string): string[] {
+        return classes.split(/[\s|,]/).filter((value: string) => value !== '');
+    }
+
+    @Loggable()
+    public static MergeStyleGroupClasses(styleGroup?: StyleGroup, defaultClass?: string | string[]): string[] {
         const classes: string[] = [];
-        const { optionalClass } = styleGroup ?? {};
-        const baseClass = styleGroup?.baseClass ?? defaultClass;
+        const { optionalClass, baseClass } = styleGroup ?? {};
+        defaultClass ??= [];
+        if(isString(defaultClass)) {
+            defaultClass = Utils.SplitClasses(defaultClass);
+        }
+
+        classes.push(...defaultClass);
 
         if (baseClass) {
             classes.push(baseClass);
@@ -292,7 +305,7 @@ export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: bo
                 const defaultClassPropName: string = `default${formattedPropName}StyleClass`;
                 const classPropName: string = `${strippedPropName}StyleClasses`;
 
-                let defaultClass: string | undefined = undefined;
+                let defaultClass: string | string[] | undefined = undefined;
                 const defaultClassProp = this[defaultClassPropName];
 
                 LogService.debug(this, 
@@ -302,11 +315,13 @@ export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: bo
                     'classPropName:', classPropName
                 );
 
-                if(isString(defaultClassProp)) {
+                if(isString(defaultClassProp) || isStringArray(defaultClassProp)) {
                     defaultClass = defaultClassProp;
                 }
 
                 this[classPropName] = Utils.MergeStyleGroupClasses(property, defaultClass);
+
+                this.cd.detectChanges();
                 
                 LogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
             }

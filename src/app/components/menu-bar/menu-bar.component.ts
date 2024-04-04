@@ -75,7 +75,9 @@ export class MenuBarComponent implements LoggableObject {
 
     public defaultSubMenuItemStyleClass: string = 'ws-menubar-submenu-item';
 
-    public defaultMobileItemStyleClass: string = 'mobile-item';
+    public defaultSubMenuMobileWrapperClass: string = 'ws-menubar-submenu-wrapper';
+
+    public defaultMobileItemStyleClass: string = 'ws-menubar-submenu-item nested-item';
 
 
     public menuBarStyleClasses: string[] = [this.defaultMenuBarStyleClass];
@@ -89,6 +91,8 @@ export class MenuBarComponent implements LoggableObject {
     public menuBarButtonStyleClasses: string[] = [this.defaultMenuBarButtonStyleClass];
 
     public subMenuItemStyleClasses: string[] = [this.defaultSubMenuItemStyleClass];
+
+    public subMenuMobileWrapperStyleClasses: string[] = [this.defaultSubMenuMobileWrapperClass];
 
     public mobileItemStyleClasses: string[] = [this.defaultMobileItemStyleClass];
 
@@ -113,19 +117,21 @@ export class MenuBarComponent implements LoggableObject {
     
     @Input() containerElement?: ElementSelector = '.app-top-nav-menu-wrapper';
 
-    @Input() menuBarStyles?: StyleGroup;
+    @Input() menuBarStyles?: StyleGroup = {};
 
-    @Input() menuItemStyles?: StyleGroup;
+    @Input() menuItemStyles?: StyleGroup = {};
 
-    @Input() coverStyles?: StyleGroup;
+    @Input() coverStyles?: StyleGroup = {};
 
-    @Input() subMenuStyles?: StyleGroup;
+    @Input() subMenuStyles?: StyleGroup = {};
 
-    @Input() menuBarButtonStyles?: StyleGroup;
+    @Input() menuBarButtonStyles?: StyleGroup = {};
 
-    @Input() subMenuItemStyles?: StyleGroup;
+    @Input() subMenuItemStyles?: StyleGroup = {};
 
-    @Input() mobileItemStyles?: StyleGroup;
+    @Input() subMenuMobileWrapperStyles?: StyleGroup = {};
+
+    @Input() mobileItemStyles?: StyleGroup = {};
 
     /** @todo Eventually replace with a configurable object */
     @Input() useSpacer?: boolean = true;

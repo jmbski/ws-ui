@@ -3,7 +3,7 @@ import { LogLevel } from '../app/models/general';
 import { LogServiceConfig } from '../app/services/log-service/log-service-config';
 
 export const logServiceConfig: LogServiceConfig = {
-    logLevel: LogLevel.Info,
+    logLevel: LogLevel.Debug,
     defaultStateName: 'primaryState',
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,

@@ -1,7 +1,6 @@
 @import '../../assets/styles/extensions.scss';
 
 $menu-base-zindex: 2001;
-
 .ws {
     &-button {
         &-scroll {
@@ -21,7 +20,8 @@ $menu-base-zindex: 2001;
         z-index: calc($menu-base-zindex + 7);
         overflow-y: auto;
 
-        .mobile-item {
+
+        .nested-item {
             background-color: var(--surface-600);
         }
 

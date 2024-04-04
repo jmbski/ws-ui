@@ -37,10 +37,10 @@
         }
 
         @for(item of model$ | async; track item.label) {
-            <div #topMenuItem class="ws-menubar-item w-full">
+            <div #topMenuItem [class]="menuItemStyleClasses">
                 <button 
                     type="button" 
-                    class="ws-button-scroll sticky top-0"
+                    [class]="menuBarButtonStyleClasses"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                     (click)="handleItemClick(item)"
@@ -48,13 +48,13 @@
                     {{item.label}}
                 </button>
     
-                <div class="ws-menubar-submenu-wrapper">
+                <div [class]="subMenuMobileWrapperStyleClasses">
                     <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
-                        <div class="ws-menubar-submenu overflow-x-hidden">
+                        <div [class]="subMenuStyleClasses">
                             
                             @for(menuItem of item.items; track menuItem.label) {
                                 <span #subMenuItem
-                                    class="ws-menubar-submenu-item"
+                                    [class]="subMenuItemStyleClasses"
                                     aria-controls="collapseBasicSub"
                                     (click)="handleItemClick(menuItem)"
                                 >
@@ -62,10 +62,10 @@
                                 </span>
     
                                 <div id="collapseBasicSub" [collapse]="!menuItem.isExpanded" [isAnimated]="true">
-                                    <div class="ws-menubar-submenu overflow-x-hidden">
+                                    <div [class]="subMenuStyleClasses">
                                         
                                         @for(subItem of menuItem.items; track subItem.label) {
-                                            <span class="ws-menubar-submenu-item mobile-item">{{subItem.label}}</span>
+                                            <span [class]="mobileItemStyleClasses">{{subItem.label}}</span>
                                         }
                                         
                                     </div>
