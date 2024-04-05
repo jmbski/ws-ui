@@ -1,13 +1,14 @@
 @if(!useMobile){
-    <div [class]="menuBarStyleClasses">
+    <div [class]="menuBarStyleClasses" [style]="menuBarStyles?.style">
         @if(!showMenu) {
-            <div [class]="coverStyleClasses"></div>
+            <div [class]="coverStyleClasses" [style]="coverStyles?.style"></div>
         }
         @for(item of model$ | async; track item.label) {
-            <div [class]="menuItemStyleClasses">
+            <div [class]="menuItemStyleClasses" [style]="menuItemStyles?.style">
                 <button 
                     type="button" 
                     [class]="menuBarButtonStyleClasses"
+                    [style]="menuBarButtonStyles?.style"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                 >
@@ -15,10 +16,10 @@
                 </button>
     
                 <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
-                    <div [class]="subMenuStyleClasses">
+                    <div [class]="subMenuStyleClasses" [style]="subMenuStyles?.style">
                         
                         @for(subItem of item.items; track subItem.label) {
-                            <span [class]="subMenuItemStyleClasses">{{subItem.label}}</span>
+                            <span [class]="subMenuItemStyleClasses" [style]="subMenuItemStyles?.style">{{subItem.label}}</span>
                         }
                         
                         @if(usePennant) {
@@ -31,16 +32,17 @@
     </div>
 }
 @else {
-    <div [class]="menuBarStyleClasses">
+    <div [class]="menuBarStyleClasses" [style]="menuBarStyles?.style">
         @if(!showMenu) {
-            <div [class]="coverStyleClasses"></div>
+            <div [class]="coverStyleClasses" [style]="coverStyles?.style"></div>
         }
 
         @for(item of model$ | async; track item.label) {
-            <div #topMenuItem [class]="menuItemStyleClasses">
+            <div #topMenuItem [class]="menuItemStyleClasses" [style]="menuItemStyles?.style">
                 <button 
                     type="button" 
                     [class]="menuBarButtonStyleClasses"
+                    [style]="menuBarButtonStyles?.style"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                     (click)="handleItemClick(item)"
@@ -48,13 +50,14 @@
                     {{item.label}}
                 </button>
     
-                <div [class]="subMenuMobileWrapperStyleClasses">
+                <div [class]="subMenuMobileWrapperStyleClasses" [style]="subMenuMobileWrapperStyles?.style">
                     <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
-                        <div [class]="subMenuStyleClasses">
+                        <div [class]="subMenuStyleClasses" [style]="subMenuStyles?.style">
                             
                             @for(menuItem of item.items; track menuItem.label) {
                                 <span #subMenuItem
                                     [class]="subMenuItemStyleClasses"
+                                    [style]="subMenuItemStyles?.style"
                                     aria-controls="collapseBasicSub"
                                     (click)="handleItemClick(menuItem)"
                                 >
@@ -62,10 +65,10 @@
                                 </span>
     
                                 <div id="collapseBasicSub" [collapse]="!menuItem.isExpanded" [isAnimated]="true">
-                                    <div [class]="subMenuStyleClasses">
+                                    <div [class]="subMenuStyleClasses" [style]="subMenuStyles?.style">
                                         
                                         @for(subItem of menuItem.items; track subItem.label) {
-                                            <span [class]="mobileItemStyleClasses">{{subItem.label}}</span>
+                                            <span [class]="mobileItemStyleClasses"  [style]="mobileItemStyles?.style">{{subItem.label}}</span>
                                         }
                                         
                                     </div>
