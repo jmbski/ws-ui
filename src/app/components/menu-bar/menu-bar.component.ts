@@ -152,12 +152,7 @@ export class MenuBarComponent implements LoggableObject {
 
         this.mobileMenuItems = input;
         this.stdMenuItems = input[0]?.items || [];
-        /* if(UseMobile()) {
-            this._model = input;
-        }
-        else {
-            this._model = input[0]?.items || [];
-        } */
+        
         this.model$.next(this.model);
     }
     

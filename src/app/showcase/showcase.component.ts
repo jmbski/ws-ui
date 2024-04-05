@@ -25,6 +25,8 @@ import {
 } from 'warskald-ui/components';
 import { WSMenuItem, LoggableObject, LogLevel } from 'warskald-ui/models';
 import { PrimeNGConfig } from 'primeng/api';
+import { NavigationService } from '../services/navigation-service';
+import { Router } from 'express';
 
 @Component({
     selector: 'ws-showcase',
@@ -101,7 +103,9 @@ export class ShowcaseComponent implements LoggableObject {
         public cd: ChangeDetectorRef,
         private primengConfig: PrimeNGConfig,
         private deviceDetector: DeviceDetectorService,
+        private navService: NavigationService,
     ) {
+
 
         AppDeviceInfo.isMobile = this.deviceDetector.isMobile();
         AppDeviceInfo.isTablet = this.deviceDetector.isTablet();
@@ -112,6 +116,7 @@ export class ShowcaseComponent implements LoggableObject {
 
         this.primengConfig.ripple = true;
 
+        
 
         this.primengConfig.zIndex = {
             modal: 11100,    // dialog, sidebar
@@ -191,7 +196,7 @@ export class ShowcaseComponent implements LoggableObject {
             {
                 label: 'Test',
                 command: () => {
-                    console.log('Test command');
+                    NavigationService.navigateTo('test');
                 }
             },
             {

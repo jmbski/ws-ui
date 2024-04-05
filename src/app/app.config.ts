@@ -9,6 +9,7 @@ import { logServiceConfig } from 'environment';
 export const routes: Routes = [
     { path: '', redirectTo: 'showcase', pathMatch: 'full' },
     { path: 'showcase', loadComponent: () => import('./showcase/showcase.component').then(m => m.ShowcaseComponent) },
+    { path: 'test', loadComponent: () => import('./showcase/test/test.component').then(m => m.TestComponent) },
 ];
 
 
