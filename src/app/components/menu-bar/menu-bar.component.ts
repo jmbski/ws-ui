@@ -310,9 +310,8 @@ export class MenuBarComponent implements LoggableObject {
         this.cd.detectChanges();
     }
 
-    @Loggable(ConsoleFuncts.Dir, {test: 'test'})
+    @Loggable()
     public handleItemClick(model: WSMenuItem) {
-
         if(model) {
             model.isExpanded = !model.isExpanded;
             if(model.isExpanded || model.label === 'Menu') {

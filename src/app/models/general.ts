@@ -1,6 +1,7 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { NgStyleValues } from './style-types';
 import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
+import { ConsoleFunctName, ConsoleFunctDef } from '../services/log-service/log-service';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -110,3 +111,4 @@ export type LocalLogSettings = Partial<LoggableObject>;
  * Access modes for white/black lists.
  */
 export type LogAccessMode = 'whitelist' | 'blacklist' | 'none';
+export type ConsoleFunctLevelMap = Record<ConsoleFunctName, ConsoleFunctDef>;

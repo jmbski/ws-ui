@@ -162,7 +162,7 @@ export function hasValue(obj: unknown): boolean {
     return true;
 }
 
-export type ObjectTypeMapping = Record<string, PropertyTypeGuard>;
+export type TypeMapping<T> = Record<keyof T, PropertyTypeGuard>;
 
 export const OptionalStringProp: PropertyTypeGuard = { typeGuard: isString, optional: true };
 export const OptionalNumberProp: PropertyTypeGuard = { typeGuard: isNumber, optional: true };
@@ -195,12 +195,12 @@ export const StyleProp: PropertyTypeGuard = { typeGuard: isStyle };
 export const ArrayProp: PropertyTypeGuard = { typeGuard: isArray };
 
 
-export function objectIsType<T>(obj: unknown, typeGuards: ObjectTypeMapping | string[]): obj is T {
+export function objectIsType<T>(obj: unknown, typeGuards: TypeMapping<T> | string[]): obj is T {
     if(Array.isArray(typeGuards)) {
         return isWeakObject(obj) && typeGuards.every(key => isWeakObject(obj[key]));
     }
     return isWeakObject(obj) && Object.keys(typeGuards).every(key => {
-        const { typeGuard, optional } = typeGuards[key];
+        const { typeGuard, optional } = typeGuards[key as keyof T];
         const property = obj[key];
         return optional ? isUndefined(property) || typeGuard(property) : typeGuard(property);
     });
@@ -246,7 +246,7 @@ export function isComponentClass(obj: unknown): obj is Type<unknown> {
     return obj instanceof Type;
 }
 
-export const StyleGroupTypeMap: ObjectTypeMapping = {
+export const StyleGroupTypeMap: TypeMapping<StyleGroup> = {
     baseClass: OptionalStringProp,
     optionalClass: OptionalStringProp,
     style: OptionalStyleProp,

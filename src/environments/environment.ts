@@ -1,4 +1,4 @@
-import { ConsoleFuncts, LogService } from 'warskald-ui/services';
+import { ConsoleFuncts, getConsoleStringArg, LogService } from 'warskald-ui/services';
 import { LogLevel } from '../app/models/general';
 import { LogServiceConfig } from '../app/services/log-service/log-service-config';
 
@@ -7,6 +7,13 @@ export const logServiceConfig: LogServiceConfig = {
     defaultStateName: 'primaryState',
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,
+    showConsoleFunctArgs: true,
+    customConsoleFunctDefs: {
+        timeStamp: {
+            logLevel: LogLevel.Debug,
+            getArgs: getConsoleStringArg,
+        },
+    },
     additionalServiceStates: {
         logEverything: {
             logLevel: LogLevel.Trace,

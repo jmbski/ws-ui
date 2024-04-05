@@ -10,7 +10,7 @@ import {
     isArray, 
     isString, 
     objectIsType, 
-    ObjectTypeMapping, 
+    TypeMapping, 
     OptionalBooleanProp, 
     OptionalExistsProp, 
     OptionalWeakObjectProp, 
@@ -19,7 +19,7 @@ import {
     StringProp 
 } from './general-type-guards';
 
-import { ImageConfig } from '@angular/common';
+import { ImageComponent, WsImageConfig } from 'warskald-ui/components/image';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
 
@@ -27,7 +27,7 @@ export function IsElementType(value: unknown): value is ElementType {
     return isString(value) && (<string[]>Object.values(ElementType)).includes(value);
 }
 
-export const IComponentConfigTypeMap: ObjectTypeMapping = {
+export const IComponentConfigTypeMap: TypeMapping<IComponentConfig> = {
     elementType: { typeGuard: IsElementType },
     id: StringProp,
     content: OptionalExistsProp,
@@ -68,7 +68,7 @@ export function IsElementTypeOf<T extends ElementType>(value: unknown, elementTy
     return value === elementType;
 }
 
-export const TextBlockTypeMap: ObjectTypeMapping = {
+export const TextBlockTypeMap: TypeMapping<TextBlockConfig> = {
     elementType: { typeGuard: IsTextBlockEnum },
     content: { typeGuard: isString },
     illuminated: OptionalBooleanProp,
@@ -76,12 +76,12 @@ export const TextBlockTypeMap: ObjectTypeMapping = {
     illuminatedBorder: OptionalStringProp,
 };
 
-export const ContainerTypeMap: ObjectTypeMapping = {
+export const ContainerTypeMap: TypeMapping<ContainerConfig> = {
     elementType: { typeGuard: IsContainerEnum },
     elements: { typeGuard: IsIComponentConfigArray }
 };
 
-export const ImageTypeMap: ObjectTypeMapping = {
+export const ImageTypeMap: TypeMapping<ImageComponent> = {
     elementType: { typeGuard: IsImageEnum },
     src: OptionalStringProp,
 };
@@ -108,11 +108,11 @@ export function IsContainerArray(value: unknown): value is ContainerConfig[] {
     return isArray(value) && value.every(IsContainer);
 }
 
-export function IsImage(value: unknown): value is ImageConfig {
-    return IsIComponentConfig(value) && objectIsType<ImageConfig>(value, ImageTypeMap);
+export function IsImage(value: unknown): value is WsImageConfig {
+    return IsIComponentConfig(value) && objectIsType<WsImageConfig>(value, ImageTypeMap);
 }
 
-export function IsImageArray(value: unknown): value is ImageConfig[] {
+export function IsImageArray(value: unknown): value is WsImageConfig[] {
     return isArray(value) && value.every(IsImage);
 }
 

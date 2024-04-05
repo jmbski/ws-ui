@@ -1,5 +1,5 @@
-import { LogLevel, LogAccessMode, FunctionMap } from 'warskald-ui/models';
-import { ObjectTypeMapping, OptionalBooleanProp, OptionalWeakObjectProp, OptionalStringArrayProp, OptionalStringProp, objectIsType, isWeakObject, isTypedRecord, isFunctionRecord } from 'warskald-ui/type-guards';
+import { LogLevel, LogAccessMode, FunctionMap, ConsoleFunctLevelMap } from 'warskald-ui/models';
+import { TypeMapping, OptionalBooleanProp, OptionalWeakObjectProp, OptionalStringArrayProp, OptionalStringProp, objectIsType, isWeakObject, isTypedRecord, isFunctionRecord } from 'warskald-ui/type-guards';
 import { ConsoleFunctName } from './log-service';
 
 /**
@@ -43,7 +43,20 @@ export interface LogServiceConfig extends Record<string, unknown> {
      */
     logSetters?: boolean;
 
+    /**
+     * If true, the service will show the arguments passed in for the console function in addition to the message.
+     */
+    showConsoleFunctArgs?: boolean;
 
+    /**
+     * Array of strings to ignore when getting string args for a console function.
+     */
+    ignoredStrings?: string[];
+
+    /**
+     * Object use to customize console function behavior.
+     */
+    customConsoleFunctDefs?: Partial<ConsoleFunctLevelMap>;
 
     /**
      * The list of objects that are allowed to log messages.
@@ -167,7 +180,7 @@ export function isLogAccessMode(value: unknown): value is LogAccessMode {
 
 const AccessModeProp = { typeGuard: isLogAccessMode, optional: true };
 
-const logServiceTypeMap: ObjectTypeMapping = {
+const logServiceTypeMap: TypeMapping<LogServiceConfig> = {
     logLevel: { typeGuard: isLogLevel, optional: true },
     useLocalLogLevel: OptionalBooleanProp,
     useStrictLocalLogLevel: OptionalBooleanProp,

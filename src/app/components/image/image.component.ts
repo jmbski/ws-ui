@@ -82,3 +82,5 @@ export class ImageComponent extends ComponentClassBase implements LoggableObject
     
     
 }
+
+export type WsImageConfig = Partial<ImageComponent>;

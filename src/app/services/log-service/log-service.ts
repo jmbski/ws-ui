@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { isLogLevel, LogServiceConfig } from './log-service-config';
 import { isBoolean, isFunction } from 'lodash';
 import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LocalLogSettings, UnionTypeOf, stringLiterals, WeakObject  } from 'warskald-ui/models';
-import { isString, isStringArray } from 'warskald-ui/type-guards';
+import { isString, isStringArray, isWeakObject, objectIsType, OptionalBooleanProp, OptionalNumberProp, TypeMapping } from 'warskald-ui/type-guards';
+import { ConsoleFunctLevelMap } from 'src/app/models/general';
 
 // direct import of environment variables will be done for the work
 // version, since that will be a local service, not a packaged library
@@ -40,14 +41,58 @@ export interface ConsoleFunctDef {
     contextStringInArgs?: boolean;
 }
 
-export type ConsoleFunctLevelMap = Record<ConsoleFunctName, ConsoleFunctDef>;
-
-function getStringArg(...args: unknown[]): string[] {
-    return typeof args[0] === 'string' ? [args[0] as string] : [];
+export function getConsoleStringArg(...args: unknown[]): string[] {
+    const prop = args.find(arg => isString(arg) && 
+        !LogService.ignoredStrings.includes(arg));
+    return prop ? [prop as string] : [];
 }
 
-function getObjectArg(...args: unknown[]): object[] {
-    return typeof args[0] === 'object' ? [args[0] as object] : [];
+export interface ConsoleDirOptions {
+    depth?: number;
+    showHidden?: boolean;
+    colors?: boolean;
+}
+
+const dirOptionsTypeMap: TypeMapping<ConsoleDirOptions> = {
+    colors: OptionalBooleanProp,
+    depth: OptionalNumberProp,
+    showHidden: OptionalBooleanProp,
+};
+
+export function isConsoleDirOptions(value: unknown): value is ConsoleDirOptions {
+    return objectIsType<ConsoleDirOptions>(value, dirOptionsTypeMap);
+}
+
+export function getConsoleDirArgs(...args: unknown[]): object[] {
+    const returnArgs: object[] = [];
+
+    const objIndex =  args.findIndex(arg => isWeakObject(arg));
+
+    const optionsIndex = args.slice(objIndex + 1).findIndex(arg => isConsoleDirOptions(arg));
+    
+    if(objIndex > -1) {
+        returnArgs.push(args[objIndex] as object);
+        if(optionsIndex > -1) {
+            returnArgs.push(args[optionsIndex + objIndex + 1] as ConsoleDirOptions);
+        }
+    }
+
+    return returnArgs;
+}
+
+export function getConsoleTableArgs(...args: unknown[]) {
+    const returnArgs: unknown[] = [];
+
+    const dataIndex = args.findIndex(arg => Array.isArray(arg) || typeof arg === 'object');
+    if(dataIndex > -1) {
+        returnArgs.push(args[dataIndex]);
+        const columnsIndex = args.findIndex((arg, index) => isStringArray(arg) && index > dataIndex);
+        if(columnsIndex > dataIndex) {
+            returnArgs.push(args[columnsIndex]);
+        }
+    }
+
+    return returnArgs;
 }
 
 export const consoleFunctDefMap: ConsoleFunctLevelMap = {
@@ -62,11 +107,11 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     },
     count: {
         logLevel: LogLevel.Debug,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     countReset: {
         logLevel: LogLevel.Debug,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     debug: {
         logLevel: LogLevel.Debug,
@@ -75,11 +120,11 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     },
     dir: {
         logLevel: LogLevel.Debug,
-        getArgs: getObjectArg,
+        getArgs: getConsoleDirArgs,
     },
     dirxml: {
         logLevel: LogLevel.Debug,
-        getArgs: getObjectArg,
+        getArgs: getConsoleDirArgs,
     },
     error: {
         logLevel: LogLevel.Error,
@@ -88,11 +133,11 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     },
     group: {
         logLevel: LogLevel.Debug,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     groupCollapsed: {
         logLevel: LogLevel.Debug,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     groupEnd: {
         logLevel: LogLevel.Debug,
@@ -110,25 +155,15 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     },
     table: {
         logLevel: LogLevel.Debug,
-        getArgs: (...args: unknown[]) => {
-            const [data, columns] = args;
-            if(Array.isArray(data) || typeof data === 'object') {
-                if(isStringArray(columns)) {
-                    return [data, columns];
-                }
-                return [data];
-                
-            }
-            return [];
-        },
+        getArgs: getConsoleTableArgs,
     },
     time: {
         logLevel: LogLevel.Debug,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     timeEnd: {
         logLevel: LogLevel.Debug,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     timeLog: {
         logLevel: LogLevel.Debug,
@@ -137,7 +172,7 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     },
     timeStamp: {
         logLevel: LogLevel.Experimental,
-        getArgs: getStringArg,
+        getArgs: getConsoleStringArg,
     },
     trace: {
         logLevel: LogLevel.Trace,
@@ -176,6 +211,7 @@ export function isConsoleKey(value: unknown): value is ConsoleFunctName {
 export type LogLevelOrFunct = LogLevel | ConsoleFunctName | undefined;
 
 export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
+
 /**
  * Service for logging messages to the console.
  */
@@ -216,6 +252,29 @@ export class LogService {
      * If true, the service will log setter calls.
      */
     public static logSetters?: boolean = true;
+
+    /**
+     * If true, the service will show the arguments passed in for the console function in addition to the message.
+     */
+    public static showConsoleFunctArgs?: boolean;
+
+    /**
+     * Object use to customize console function behavior.
+     */
+    public static customConsoleFunctDefs?: ConsoleFunctLevelMap;
+
+    /**
+     * Array of strings to ignore when getting string args for a console function.
+     */
+    public static ignoredStrings: string[] = [
+        'entering;',
+        'entering',
+        'exiting;',
+        'exiting',
+        '\nargs:\n',
+        'setting',
+        'getting',
+    ];
 
     /**
      * The list of objects that are allowed to log messages.
@@ -361,6 +420,8 @@ export class LogService {
     private static _serviceStates: Record<string, LogServiceConfig> = {
         'defaultState': LogService._defaultState,
     };
+
+    private static _consoleFunctDefMap: ConsoleFunctLevelMap = Object.assign({}, consoleFunctDefMap);
 
     // private static _envSettings: LogServiceConfig = logServiceConfig;
     
@@ -515,8 +576,16 @@ export class LogService {
         if(settings.toggleState) {
             LogService.saveState('toggleState', settings.toggleState);
         }
+
+        if(settings.customConsoleFunctDefs) {
+            LogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
+        }
         
         LogService.toggleKeyListener(true);
+    }
+
+    public static updateConsoleFunctDefMap(functDefMap: Partial<ConsoleFunctLevelMap>) {
+        LogService._consoleFunctDefMap = Object.assign({}, consoleFunctDefMap, functDefMap);
     }
 
     /**
@@ -579,6 +648,10 @@ export class LogService {
                 LogService[key] = state[key] ?? LogService[key];
             });
 
+            if(state.customConsoleFunctDefs) {
+                LogService.updateConsoleFunctDefMap(state.customConsoleFunctDefs);
+            }
+
             LogService.toggleKeyListener(true);
         }
     }
@@ -616,6 +689,10 @@ export class LogService {
             // using a bang operator since we know settings will be defined
             LogService[key] = settings![key] ?? LogService[key];
         });
+
+        if(settings.customConsoleFunctDefs) {
+            LogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
+        }
 
 
         if(settings.toggleState) {
@@ -668,6 +745,33 @@ export class LogService {
     public static assert(caller: LoggableObject, condition: boolean, ...messages: unknown[]) {
         LogService.writeLog(caller, 'assert', LogService._getCallerFunctionName(), condition, ...messages);
     }
+
+    /**
+     * Clears the console.
+     */
+    public static clear(caller: LoggableObject) {
+        LogService.writeLog(caller, 'clear', LogService._getCallerFunctionName());
+    }
+
+    /**
+     * Logs the number of times that count() has been called with the same label.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static count(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'count', LogService._getCallerFunctionName(), label);
+    }
+
+    /**
+     * Resets the count for the label.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to reset
+     */
+    public static countReset(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'countReset', LogService._getCallerFunctionName(), label);
+    }
     
     /**
      * Logs a message at the debug level.
@@ -678,6 +782,30 @@ export class LogService {
     public static debug(caller: LoggableObject, ...messages: unknown[]) {
         LogService.writeLog(caller, 'debug', LogService._getCallerFunctionName(), ...messages);
     }
+
+    /**
+     * Displays an interactive list of the properties of the specified JavaScript object. 
+     * The output is presented as a hierarchical listing with disclosure triangles that let
+     * you see the contents of child objects.
+     * 
+     * @param caller - the object that is logging the message
+     * @param obj - the object to log
+     * @param options - the options for the dir function
+     */
+    public static dir(caller: LoggableObject, obj: WeakObject, options?: ConsoleDirOptions) {
+        LogService.writeLog(caller, 'dir', LogService._getCallerFunctionName(), obj, options);
+    }
+
+    /**
+     * Displays an XML/HTML Element representation of the specified object.
+     * 
+     * @param caller - the object that is logging the message
+     * @param obj - the object to log
+     * @param options - the options for the dirxml function
+     */
+    public static dirxml(caller: LoggableObject, obj: WeakObject, options?: ConsoleDirOptions) {
+        LogService.writeLog(caller, 'dirxml', LogService._getCallerFunctionName(), obj, options);
+    }
     
     /**
      * Logs a message at the error level.
@@ -687,6 +815,34 @@ export class LogService {
      */
     public static error(caller: LoggableObject, ...messages: unknown[]) {
         LogService.writeLog(caller, 'error', LogService._getCallerFunctionName(), ...messages);
+    }
+
+    /**
+     * Creates a new inline group in the console. This indents following console messages by an additional level, until console.groupEnd() is called.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static group(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'group', LogService._getCallerFunctionName(), label);
+    }
+
+    /**
+     * Creates a new inline group in the console. However, the new group is created as collapsed, 
+     * needing to be expanded before the user can see the messages.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static groupCollapsed(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'groupCollapsed', LogService._getCallerFunctionName(), label);
+    }
+
+    /**
+     * Exits the current inline group in the console.
+     */
+    public static groupEnd(caller: LoggableObject) {
+        LogService.writeLog(caller, 'groupEnd', LogService._getCallerFunctionName());
     }
     
     /**
@@ -707,6 +863,58 @@ export class LogService {
      */
     public static log(caller: LoggableObject, ...messages: unknown[]) {
         LogService.writeLog(caller, 'log', LogService._getCallerFunctionName(), ...messages);
+    }
+
+    /**
+     * Displays tabular data as a table. This function takes one mandatory argument data, 
+     * which must be an array or an object, and one additional optional parameter columns.
+     * 
+     * @param caller - the object that is logging the message
+     * @param data - an object or array to show as a table
+     * @param columns - an array of strings to use as the column headers
+     */
+    public static table(caller: LoggableObject, data: unknown, columns?: string[]) {
+        LogService.writeLog(caller, 'table', LogService._getCallerFunctionName(), data, columns);
+    }
+
+    /**
+     * Starts a new timer. The timer is identified by the label parameter.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static time(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'time', LogService._getCallerFunctionName(), label);
+    }
+
+    /**
+     * Stops a timer that was previously started by calling console.time().
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static timeEnd(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'timeEnd', LogService._getCallerFunctionName(), label);
+    }
+
+    /**
+     * Logs the value of the timer to the console.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static timeLog(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'timeLog', LogService._getCallerFunctionName(), label);
+    }
+
+    /**
+     * Adds a marker to the browser's Timeline or Waterfall tool.
+     * 
+     * @param caller - the object that is logging the message
+     * @param label - the label to log
+     */
+    public static timeStamp(caller: LoggableObject, label?: string) {
+        LogService.writeLog(caller, 'timeStamp', LogService._getCallerFunctionName(), label);
     }
     
     /**
@@ -745,7 +953,7 @@ export class LogService {
         }
 
         if(isConsoleKey(levelOrFunct)) {
-            const { getArgs, logLevel, contextStringInArgs } = consoleFunctDefMap[levelOrFunct];
+            const { getArgs, logLevel, contextStringInArgs } = LogService._consoleFunctDefMap[levelOrFunct];
         
             if(LogService.canLog(logLevel, caller, callingFunctName)) {
                 const logFunction = console[levelOrFunct];
@@ -759,7 +967,9 @@ export class LogService {
                     const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
                     const levelLogFunction = console[levelConsoleFunctName];
                     if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
-                        levelLogFunction(contextString, ...logArgs);
+                        LogService.showConsoleFunctArgs ? 
+                            levelLogFunction(`${contextString}::console funct args:`, ...logArgs) :
+                            levelLogFunction(contextString);
                     }
                 }
                 if(isConsoleFunction(logFunction, levelOrFunct)) {
@@ -985,9 +1195,10 @@ export function Loggable(consoleFunct?: ConsoleFuncts.TimeStamp, label?: string)
  * LogLevel = {@link LogLevel.Debug}
  * 
  * @param consoleFunct - {@link ConsoleFuncts.Dir}
- * @param obj - An object to log
+ * @param objOrOpts - An object to log, or the options object if you simply want it to dir the input/output
+ * @param options - Options for the console.dir() function if objOrOpts is an object
  */
-export function Loggable(consoleFunct?: ConsoleFuncts.Dir, obj?: object): GeneralFunction<PropertyDescriptor>;
+export function Loggable(consoleFunct?: ConsoleFuncts.Dir, objOrOpts?: object | ConsoleDirOptions, options?: ConsoleDirOptions): GeneralFunction<PropertyDescriptor>;
 
 /**
  * Displays an XML/HTML Element representation of the specified object if possible 
@@ -996,9 +1207,10 @@ export function Loggable(consoleFunct?: ConsoleFuncts.Dir, obj?: object): Genera
  * LogLevel = {@link LogLevel.Debug}
  * 
  * @param consoleFunct - {@link ConsoleFuncts.Dirxml}
- * @param obj - An object to log
+ * @param objOrOpts - An object to log, or the options object if you simply want it to dir the input/output
+ * @param options - Options for the console.dir() function if objOrOpts is an object
  */
-export function Loggable(consoleFunct?: ConsoleFuncts.Dirxml, obj?: object): GeneralFunction<PropertyDescriptor>;
+export function Loggable(consoleFunct?: ConsoleFuncts.Dirxml, objOrOpts?: object | ConsoleDirOptions, options?: ConsoleDirOptions): GeneralFunction<PropertyDescriptor>;
 
 /**
  * Displays tabular data as a table. This function takes one mandatory argument data, 
@@ -1041,6 +1253,7 @@ export function Loggable(logLevel?: LogLevel, ...logArgs: unknown[]): GeneralFun
 export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor> {
     
     return function (target: LoggableObject, propertyKey: string, descriptor: PropertyDescriptor) {
+        
         const originalMethod = descriptor.value; 
         const originalGetter = descriptor.get;
         const originalSetter = descriptor.set;
@@ -1048,7 +1261,7 @@ export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]):
         if(originalGetter && LogService.logGetters) {
             descriptor.get = function (this: LoggableObject) {
                 const value = originalGetter?.call(this);
-                LogService.writeLog(this, levelOrFunct, propertyKey, 'getting', value, ...logArgs);
+                LogService.writeLog(this, levelOrFunct, propertyKey, 'getting', ...logArgs, value);
                 return value;
             };
         }
