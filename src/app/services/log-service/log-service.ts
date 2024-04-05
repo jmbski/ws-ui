@@ -3,9 +3,11 @@ import { isLogLevel, LogServiceConfig } from './log-service-config';
 import { isBoolean, isFunction } from 'lodash';
 import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LocalLogSettings, UnionTypeOf, stringLiterals, WeakObject  } from 'warskald-ui/models';
 import { isString, isStringArray, isWeakObject, objectIsType, OptionalBooleanProp, OptionalNumberProp, TypeMapping } from 'warskald-ui/type-guards';
-import { ConsoleFunctLevelMap } from 'src/app/models/general';
-import { ConsoleFuncts } from 'src/app/models/general';
-import { ConsoleFunctName } from 'src/app/models/general';
+import { 
+    ConsoleFunctLevelMap,
+    ConsoleFuncts,
+    ConsoleFunctName 
+} from 'warskald-ui/models';
 
 export function getConsoleStringArg(...args: unknown[]): string[] {
     const prop = args.find(arg => isString(arg) && 
