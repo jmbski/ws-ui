@@ -1,6 +1,6 @@
 import { LogLevel, LogAccessMode, FunctionMap, ConsoleFunctLevelMap } from 'warskald-ui/models';
 import { TypeMapping, OptionalBooleanProp, OptionalWeakObjectProp, OptionalStringArrayProp, OptionalStringProp, objectIsType, isWeakObject, isTypedRecord, isFunctionRecord } from 'warskald-ui/type-guards';
-import { ConsoleFunctName } from './log-service';
+import { ConsoleFunctName } from 'src/app/models/general';
 
 /**
  * Configuration for the log service.

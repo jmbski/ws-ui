@@ -8,7 +8,7 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { ConsoleFuncts, initStyleGroups, LogService, Loggable, Loggable2 } from 'warskald-ui/services';
+import { initStyleGroups, LogService, Loggable } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 

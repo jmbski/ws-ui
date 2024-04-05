@@ -4,42 +4,8 @@ import { isBoolean, isFunction } from 'lodash';
 import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LocalLogSettings, UnionTypeOf, stringLiterals, WeakObject  } from 'warskald-ui/models';
 import { isString, isStringArray, isWeakObject, objectIsType, OptionalBooleanProp, OptionalNumberProp, TypeMapping } from 'warskald-ui/type-guards';
 import { ConsoleFunctLevelMap } from 'src/app/models/general';
-
-// direct import of environment variables will be done for the work
-// version, since that will be a local service, not a packaged library
-// import { environment, logServiceConfig } from 'environment';
-
-export type ConsoleFunctName = Exclude<keyof Console, 'Console' | 'profile' | 'profileEnd'>;
-
-export enum ConsoleFuncts {
-    Assert = 'assert',
-    Clear = 'clear',
-    Count = 'count',
-    CountReset = 'countReset',
-    Debug = 'debug',
-    Dir = 'dir',
-    Dirxml = 'dirxml',
-    Error = 'error',
-    Group = 'group',
-    GroupCollapsed = 'groupCollapsed',
-    GroupEnd = 'groupEnd',
-    Info = 'info',
-    Log = 'log',
-    Table = 'table',
-    Time = 'time',
-    TimeEnd = 'timeEnd',
-    TimeLog = 'timeLog',
-    TimeStamp = 'timeStamp',
-    Trace = 'trace',
-    Warn = 'warn',
-}
-
-export interface ConsoleFunctDef {
-    logLevel: LogLevel;
-    getArgs: (...args: unknown[]) => unknown[];
-    /** if true, the context string will be included in the getArgs function */
-    contextStringInArgs?: boolean;
-}
+import { ConsoleFuncts } from 'src/app/models/general';
+import { ConsoleFunctName } from 'src/app/models/general';
 
 export function getConsoleStringArg(...args: unknown[]): string[] {
     const prop = args.find(arg => isString(arg) && 

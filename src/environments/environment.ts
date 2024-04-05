@@ -1,4 +1,4 @@
-import { ConsoleFuncts, getConsoleStringArg, LogService } from 'warskald-ui/services';
+import { getConsoleStringArg, LogService } from 'warskald-ui/services';
 import { LogLevel } from '../app/models/general';
 import { LogServiceConfig } from '../app/services/log-service/log-service-config';
 

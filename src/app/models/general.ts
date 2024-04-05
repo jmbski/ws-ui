@@ -1,7 +1,6 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { NgStyleValues } from './style-types';
 import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
-import { ConsoleFunctName, ConsoleFunctDef } from '../services/log-service/log-service';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -111,4 +110,38 @@ export type LocalLogSettings = Partial<LoggableObject>;
  * Access modes for white/black lists.
  */
 export type LogAccessMode = 'whitelist' | 'blacklist' | 'none';
-export type ConsoleFunctLevelMap = Record<ConsoleFunctName, ConsoleFunctDef>;
+export type ConsoleFunctLevelMap = Record<ConsoleFunctName, ConsoleFunctDef>;export enum ConsoleFuncts {
+    Assert = 'assert',
+    Clear = 'clear',
+    Count = 'count',
+    CountReset = 'countReset',
+    Debug = 'debug',
+    Dir = 'dir',
+    Dirxml = 'dirxml',
+    Error = 'error',
+    Group = 'group',
+    GroupCollapsed = 'groupCollapsed',
+    GroupEnd = 'groupEnd',
+    Info = 'info',
+    Log = 'log',
+    Table = 'table',
+    Time = 'time',
+    TimeEnd = 'timeEnd',
+    TimeLog = 'timeLog',
+    TimeStamp = 'timeStamp',
+    Trace = 'trace',
+    Warn = 'warn'
+}
+// direct import of environment variables will be done for the work
+// version, since that will be a local service, not a packaged library
+// import { environment, logServiceConfig } from 'environment';
+
+export type ConsoleFunctName = Exclude<keyof Console, 'Console' | 'profile' | 'profileEnd'>;
+
+export interface ConsoleFunctDef {
+    logLevel: LogLevel;
+    getArgs: (...args: unknown[]) => unknown[];
+    /** if true, the context string will be included in the getArgs function */
+    contextStringInArgs?: boolean;
+}
+
