@@ -1252,7 +1252,12 @@ export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]):
                 
                 LogService.writeLog(this, levelOrFunct!, propertyKey, 'entering;', '\nargs:\n', argsOutput, ...logArgs);
             
-                returnVal = originalMethod.apply(this, args);
+                try {
+                    returnVal = originalMethod.apply(this, args);
+                }
+                catch(error: unknown) {
+                    LogService.writeLog(this, ConsoleFuncts.Error, propertyKey, 'error:', error, ...logArgs);
+                }
             
                 LogService.writeLog(this, levelOrFunct!, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
                             
@@ -1263,28 +1268,6 @@ export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]):
         }
         
 
-        return descriptor;
-    };
-}
-
-export function Loggable2( ...args: unknown[]) {
-    return function (target: LoggableObject, propertyKey: string, descriptor: PropertyDescriptor) {
-        const isFunct = descriptor.value instanceof Function;
-        
-        if(!isFunct) {
-            const originalGetter = descriptor.get;
-            const originalSetter = descriptor.set;
-            descriptor.get = function (this: LoggableObject) {
-                const value = originalGetter?.call(this);
-                LogService.writeLog(this, 'debug', propertyKey, 'getting', value, ...args);
-                return value;
-            };
-
-            descriptor.set = function (this: LoggableObject, value: unknown) {
-                LogService.writeLog(this, 'debug', propertyKey, 'setting', value, ...args);
-                originalSetter?.call(this, value);
-            };
-        }
         return descriptor;
     };
 }
