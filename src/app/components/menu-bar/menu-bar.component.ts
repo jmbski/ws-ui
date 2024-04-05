@@ -318,7 +318,7 @@ export class MenuBarComponent implements LoggableObject {
                 
             }
         }
-        else if(model.command) {
+        if(model.command) {
             model.command(event);
         }
         this.cd.detectChanges();
