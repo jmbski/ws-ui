@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, TemplateRef } from '@angular/core';
 import { LayoutChangeObserver$, UseMobile } from 'warskald-ui/common';
-import { ElementSelector, LoggableObject, LogLevel, StyleGroup, WSMenuItem } from 'warskald-ui/models'; 
+import { ElementSelector, LoggableObject, LogLevel, StyleGroup, WSMenuItem, WSMenuItemEvent } from 'warskald-ui/models'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
 import { NgStyleValues } from 'warskald-ui/models';
@@ -311,8 +311,8 @@ export class MenuBarComponent implements LoggableObject {
     }
 
     @Loggable()
-    public handleItemClick(model: WSMenuItem) {
-        if(model) {
+    public handleItemClick(event: WSMenuItemEvent, model: WSMenuItem) {
+        if(model.items?.length) {
             model.isExpanded = !model.isExpanded;
             if(model.isExpanded || model.label === 'Menu') {
                 this.model[0]?.items?.forEach((menuItem) => {
@@ -320,10 +320,13 @@ export class MenuBarComponent implements LoggableObject {
                         menuItem.isExpanded = false;
                     }
                 });
-            
+                
             }
-            this.cd.detectChanges();
         }
+        else if(model.command) {
+            model.command(event);
+        }
+        this.cd.detectChanges();
     }
     
     // #endregion public methods

@@ -189,6 +189,12 @@ export class ShowcaseComponent implements LoggableObject {
                 ]
             },
             {
+                label: 'Test',
+                command: () => {
+                    console.log('Test command');
+                }
+            },
+            {
                 label: 'Contact Us',
                 items: [
                     {

@@ -9,6 +9,7 @@
                     type="button" 
                     [class]="menuBarButtonStyleClasses"
                     [style]="menuBarButtonStyles?.style"
+                    (click)="handleItemClick($event, item)"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                 >
@@ -45,7 +46,7 @@
                     [style]="menuBarButtonStyles?.style"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
-                    (click)="handleItemClick(item)"
+                    (click)="handleItemClick($event, item)"
                 >
                     {{item.label}}
                 </button>
@@ -59,7 +60,7 @@
                                     [class]="subMenuItemStyleClasses"
                                     [style]="subMenuItemStyles?.style"
                                     aria-controls="collapseBasicSub"
-                                    (click)="handleItemClick(menuItem)"
+                                    (click)="handleItemClick($event, menuItem)"
                                 >
                                     {{menuItem.label}}
                                 </span>
