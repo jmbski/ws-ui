@@ -10,8 +10,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { nanoid } from 'nanoid';
-import { LogService } from 'warskald-ui/services';
-import { LoggableObject, LogLevel } from 'warskald-ui/models';
+import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
 
 export interface TabbedResponseData {
     tabName: string,
@@ -37,7 +36,7 @@ export class TabbedResponseTableComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'TabbedResponseTableComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
 
     // #region public properties
 
@@ -93,7 +92,7 @@ export class TabbedResponseTableComponent implements LoggableObject {
     }
 
     ngAfterViewInit() {
-        LogService.debug(this, 'entering', 'xmlString:', this.xmlString, 'config:', this.config);
+        EzLogService.debug(this, 'entering', 'xmlString:', this.xmlString, 'config:', this.config);
         if(this.xmlString) {
             this.tabbedResponseData = this.parseXmlToTabbedResponseData(this.xmlString);
             this.tabMenuModel = this.tabbedResponseData.map((data: TabbedResponseData, index: number) => {
@@ -111,7 +110,7 @@ export class TabbedResponseTableComponent implements LoggableObject {
                 };
             });
 
-            LogService.debug(this, 'tabbedResponseData:', this.tabbedResponseData, 'tabMenuModel:', this.tabMenuModel);
+            EzLogService.debug(this, 'tabbedResponseData:', this.tabbedResponseData, 'tabMenuModel:', this.tabMenuModel);
             this.cd.detectChanges();
         }
     }
@@ -122,35 +121,35 @@ export class TabbedResponseTableComponent implements LoggableObject {
     // #region public methods
 
     public onTabChange(event: unknown) {
-        LogService.debug(this, 'entering', 'event:', event);
+        EzLogService.debug(this, 'entering', 'event:', event);
     }
 
     public parseElementValue(textContent: string | null): string {
-        LogService.debug(this, 'entering', 'textContent:', textContent);
+        EzLogService.debug(this, 'entering', 'textContent:', textContent);
         
         if(!textContent) {
-            LogService.debug(this, 'exiting', 'string');
+            EzLogService.debug(this, 'exiting', 'string');
             return 'string';
         }
         if(isBooleanString(textContent)) {
-            LogService.debug(this, 'exiting', 'boolean');
+            EzLogService.debug(this, 'exiting', 'boolean');
             return 'boolean';
         }
         if(isNumericString(textContent)) {
-            LogService.debug(this, 'exiting', 'number');
+            EzLogService.debug(this, 'exiting', 'number');
             return 'number';
         }
         if(stringToDate(textContent)) {
-            LogService.debug(this, 'exiting', 'date');
+            EzLogService.debug(this, 'exiting', 'date');
             return 'date';
         }
 
-        LogService.debug(this, 'exiting', 'string');
+        EzLogService.debug(this, 'exiting', 'string');
         return 'string';
     }
 
     public measureTextWidth(text: string, fontSize: number): number {
-        LogService.debug(this, 'entering', 'text:', text, 'fontSize:', fontSize);
+        EzLogService.debug(this, 'entering', 'text:', text, 'fontSize:', fontSize);
 
         const el = document.createElement('div');
         el.style.position = 'absolute'; 
@@ -164,12 +163,12 @@ export class TabbedResponseTableComponent implements LoggableObject {
     
         document.body.removeChild(el);
 
-        LogService.debug(this, 'exiting', 'width:', width);
+        EzLogService.debug(this, 'exiting', 'width:', width);
         return width;
     }
 
     public xmlElementToColumnDef(element: Element, tagPrefix: string = 'ws:'): ColumnDefinition {
-        LogService.debug(this, 'entering', 'element:', element, 'tagPrefix:', tagPrefix);
+        EzLogService.debug(this, 'entering', 'element:', element, 'tagPrefix:', tagPrefix);
 
         const { tagName, textContent } = element;
         const columnDef: ColumnDefinition = {
@@ -182,23 +181,23 @@ export class TabbedResponseTableComponent implements LoggableObject {
             width: this.measureTextWidth(tagName, 16) + 'px',
         };
         
-        LogService.debug(this, 'exiting', 'columnDef:', columnDef);
+        EzLogService.debug(this, 'exiting', 'columnDef:', columnDef);
         return columnDef;
     }
 
     public addXmlColumnDef(columnDefs: ColumnDefinition[], element: Element): void {
-        LogService.debug(this, 'entering', 'columnDefs:', columnDefs, 'element:', element);
+        EzLogService.debug(this, 'entering', 'columnDefs:', columnDefs, 'element:', element);
 
         const columnDef = this.xmlElementToColumnDef(element);
         if(columnDefs.findIndex((def: ColumnDefinition) => def.field === columnDef.field) === -1) {
             columnDefs.push(columnDef);
         }
 
-        LogService.debug(this, 'exiting', 'columnDefs:', columnDefs);
+        EzLogService.debug(this, 'exiting', 'columnDefs:', columnDefs);
     }
 
     public parseXmlToTabbedResponseData(xmlString: string, tagPrefix: string = 'ws:'): TabbedResponseData[] {
-        LogService.debug(this, 'entering', 'xmlString:', xmlString, 'tagPrefix:', tagPrefix);
+        EzLogService.debug(this, 'entering', 'xmlString:', xmlString, 'tagPrefix:', tagPrefix);
 
         const data: TabbedResponseData[] = [];
         if(this.config) {
@@ -227,7 +226,7 @@ export class TabbedResponseTableComponent implements LoggableObject {
                     tableConfig.rowData.push(rowItem);
                 });
 
-                LogService.debug(this, 'tableConfig:', tableConfig, 'tag:', tag);
+                EzLogService.debug(this, 'tableConfig:', tableConfig, 'tag:', tag);
                 data.push({
                     tabName: tag,
                     tableConfig,
@@ -235,7 +234,7 @@ export class TabbedResponseTableComponent implements LoggableObject {
             });
         }
         
-        LogService.debug(this, 'exiting', 'data:', data);
+        EzLogService.debug(this, 'exiting', 'data:', data);
         return data;
     }
     

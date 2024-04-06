@@ -2,14 +2,12 @@ import {
     BaseComponentClass,
     capitalizeFirst,
     LocalObject,
-    LoggableObject,
-    LogLevel,
     StyleGroup,
     WSMenuItem,
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
 import { isString, isStringArray, isStyleGroup } from 'warskald-ui/type-guards';
-import { Loggable, LogService } from './log-service/log-service';
+import { Loggable, LoggableObject, LogLevels, EzLogService } from './log-service/_index';
 
 export interface XMLPropertyDef {
     name: string;
@@ -25,7 +23,7 @@ export interface XMLCollectionDef {
 export class Utils implements LoggableObject {
     public readonly LOCAL_ID: string = 'Utils';
     canLog?: boolean | undefined = true;
-    localLogLevel?: LogLevel | undefined = LogLevel.Debug;
+    localLogLevel?: number | undefined = LogLevels.Debug;
     
     public static printMap(map: Map<unknown, unknown>): void {
         for (const [key, value] of map.entries()) {
@@ -292,12 +290,12 @@ export class Utils implements LoggableObject {
 }
 
 export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: boolean = true) {
-    LogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
+    EzLogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
     
     for(const propName in this) {
         if(propName.endsWith('Styles') || !onlyStylePropNames) {
             const property = this[propName];
-            LogService.debug(this, 'property:', propName, property);
+            EzLogService.debug(this, 'property:', propName, property);
 
             if(isStyleGroup(property)) {
                 const strippedPropName: string = propName.replace('Styles', '');
@@ -308,7 +306,7 @@ export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: bo
                 let defaultClass: string | string[] | undefined = undefined;
                 const defaultClassProp = this[defaultClassPropName];
 
-                LogService.debug(this, 
+                EzLogService.debug(this, 
                     'strippedPropName:', strippedPropName, 
                     'formattedPropName:', formattedPropName, 
                     'defaultClassPropName:', defaultClassPropName, 
@@ -323,7 +321,7 @@ export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: bo
 
                 this.cd.detectChanges();
                 
-                LogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
+                EzLogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
             }
         }
     }

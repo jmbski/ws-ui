@@ -2,8 +2,7 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter, Routes } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { DEFAULT_SRC_NAMES } from './services/data-service';
-import { LogService } from 'warskald-ui/services';
-import { LogLevel } from 'warskald-ui/models';
+import { EzLogService } from 'warskald-ui/services';
 import { logServiceConfig } from 'environment';
 
 export const routes: Routes = [
@@ -13,7 +12,7 @@ export const routes: Routes = [
 ];
 
 
-LogService.initialize(logServiceConfig);
+EzLogService.initialize(logServiceConfig);
 
 export const appConfig: ApplicationConfig = {
     providers: [

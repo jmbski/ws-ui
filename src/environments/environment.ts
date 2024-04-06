@@ -1,22 +1,20 @@
-import { getConsoleStringArg, LogService } from 'warskald-ui/services';
-import { LogLevel } from '../app/models/general';
-import { LogServiceConfig } from '../app/services/log-service/log-service-config';
+import { getConsoleStringArg, LogLevels, EzLogService, LogServiceConfig } from 'warskald-ui/services';
 
 export const logServiceConfig: LogServiceConfig = {
-    logLevel: LogLevel.Debug,
+    logLevel: LogLevels.Debug,
     defaultStateName: 'primaryState',
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,
     showConsoleFunctArgs: true,
     customConsoleFunctDefs: {
         timeStamp: {
-            logLevel: LogLevel.Debug,
+            logLevel: LogLevels.Debug,
             getArgs: getConsoleStringArg,
         },
     },
     additionalServiceStates: {
         logEverything: {
-            logLevel: LogLevel.Trace,
+            logLevel: LogLevels.Trace,
             useLocalLogLevel: false,
             enableReportListener: true,
             enableToggleListener: true,
@@ -29,10 +27,10 @@ export const logServiceConfig: LogServiceConfig = {
     persistCurrentState: true,
     customKeyListeners: {
         '1': (event: KeyboardEvent) => {
-            LogService.loadState('primaryState');
+            EzLogService.loadState('primaryState');
         },
         '2': (event: KeyboardEvent) => {
-            LogService.loadState('logEverything');
+            EzLogService.loadState('logEverything');
         }
     }
 };

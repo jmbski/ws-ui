@@ -1,26 +1,14 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ComponentClassBase } from 'warskald-ui/models';
-import { ImageModule } from 'primeng/image';
-import { nanoid } from 'nanoid';
-import { LoggableObject, LogLevels } from '../../services/log-service/_index';
+import { Injectable } from '@angular/core';
+import { LoggableObject, LogLevels } from './log-service/_index';
 
-@Component({
-    selector: 'ws-image',
-    standalone: true,
-    imports: [
-        CommonModule,
-        ImageModule,
-    ],
-    templateUrl: './image.component.html',
-    styleUrl: './image.component.scss'
+@Injectable({
+    providedIn: 'root'
 })
-export class ImageComponent extends ComponentClassBase implements LoggableObject {
-
-    LOCAL_ID: string = 'ImageComponent_' + nanoid();
+export class LayoutService implements LoggableObject{
+    LOCAL_ID: string = 'LayoutService';
     canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
-    
+    localLogLevel?: number = LogLevels.Debug;
+
     // #region public properties
     
     // #endregion public properties
@@ -37,8 +25,6 @@ export class ImageComponent extends ComponentClassBase implements LoggableObject
     
     
     // #region standard inputs
-    
-    @Input() src?: string;
     
     // #endregion standard inputs
     
@@ -60,9 +46,9 @@ export class ImageComponent extends ComponentClassBase implements LoggableObject
     
     // #region constructor and lifecycle hooks
     constructor(
-        public cd: ChangeDetectorRef,
+        
     ) {
-        super();
+        
     }
     // #endregion constructor and lifecycle hooks
     

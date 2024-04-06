@@ -1,182 +1,11 @@
 import { Injectable } from '@angular/core';
-import { isLogLevel, LogServiceConfig } from './log-service-config';
-import { isBoolean, isFunction } from 'lodash';
-import { GeneralFunction, FunctionMap, LogLevel, LogAccessMode, LoggableObject, LocalLogSettings, UnionTypeOf, stringLiterals, WeakObject  } from 'warskald-ui/models';
-import { isString, isStringArray, isWeakObject, objectIsType, OptionalBooleanProp, OptionalNumberProp, TypeMapping } from 'warskald-ui/type-guards';
-import { 
-    ConsoleFunctLevelMap,
-    ConsoleFuncts,
-    ConsoleFunctName 
-} from 'warskald-ui/models';
+import { FunctionMap, WeakObject } from 'warskald-ui/models';
+import { LogServiceConfig } from './log-service-config';
+import { ConsoleFuncts, LogLevels, LogSvcIgnoredStrings$, logLevelConsoleFunctMap } from './log-service-constants';
+import { isLogLevel, isConsoleKey, isConsoleFunction } from './log-service-typeguards';
+import { ConsoleFunctName, ConsoleFunctLevelMap, LogAccessMode, LoggableObject, LocalLogSettings, ConsoleDirOptions, LogLevelOrFunct } from './log-service-types';
+import { consoleFunctDefMap } from './log-service-utils';
 
-export function getConsoleStringArg(...args: unknown[]): string[] {
-    const prop = args.find(arg => isString(arg) && 
-        !LogService.ignoredStrings.includes(arg));
-    return prop ? [prop as string] : [];
-}
-
-export interface ConsoleDirOptions {
-    depth?: number;
-    showHidden?: boolean;
-    colors?: boolean;
-}
-
-const dirOptionsTypeMap: TypeMapping<ConsoleDirOptions> = {
-    colors: OptionalBooleanProp,
-    depth: OptionalNumberProp,
-    showHidden: OptionalBooleanProp,
-};
-
-export function isConsoleDirOptions(value: unknown): value is ConsoleDirOptions {
-    return objectIsType<ConsoleDirOptions>(value, dirOptionsTypeMap);
-}
-
-export function getConsoleDirArgs(...args: unknown[]): object[] {
-    const returnArgs: object[] = [];
-
-    const objIndex =  args.findIndex(arg => isWeakObject(arg));
-
-    const optionsIndex = args.slice(objIndex + 1).findIndex(arg => isConsoleDirOptions(arg));
-    
-    if(objIndex > -1) {
-        returnArgs.push(args[objIndex] as object);
-        if(optionsIndex > -1) {
-            returnArgs.push(args[optionsIndex + objIndex + 1] as ConsoleDirOptions);
-        }
-    }
-
-    return returnArgs;
-}
-
-export function getConsoleTableArgs(...args: unknown[]) {
-    const returnArgs: unknown[] = [];
-
-    const dataIndex = args.findIndex(arg => Array.isArray(arg) || typeof arg === 'object');
-    if(dataIndex > -1) {
-        returnArgs.push(args[dataIndex]);
-        const columnsIndex = args.findIndex((arg, index) => isStringArray(arg) && index > dataIndex);
-        if(columnsIndex > dataIndex) {
-            returnArgs.push(args[columnsIndex]);
-        }
-    }
-
-    return returnArgs;
-}
-
-export const consoleFunctDefMap: ConsoleFunctLevelMap = {
-    assert: {
-        logLevel: LogLevel.Assert,
-        getArgs: (condition: unknown, ...args: unknown[]) => [condition, ...args],
-        contextStringInArgs: true,
-    },
-    clear: {
-        logLevel: LogLevel.Debug,
-        getArgs: () => [],
-    },
-    count: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleStringArg,
-    },
-    countReset: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleStringArg,
-    },
-    debug: {
-        logLevel: LogLevel.Debug,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-    dir: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleDirArgs,
-    },
-    dirxml: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleDirArgs,
-    },
-    error: {
-        logLevel: LogLevel.Error,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-    group: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleStringArg,
-    },
-    groupCollapsed: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleStringArg,
-    },
-    groupEnd: {
-        logLevel: LogLevel.Debug,
-        getArgs: () => [],
-    },
-    info: {
-        logLevel: LogLevel.Info,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-    log: {
-        logLevel: LogLevel.Log,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-    table: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleTableArgs,
-    },
-    time: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleStringArg,
-    },
-    timeEnd: {
-        logLevel: LogLevel.Debug,
-        getArgs: getConsoleStringArg,
-    },
-    timeLog: {
-        logLevel: LogLevel.Debug,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-    timeStamp: {
-        logLevel: LogLevel.Experimental,
-        getArgs: getConsoleStringArg,
-    },
-    trace: {
-        logLevel: LogLevel.Trace,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-    warn: {
-        logLevel: LogLevel.Warn,
-        getArgs: (...args: unknown[]) => args,
-        contextStringInArgs: true,
-    },
-};
-
-export type LogLevelConsoleFunctMap = Record<LogLevel, ConsoleFunctName | undefined>;
-
-export const logLevelConsoleFunctMap: LogLevelConsoleFunctMap = {
-    [LogLevel.Assert]: 'assert',
-    [LogLevel.Debug]: 'debug',
-    [LogLevel.Error]: 'error',
-    [LogLevel.Info]: 'info',
-    [LogLevel.Log]: 'log',
-    [LogLevel.Trace]: 'trace',
-    [LogLevel.Warn]: 'warn',
-    [LogLevel.None]: undefined,
-    [LogLevel.Experimental]: undefined,
-};
-
-export function isConsoleFunction(value: unknown, name: string): value is GeneralFunction<void> {
-    return Object.keys(console).includes(name) && name !== 'Console' && isFunction(value);
-}
-
-export function isConsoleKey(value: unknown): value is ConsoleFunctName {
-    return Object.keys(console).includes(value as string);
-}
-
-export type LogLevelOrFunct = LogLevel | ConsoleFunctName | undefined;
 
 export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
 
@@ -186,14 +15,14 @@ export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
 @Injectable({
     providedIn: 'root'
 })
-export class LogService {
+export class EzLogService {
 
     // #region public properties
 
     /** 
      * The log level for the application.
      */
-    public static logLevel: LogLevel = LogLevel.Trace;
+    public static logLevel: number = LogLevels.Trace;
 
     /**
      * Whether or not to use the local log level of the calling object.
@@ -232,19 +61,6 @@ export class LogService {
     public static customConsoleFunctDefs?: ConsoleFunctLevelMap;
 
     /**
-     * Array of strings to ignore when getting string args for a console function.
-     */
-    public static ignoredStrings: string[] = [
-        'entering;',
-        'entering',
-        'exiting;',
-        'exiting',
-        '\nargs:\n',
-        'setting',
-        'getting',
-    ];
-
-    /**
      * The list of objects that are allowed to log messages.
      */
     public static callerWhiteList: string[] = [];
@@ -277,12 +93,12 @@ export class LogService {
     /**
      * The list of log levels that are allowed to be logged.
      */
-    public static logLevelWhiteList: LogLevel[] = [];
+    public static logLevelWhiteList: LogLevels[] = [];
 
     /**
      * The list of log levels that are not allowed to be logged.
      */
-    public static logLevelBlackList: LogLevel[] = [];
+    public static logLevelBlackList: LogLevels[] = [];
 
     /**
      * The access mode for the log level white list/black list.
@@ -356,12 +172,25 @@ export class LogService {
      * Default state of the service
      */
     private static _defaultState: LogServiceConfig = {
-        logLevel: LogLevel.Trace,
+        logLevel: LogLevels.Trace,
         useLocalLogLevel: true,
         useCanLog: true,
         useStrictLocalLogLevel: false,
         logGetters: true,
         logSetters: true,
+        additionalServiceStates: {},
+        customConsoleFunctDefs: undefined,
+        defaultLogFunct: ConsoleFuncts.Info,
+        ignoredStrings: [
+            'entering;',
+            'entering',
+            'exiting;',
+            'exiting',
+            '\nargs:\n',
+            'setting',
+            'getting',
+        ],
+        showConsoleFunctArgs: true,
         callerWhiteList: [],
         callerBlackList: [],
         callerAccessMode: 'none',
@@ -386,7 +215,7 @@ export class LogService {
      * Collection of states to switch between
      */
     private static _serviceStates: Record<string, LogServiceConfig> = {
-        'defaultState': LogService._defaultState,
+        'defaultState': EzLogService._defaultState,
     };
 
     private static _consoleFunctDefMap: ConsoleFunctLevelMap = Object.assign({}, consoleFunctDefMap);
@@ -399,12 +228,12 @@ export class LogService {
     // #region getters/setters
 
     static get additionalServiceStates(): Record<string, LogServiceConfig> {
-        return LogService._serviceStates;
+        return EzLogService._serviceStates;
     }
     static set additionalServiceStates(states: Record<string, LogServiceConfig> | undefined) {
         if(states) {
             Object.keys(states).forEach((key: string) => {
-                LogService._serviceStates[key] = states[key];
+                EzLogService._serviceStates[key] = states[key];
             });
         }
     }
@@ -417,6 +246,16 @@ export class LogService {
     }
     static set defaultLogFunct(input: ConsoleFunctName) {
         DefaultLogFunct = input;
+    }
+
+    /**
+     * Array of strings to ignore when getting string args for a console function.
+     */
+    static get ignoredStrings(): string[] {
+        return LogSvcIgnoredStrings$.getValue();
+    }
+    static set ignoredStrings(input: string[]) {
+        LogSvcIgnoredStrings$.next(input);
     }
     
     // #endregion getters/setters
@@ -459,12 +298,12 @@ export class LogService {
      * @param caller - The object that is attempting to log a message.
      * @returns - True if the message can be logged, false otherwise.
      */
-    public static canLog(callLogLevel: LogLevel, caller: LoggableObject, functName: string): boolean {
+    public static canLog(callLogLevel: LogLevels, caller: LoggableObject, functName: string): boolean {
         
         const { localLogLevel, canLog } = caller;
 
         /** If the caller's canLog flag is false, return immediately before doing anything else */
-        if(canLog === false && LogService.useCanLog) {
+        if(canLog === false && EzLogService.useCanLog) {
             return false;
         }
         
@@ -476,12 +315,12 @@ export class LogService {
             {accessor: 'logLevel', prop: callLogLevel},
         ].every(({accessor, prop}) => {
             
-            const accessMode = LogService[`${accessor}AccessMode`];
+            const accessMode = EzLogService[`${accessor}AccessMode`];
             let allowed: boolean = true;
 
             if(<LogAccessMode>accessMode !== 'none') {
-                const whitelist = LogService[`${accessor}WhiteList`];
-                const blacklist = LogService[`${accessor}BlackList`];
+                const whitelist = EzLogService[`${accessor}WhiteList`];
+                const blacklist = EzLogService[`${accessor}BlackList`];
                 
                 allowed = accessMode === 'whitelist' ?
                     (<unknown[]>whitelist).includes(prop) :
@@ -495,12 +334,12 @@ export class LogService {
             return false;
         }
         
-        let logLevel = LogService.logLevel;
+        let logLevel = EzLogService.logLevel;
 
-        if(LogService.useLocalLogLevel) {
-            logLevel = LogService.useStrictLocalLogLevel ? 
-                Math.max(LogService.logLevel, localLogLevel ?? LogLevel.Trace) :
-                Math.min(LogService.logLevel, localLogLevel ?? LogLevel.Trace);
+        if(EzLogService.useLocalLogLevel) {
+            logLevel = EzLogService.useStrictLocalLogLevel ? 
+                Math.max(EzLogService.logLevel, localLogLevel ?? LogLevels.Trace) :
+                Math.min(EzLogService.logLevel, localLogLevel ?? LogLevels.Trace);
         }
 
         return callLogLevel >= logLevel;
@@ -517,11 +356,11 @@ export class LogService {
         caller.canLog = canLog ?? caller.canLog;
         caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
 
-        LogService.debug(caller, 'entering', settings);
+        EzLogService.debug(caller, 'entering', settings);
 
         Object.assign(caller, settings);
 
-        LogService.debug(caller, 'exiting', caller);
+        EzLogService.debug(caller, 'exiting', caller);
     }
 
     /**
@@ -534,26 +373,26 @@ export class LogService {
         stateName?: string
     ) {
         Object.keys(settings).forEach((key: string) => {
-            LogService[key] = settings[key] ?? LogService[key];
+            EzLogService[key] = settings[key] ?? EzLogService[key];
         });
 
-        LogService.saveState(stateName, settings);
+        EzLogService.saveState(stateName, settings);
 
-        LogService.currentStateName = stateName ?? 'latestState';
+        EzLogService.currentStateName = stateName ?? 'latestState';
 
         if(settings.toggleState) {
-            LogService.saveState('toggleState', settings.toggleState);
+            EzLogService.saveState('toggleState', settings.toggleState);
         }
 
         if(settings.customConsoleFunctDefs) {
-            LogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
+            EzLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
         }
         
-        LogService.toggleKeyListener(true);
+        EzLogService.toggleKeyListener(true);
     }
 
     public static updateConsoleFunctDefMap(functDefMap: Partial<ConsoleFunctLevelMap>) {
-        LogService._consoleFunctDefMap = Object.assign({}, consoleFunctDefMap, functDefMap);
+        EzLogService._consoleFunctDefMap = Object.assign({}, consoleFunctDefMap, functDefMap);
     }
 
     /**
@@ -564,32 +403,32 @@ export class LogService {
     public static saveState(stateName?: string, state?: LogServiceConfig) {
         stateName ??= 'latestState';
         state ??= {
-            logLevel: LogService.logLevel,
-            useLocalLogLevel: LogService.useLocalLogLevel,
-            useCanLog: LogService.useCanLog,
-            useStrictLocalLogLevel: LogService.useStrictLocalLogLevel,
-            callerWhiteList: LogService.callerWhiteList,
-            callerBlackList: LogService.callerBlackList,
-            callerAccessMode: LogService.callerAccessMode,
-            functionWhiteList: LogService.functionWhiteList,
-            functionBlackList: LogService.functionBlackList,
-            functionAccessMode: LogService.functionAccessMode,
-            logLevelWhiteList: LogService.logLevelWhiteList,
-            logLevelBlackList: LogService.logLevelBlackList,
-            logLevelAccessMode: LogService.logLevelAccessMode,
-            reportKey: LogService.reportKey,
-            enableReportListener: LogService.enableReportListener,
-            toggleKey: LogService.toggleKey,
-            enableToggleListener: LogService.enableToggleListener,
-            customKeyListeners: LogService.customKeyListeners,
+            logLevel: EzLogService.logLevel,
+            useLocalLogLevel: EzLogService.useLocalLogLevel,
+            useCanLog: EzLogService.useCanLog,
+            useStrictLocalLogLevel: EzLogService.useStrictLocalLogLevel,
+            callerWhiteList: EzLogService.callerWhiteList,
+            callerBlackList: EzLogService.callerBlackList,
+            callerAccessMode: EzLogService.callerAccessMode,
+            functionWhiteList: EzLogService.functionWhiteList,
+            functionBlackList: EzLogService.functionBlackList,
+            functionAccessMode: EzLogService.functionAccessMode,
+            logLevelWhiteList: EzLogService.logLevelWhiteList,
+            logLevelBlackList: EzLogService.logLevelBlackList,
+            logLevelAccessMode: EzLogService.logLevelAccessMode,
+            reportKey: EzLogService.reportKey,
+            enableReportListener: EzLogService.enableReportListener,
+            toggleKey: EzLogService.toggleKey,
+            enableToggleListener: EzLogService.enableToggleListener,
+            customKeyListeners: EzLogService.customKeyListeners,
         };
 
-        state = Object.assign({}, LogService._defaultState, state);
+        state = Object.assign({}, EzLogService._defaultState, state);
 
 
         if(stateName !== 'defaultState') {
-            LogService._serviceStates[stateName] = state;
-            LogService._updateLocalStorage();
+            EzLogService._serviceStates[stateName] = state;
+            EzLogService._updateLocalStorage();
         }
     }
 
@@ -600,33 +439,33 @@ export class LogService {
      */
     public static saveStates(states: Record<string, LogServiceConfig>) {
         Object.keys(states).forEach((key: string) => {
-            LogService.saveState(key, states[key]);
+            EzLogService.saveState(key, states[key]);
         });
     }
 
     public static loadState(stateName: string) {
-        const state: LogServiceConfig | undefined = LogService._serviceStates[stateName];
+        const state: LogServiceConfig | undefined = EzLogService._serviceStates[stateName];
         if(state) {
-            LogService.currentStateName = stateName;
+            EzLogService.currentStateName = stateName;
             console.log(`Switching to state: ${stateName}`);
 
-            LogService._updateLocalStorage(true);
+            EzLogService._updateLocalStorage(true);
 
             Object.keys(state).forEach((key: string) => {
-                LogService[key] = state[key] ?? LogService[key];
+                EzLogService[key] = state[key] ?? EzLogService[key];
             });
 
             if(state.customConsoleFunctDefs) {
-                LogService.updateConsoleFunctDefMap(state.customConsoleFunctDefs);
+                EzLogService.updateConsoleFunctDefMap(state.customConsoleFunctDefs);
             }
 
-            LogService.toggleKeyListener(true);
+            EzLogService.toggleKeyListener(true);
         }
     }
 
     public static deleteState(stateName: string) {
-        delete LogService._serviceStates[stateName];
-        LogService._updateLocalStorage();
+        delete EzLogService._serviceStates[stateName];
+        EzLogService._updateLocalStorage();
     }
 
     /**
@@ -635,41 +474,41 @@ export class LogService {
      * @param toggleValue - whether or not to toggle the report listener
      */
     public static toggleKeyListener(toggleValue?: boolean) {
-        toggleValue ??= !LogService.keyListenerActive;
+        toggleValue ??= !EzLogService.keyListenerActive;
         
         if(!toggleValue) {
-            window.removeEventListener('keyup', LogService._keyListenHandler);
-            LogService.keyListenerActive = false;
+            window.removeEventListener('keyup', EzLogService._keyListenHandler);
+            EzLogService.keyListenerActive = false;
         } 
         else {
             // remove the listener first in case it is already active
-            window.removeEventListener('keyup', LogService._keyListenHandler);
-            window.addEventListener('keyup', LogService._keyListenHandler);
+            window.removeEventListener('keyup', EzLogService._keyListenHandler);
+            window.addEventListener('keyup', EzLogService._keyListenHandler);
         }
     }
 
     public static initialize(settings?: LogServiceConfig, stateName?: string) {
 
-        settings ??= LogService._defaultState;
+        settings ??= EzLogService._defaultState;
         stateName ??= 'primaryState';
 
         Object.keys(settings).forEach((key: string) => {
             // using a bang operator since we know settings will be defined
-            LogService[key] = settings![key] ?? LogService[key];
+            EzLogService[key] = settings![key] ?? EzLogService[key];
         });
 
         if(settings.customConsoleFunctDefs) {
-            LogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
+            EzLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
         }
 
 
         if(settings.toggleState) {
-            LogService.saveState('toggleState', settings.toggleState);
+            EzLogService.saveState('toggleState', settings.toggleState);
         }
 
-        LogService.saveState(stateName, settings);
+        EzLogService.saveState(stateName, settings);
         
-        if(LogService.persistCurrentState) {
+        if(EzLogService.persistCurrentState) {
             const currentState = localStorage.getItem('currentStateName');
 
             if(currentState) {
@@ -680,14 +519,14 @@ export class LogService {
 
                 // Object.assign(LogService._serviceStates, JSON.parse(storedStates ?? '{}'));
 
-                LogService.loadState(currentState);
+                EzLogService.loadState(currentState);
             }
         }
         else {
-            LogService.currentStateName = stateName;
+            EzLogService.currentStateName = stateName;
         }
         
-        LogService.toggleKeyListener(true);
+        EzLogService.toggleKeyListener(true);
 
     }
 
@@ -711,14 +550,14 @@ export class LogService {
      * @param messages - additional messages to log
      */
     public static assert(caller: LoggableObject, condition: boolean, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'assert', LogService._getCallerFunctionName(), condition, ...messages);
+        EzLogService.writeLog(caller, 'assert', EzLogService._getCallerFunctionName(), condition, ...messages);
     }
 
     /**
      * Clears the console.
      */
     public static clear(caller: LoggableObject) {
-        LogService.writeLog(caller, 'clear', LogService._getCallerFunctionName());
+        EzLogService.writeLog(caller, 'clear', EzLogService._getCallerFunctionName());
     }
 
     /**
@@ -728,7 +567,7 @@ export class LogService {
      * @param label - the label to log
      */
     public static count(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'count', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'count', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
@@ -738,7 +577,7 @@ export class LogService {
      * @param label - the label to reset
      */
     public static countReset(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'countReset', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'countReset', EzLogService._getCallerFunctionName(), label);
     }
     
     /**
@@ -748,7 +587,7 @@ export class LogService {
      * @param messages - the messages to log
      */
     public static debug(caller: LoggableObject, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'debug', LogService._getCallerFunctionName(), ...messages);
+        EzLogService.writeLog(caller, 'debug', EzLogService._getCallerFunctionName(), ...messages);
     }
 
     /**
@@ -761,7 +600,7 @@ export class LogService {
      * @param options - the options for the dir function
      */
     public static dir(caller: LoggableObject, obj: WeakObject, options?: ConsoleDirOptions) {
-        LogService.writeLog(caller, 'dir', LogService._getCallerFunctionName(), obj, options);
+        EzLogService.writeLog(caller, 'dir', EzLogService._getCallerFunctionName(), obj, options);
     }
 
     /**
@@ -772,7 +611,7 @@ export class LogService {
      * @param options - the options for the dirxml function
      */
     public static dirxml(caller: LoggableObject, obj: WeakObject, options?: ConsoleDirOptions) {
-        LogService.writeLog(caller, 'dirxml', LogService._getCallerFunctionName(), obj, options);
+        EzLogService.writeLog(caller, 'dirxml', EzLogService._getCallerFunctionName(), obj, options);
     }
     
     /**
@@ -782,7 +621,7 @@ export class LogService {
      * @param messages - the messages to log
      */
     public static error(caller: LoggableObject, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'error', LogService._getCallerFunctionName(), ...messages);
+        EzLogService.writeLog(caller, 'error', EzLogService._getCallerFunctionName(), ...messages);
     }
 
     /**
@@ -792,7 +631,7 @@ export class LogService {
      * @param label - the label to log
      */
     public static group(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'group', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'group', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
@@ -803,14 +642,14 @@ export class LogService {
      * @param label - the label to log
      */
     public static groupCollapsed(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'groupCollapsed', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'groupCollapsed', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
      * Exits the current inline group in the console.
      */
     public static groupEnd(caller: LoggableObject) {
-        LogService.writeLog(caller, 'groupEnd', LogService._getCallerFunctionName());
+        EzLogService.writeLog(caller, 'groupEnd', EzLogService._getCallerFunctionName());
     }
     
     /**
@@ -820,7 +659,7 @@ export class LogService {
      * @param messages - the messages to log
      */
     public static info(caller: LoggableObject, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'info', LogService._getCallerFunctionName(), ...messages);
+        EzLogService.writeLog(caller, 'info', EzLogService._getCallerFunctionName(), ...messages);
     }
     
     /**
@@ -830,7 +669,7 @@ export class LogService {
      * @param messages - the messages to log
      */
     public static log(caller: LoggableObject, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'log', LogService._getCallerFunctionName(), ...messages);
+        EzLogService.writeLog(caller, 'log', EzLogService._getCallerFunctionName(), ...messages);
     }
 
     /**
@@ -842,7 +681,7 @@ export class LogService {
      * @param columns - an array of strings to use as the column headers
      */
     public static table(caller: LoggableObject, data: unknown, columns?: string[]) {
-        LogService.writeLog(caller, 'table', LogService._getCallerFunctionName(), data, columns);
+        EzLogService.writeLog(caller, 'table', EzLogService._getCallerFunctionName(), data, columns);
     }
 
     /**
@@ -852,7 +691,7 @@ export class LogService {
      * @param label - the label to log
      */
     public static time(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'time', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'time', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
@@ -862,7 +701,7 @@ export class LogService {
      * @param label - the label to log
      */
     public static timeEnd(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'timeEnd', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'timeEnd', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
@@ -872,7 +711,7 @@ export class LogService {
      * @param label - the label to log
      */
     public static timeLog(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'timeLog', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'timeLog', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
@@ -882,7 +721,7 @@ export class LogService {
      * @param label - the label to log
      */
     public static timeStamp(caller: LoggableObject, label?: string) {
-        LogService.writeLog(caller, 'timeStamp', LogService._getCallerFunctionName(), label);
+        EzLogService.writeLog(caller, 'timeStamp', EzLogService._getCallerFunctionName(), label);
     }
     
     /**
@@ -892,7 +731,7 @@ export class LogService {
      * @param messages - the messages to log
      */
     public static trace(caller: LoggableObject, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'trace', LogService._getCallerFunctionName(), ...messages);
+        EzLogService.writeLog(caller, 'trace', EzLogService._getCallerFunctionName(), ...messages);
     }
     
     /**
@@ -902,7 +741,7 @@ export class LogService {
      * @param messages - the messages to log
      */
     public static warn(caller: LoggableObject, ...messages: unknown[]) {
-        LogService.writeLog(caller, 'warn', LogService._getCallerFunctionName(), ...messages);
+        EzLogService.writeLog(caller, 'warn', EzLogService._getCallerFunctionName(), ...messages);
     }
 
     /**
@@ -910,7 +749,7 @@ export class LogService {
      * local ID of the calling object, and the name of the function that is logging the message.
      * 
      * @param caller - the object that is logging the message
-     * @param levelOrFunct - {@link LogLevel} of the message
+     * @param levelOrFunct - {@link LogLevels} of the message
      * @param functionName - the name of the function that is logging the message
      * @param messages - additional messages to log
      */
@@ -921,13 +760,13 @@ export class LogService {
         }
 
         if(isConsoleKey(levelOrFunct)) {
-            const { getArgs, logLevel, contextStringInArgs } = LogService._consoleFunctDefMap[levelOrFunct];
+            const { getArgs, logLevel, contextStringInArgs } = EzLogService._consoleFunctDefMap[levelOrFunct];
         
-            if(LogService.canLog(logLevel, caller, callingFunctName)) {
+            if(EzLogService.canLog(logLevel, caller, callingFunctName)) {
                 const logFunction = console[levelOrFunct];
                 const contextString = contextStringInArgs ? 
-                    `\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
-                    `\n${LogLevel[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${levelOrFunct}::`;
+                    `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
+                    `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${levelOrFunct}::`;
         
                 const logArgs = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
         
@@ -935,7 +774,7 @@ export class LogService {
                     const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
                     const levelLogFunction = console[levelConsoleFunctName];
                     if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
-                        LogService.showConsoleFunctArgs ? 
+                        EzLogService.showConsoleFunctArgs ? 
                             levelLogFunction(`${contextString}::console funct args:`, ...logArgs) :
                             levelLogFunction(contextString);
                     }
@@ -978,296 +817,43 @@ export class LogService {
      * @param event - the keyup event
      */
     private static _keyListenHandler(event: KeyboardEvent) {
-        if(event.key === LogService.reportKey && LogService.enableReportListener) {
+        if(event.key === EzLogService.reportKey && EzLogService.enableReportListener) {
             console.log('\nLOGSERVICE SETTINGS:');
-            for(const key in LogService) {
-                const prop = LogService[key];
+            for(const key in EzLogService) {
+                const prop = EzLogService[key];
                 if(typeof prop !== 'function' && key !== 'ɵprov') {
                     console.log(key, prop);
                 }
             }
         }
-        else if(event.key === LogService.toggleKey && LogService.enableToggleListener) {
-            const { currentStateName, defaultStateName } = LogService;
+        else if(event.key === EzLogService.toggleKey && EzLogService.enableToggleListener) {
+            const { currentStateName, defaultStateName } = EzLogService;
             if(currentStateName !== 'toggleState') {
-                LogService.loadState('toggleState');
+                EzLogService.loadState('toggleState');
             }
             else {
-                LogService._serviceStates[defaultStateName] != null ? 
-                    LogService.loadState(LogService.defaultStateName) : 
-                    LogService.loadState('defaultState');
+                EzLogService._serviceStates[defaultStateName] != null ? 
+                    EzLogService.loadState(EzLogService.defaultStateName) : 
+                    EzLogService.loadState('defaultState');
             }
         }
         else {
-            for(const key in LogService.customKeyListeners) {
+            for(const key in EzLogService.customKeyListeners) {
                 if(event.key === key) {
-                    LogService.customKeyListeners[key](event);
+                    EzLogService.customKeyListeners[key](event);
                 }
             }
         }
     }
 
     private static _updateLocalStorage(saveStateName: boolean = false): void {
-        if(LogService.persistCurrentState) {
-            localStorage.setItem('logServiceStates', JSON.stringify(LogService._serviceStates));
+        if(EzLogService.persistCurrentState) {
+            localStorage.setItem('logServiceStates', JSON.stringify(EzLogService._serviceStates));
             if(saveStateName) {
-                localStorage.setItem('currentStateName', LogService.currentStateName);
+                localStorage.setItem('currentStateName', EzLogService.currentStateName);
             }
         }
     }
     
     // #endregion private methods
-}
-
-/**
- * Parses a function and returns an array containing the names of its arguments
- * 
- * @returns - Array of argument names
- * @param fn - The function to parse
- */
-export function getArgNames(fn: GeneralFunction<unknown>): string[] {
-    // First match everything inside the function argument parentheses.
-    const functStr = fn.toString();
-    if(functStr) {
-        const args = functStr.match(/^\w+\((.+?)\)\s*{/)?.[1];
-     
-        if(args) {
-            return args.split(',').map(function(arg) {
-                // Split the arguments string into an array comma delimited.
-                return arg.replace(/\/\*.*\*\//, '').trim();
-            }).filter(function(arg) {
-                // Ensure no undefined values are added.
-                return arg;
-            });
-        }
-    }
-    return [];
-}
-
-export function getArgsOutput(funct: GeneralFunction<unknown>, ...args: unknown[]): WeakObject {
-    const argNames = getArgNames(funct);
-    const argsOutput: WeakObject = {};
-    argNames.forEach((argName, index) => {
-        if(argName.startsWith('...')) {
-            argsOutput[`${argName}`] = args.slice(index);
-            return;
-        }
-        
-        argsOutput[`${argName}`] = args[index];
-    });
-
-    return argsOutput;
-}
-
-/* export function isLogLevel(value: unknown): value is LogLevel {
-    return isString(value) && ['Assert', 'Debug', 'Error', 'Info', 'Log', 'Trace', 'Warn', 'None', 'Experimental'].includes(value);
-} */
-/** 
- * Clears the console terminal 
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Clear} 
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Clear): GeneralFunction<PropertyDescriptor>;
-
-/** 
- * Exits the current inline group in the console 
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.GroupEnd} 
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.GroupEnd): GeneralFunction<PropertyDescriptor>;
-
-/** 
- * Logs the number of times that this particular call to console.count() has been called 
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Count} 
- * @param label - An optional string containing the label for the count
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Count, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/** 
- * Resets the number of times that this particular call to console.count() has been called 
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.CountReset} 
- * @param label - An optional string containing the label for the count
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.CountReset, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Creates a new inline group in the Web console log, causing any subsequent 
- * console messages to be indented by an additional level, until console.groupEnd()
- * is called.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Group}
- * @param label - An optional string containing the label for the group
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Group, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Creates a new inline group in the Web console log, causing any subsequent 
- * console messages to be indented by an additional level, until console.groupEnd() 
- * is called. The new group is created collapsed.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.GroupCollapsed}
- * @param label - An optional string containing the label for the group
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.GroupCollapsed, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Starts a timer in the console. Calling console.timeEnd() with the same name will stop 
- * the timer and log the elapsed time in milliseconds.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Time}
- * @param label - An optional string containing the label for the timer
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Time, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Stops a timer that was previously started by calling console.time() and logs the elapsed time.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.TimeEnd}
- * @param label - An optional string containing the label for the timer
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.TimeEnd, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Adds a timestamp to the console. This lets you log the time at which a particular piece of code was executed.
- * 
- * LogLevel = {@link LogLevel.Experimental}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.TimeStamp}
- * @param label - An optional string containing the label for the timestamp
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.TimeStamp, label?: string): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Displays an interactive list of the properties of the specified JavaScript object. 
- * The output is presented as a hierarchical listing with disclosure triangles that let
- * you see the contents of child objects.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Dir}
- * @param objOrOpts - An object to log, or the options object if you simply want it to dir the input/output
- * @param options - Options for the console.dir() function if objOrOpts is an object
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Dir, objOrOpts?: object | ConsoleDirOptions, options?: ConsoleDirOptions): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Displays an XML/HTML Element representation of the specified object if possible 
- * or the JavaScript Object view if it is not.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Dirxml}
- * @param objOrOpts - An object to log, or the options object if you simply want it to dir the input/output
- * @param options - Options for the console.dir() function if objOrOpts is an object
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Dirxml, objOrOpts?: object | ConsoleDirOptions, options?: ConsoleDirOptions): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Displays tabular data as a table. This function takes one mandatory argument data, 
- * which must be an array or an object, and one additional optional parameter columns.
- * 
- * LogLevel = {@link LogLevel.Debug}
- * 
- * @param consoleFunct - {@link ConsoleFuncts.Table}
- * @param data - An object or array to log
- * @param columns - An array of strings containing the names of columns to include in the output
- */
-export function Loggable(consoleFunct?: ConsoleFuncts.Table, data?: object | unknown[], columns?: string[]): GeneralFunction<PropertyDescriptor>;
-
-/**
- * One of the standard logging function from {@link Console} to use for logging.
- * 
- * @param consoleFunct - {@link ConsoleFunctName} name of the function to call
- * @param logArgs - arguments to be passed to the logging function
- */
-export function Loggable(consoleFunct?: ConsoleFunctName, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Logs a message at the specified log level. If no log level is provided, the default
- * value is {@link LogLevel.Debug}.
- * 
- * @param logLevel - {@link LogLevel} - the log level of the message
- * @param logArgs - additional arguments to pass to the logging function
- */
-export function Loggable(logLevel?: LogLevel, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor>;
-
-/**
- * Decorator function factory for logging function calls. Can be passed a specific logging level 
- * or the name of a console function, as well as additional arguments to pass to the logging function.
- * If no arguments are passed, the default value is {@link LogLevel.Debug}.
- * 
- * @param levelOrFunct - {@link LogLevel} or {@link ConsoleFunctName}
- * @param logArgs - additional arguments to pass to the logging function
- * @returns - A decorator function
- */
-export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]): GeneralFunction<PropertyDescriptor> {
-    
-    return function (target: LoggableObject, propertyKey: string, descriptor: PropertyDescriptor) {
-        
-        const originalMethod = descriptor.value; 
-        const originalGetter = descriptor.get;
-        const originalSetter = descriptor.set;
-
-        if(originalGetter && LogService.logGetters) {
-            descriptor.get = function (this: LoggableObject) {
-                const value = originalGetter?.call(this);
-                LogService.writeLog(this, levelOrFunct, propertyKey, 'getting', ...logArgs, value);
-                return value;
-            };
-        }
-        
-        if(originalSetter && LogService.logSetters) {
-            descriptor.set = function (this: LoggableObject, value: unknown) {
-                const argsOutput: WeakObject = getArgsOutput(originalSetter, value);
-        
-                LogService.writeLog(this, levelOrFunct!, propertyKey, 'setting', argsOutput, ...logArgs);
-                originalSetter?.call(this, value);
-            };
-        }
-        
-        if(originalMethod instanceof Function && descriptor.writable) {
-            descriptor.value = function (this: LoggableObject, ...args: unknown[]) {
-
-                const argsOutput: WeakObject = getArgsOutput(originalMethod, ...args);
-            
-                let returnVal: unknown = null;
-                
-                LogService.writeLog(this, levelOrFunct!, propertyKey, 'entering;', '\nargs:\n', argsOutput, ...logArgs);
-            
-                try {
-                    returnVal = originalMethod.apply(this, args);
-                }
-                catch(error: unknown) {
-                    LogService.writeLog(this, ConsoleFuncts.Error, propertyKey, 'error:', error, ...logArgs);
-                }
-            
-                LogService.writeLog(this, levelOrFunct!, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
-                            
-                return returnVal;
-            };
-            
-        
-        }
-        
-
-        return descriptor;
-    };
 }

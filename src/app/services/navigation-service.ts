@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { LoggableObject, LogLevel } from 'warskald-ui/models';
+import { Loggable, LoggableObject, LogLevels } from './log-service/_index';
 import { nanoid } from 'nanoid';
 import { NavigationExtras, Router } from '@angular/router';
-import { Loggable } from './_index';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +9,7 @@ import { Loggable } from './_index';
 export class NavigationService implements LoggableObject {
     LOCAL_ID: string = 'NavigationService_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Debug;
+    localLogLevel?: number = LogLevels.Debug;
 
     public static router: Router;
 

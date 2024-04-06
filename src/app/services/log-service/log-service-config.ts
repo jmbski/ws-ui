@@ -1,6 +1,6 @@
-import { LogLevel, LogAccessMode, FunctionMap, ConsoleFunctLevelMap } from 'warskald-ui/models';
-import { TypeMapping, OptionalBooleanProp, OptionalStringArrayProp, OptionalStringProp, objectIsType, isTypedRecord, isFunctionRecord } from 'warskald-ui/type-guards';
-import { ConsoleFunctName } from 'warskald-ui/models';
+import { FunctionMap } from 'warskald-ui/models';
+import { ConsoleFunctLevelMap, ConsoleFunctName, LogAccessMode } from './log-service-types';
+
 
 /**
  * Configuration for the log service.
@@ -10,7 +10,7 @@ export interface LogServiceConfig extends Record<string, unknown> {
     /**
      * The log level for the application.
      */
-    logLevel?: LogLevel;
+    logLevel?: number;
 
     /**
      * Whether or not to use the local log level of the calling object.
@@ -95,12 +95,12 @@ export interface LogServiceConfig extends Record<string, unknown> {
     /**
      * The list of log levels that are allowed to be logged.
      */
-    logLevelWhiteList?: LogLevel[];
+    logLevelWhiteList?: number[];
 
     /**
      * The list of log levels that are not allowed to be logged.
      */
-    logLevelBlackList?: LogLevel[];
+    logLevelBlackList?: number[];
 
     /**
      * The access mode for the log level white list/black list.
@@ -164,57 +164,4 @@ export interface LogServiceConfig extends Record<string, unknown> {
      * The value is the function to call when the key is pressed.
      */
     customKeyListeners?: FunctionMap;
-}
-
-export function isLogLevel(value: unknown): value is LogLevel {
-    return typeof value === 'number' && Object.values(LogLevel).includes(value);
-}
-
-export function isLogLevelArray(value: unknown): value is LogLevel[] {
-    return Array.isArray(value) && value.every(isLogLevel);
-}
-
-export function isLogAccessMode(value: unknown): value is LogAccessMode {
-    return typeof value === 'string' && ['whitelist', 'blacklist', 'none'].includes(value);
-}
-
-const AccessModeProp = { typeGuard: isLogAccessMode, optional: true };
-
-const logServiceTypeMap: TypeMapping<LogServiceConfig> = {
-    logLevel: { typeGuard: isLogLevel, optional: true },
-    useLocalLogLevel: OptionalBooleanProp,
-    useStrictLocalLogLevel: OptionalBooleanProp,
-    useCanLog: OptionalBooleanProp,
-    logGetters: OptionalBooleanProp,
-    logSetters: OptionalBooleanProp,
-    callerWhiteList: OptionalStringArrayProp,
-    callerBlackList: OptionalStringArrayProp,
-    callerAccessMode: AccessModeProp,
-    functionWhiteList: OptionalStringArrayProp,
-    functionBlackList: OptionalStringArrayProp,
-    functionAccessMode: AccessModeProp,
-    logLevelWhiteList: { typeGuard: isLogLevelArray, optional: true },
-    logLevelBlackList: { typeGuard: isLogLevelArray, optional: true },
-    logLevelAccessMode: AccessModeProp,
-    enableReportListener: OptionalBooleanProp,
-    reportKey: OptionalStringProp,
-    enableToggleListener: OptionalBooleanProp,
-    toggleKey: OptionalStringProp,
-    toggleState: { typeGuard: isLogServiceConfig, optional: true },
-    defaultStateName: OptionalStringProp,
-    persistCurrentState: OptionalBooleanProp,
-    additonalServiceStates: { typeGuard: isLogServiceConfigRecord, optional: true },
-    customKeyListeners: { typeGuard: isFunctionRecord, optional: true}
-};
-
-export function isLogServiceConfig(value: unknown): value is LogServiceConfig {
-    return objectIsType(value, logServiceTypeMap);
-}
-
-export function isLogServiceConfigArray(value: unknown): value is LogServiceConfig[] {
-    return Array.isArray(value) && value.every(isLogServiceConfig);
-}
-
-export function isLogServiceConfigRecord(value: unknown): value is Record<string, LogServiceConfig> {
-    return isTypedRecord(value, isLogServiceConfig);
 }

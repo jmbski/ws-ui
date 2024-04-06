@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { WeakObject, LoggableObject, LogLevel } from 'warskald-ui/models';
+import { WeakObject } from 'warskald-ui/models';
 import { nanoid } from 'nanoid';
 import { ColumnDefinition, TableConfig } from './table-types';
 import { Table, TableModule } from 'primeng/table';
@@ -9,7 +9,7 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { LogService } from 'warskald-ui/services';
+import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-table',
@@ -30,7 +30,7 @@ export class WsTableComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'WsTableComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
     
     // #region public properties
 
@@ -110,14 +110,14 @@ export class WsTableComponent implements LoggableObject {
         return this._tableConfig;
     }
     set tableConfig(input: TableConfig | undefined) {
-        LogService.debug(this, 'entering', 'input:', input);
+        EzLogService.debug(this, 'entering', 'input:', input);
 
         this._tableConfig = input;
         this.columnDefs = input?.columnDefs ?? [];
         this.rowData = input?.rowData ?? [];
         this.cd.detectChanges();
 
-        LogService.debug(this, 'exiting');
+        EzLogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs
@@ -154,7 +154,7 @@ export class WsTableComponent implements LoggableObject {
     }
 
     public filterInput(event: Event) {
-        LogService.debug(this, 'entering', 'event:', event);
+        EzLogService.debug(this, 'entering', 'event:', event);
         
         if(event instanceof InputEvent) {
             this.tableRef?.filterGlobal((<HTMLInputElement>event.target).value, 'contains');

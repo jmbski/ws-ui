@@ -3,10 +3,10 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { NavLogoComponent } from 'warskald-ui/components/nav-logo';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
-import { ComponentDef, LoggableObject, LogLevel, StyleGroup } from 'warskald-ui/models';
+import { ComponentDef, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { nanoid } from 'nanoid';
-import { initStyleGroups, LogService } from 'warskald-ui/services';
+import { initStyleGroups, LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-top-nav',
@@ -26,7 +26,7 @@ export class TopNavComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'TopNavComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
     
     // #region public properties
     
@@ -103,7 +103,7 @@ export class TopNavComponent implements LoggableObject {
         return this._config;
     }
     set config(input: Partial<TopNavComponent> | undefined) {
-        LogService.debug(this, 'entering', 'input:', input);
+        EzLogService.debug(this, 'entering', 'input:', input);
 
         delete input?.config;
         this._config = input;
@@ -111,7 +111,7 @@ export class TopNavComponent implements LoggableObject {
 
         this.initStyleGroups();
 
-        LogService.debug(this, 'exiting');
+        EzLogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs
@@ -240,11 +240,11 @@ export class TopNavComponent implements LoggableObject {
 
     ngAfterViewInit() {
         const appTopNav: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav');
-        LogService.debug(this, 'appTopNav:', appTopNav);
+        EzLogService.debug(this, 'appTopNav:', appTopNav);
 
         if(appTopNav) {
             const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
-            LogService.debug(this, 'appTopNavShadow:', appTopNavShadow);
+            EzLogService.debug(this, 'appTopNavShadow:', appTopNavShadow);
             
             if(appTopNavShadow) {
                 appTopNavShadow.style.height = `${appTopNav.offsetHeight}px`;

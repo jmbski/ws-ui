@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Type, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap, LoggableObject, LogLevel } from 'warskald-ui/models';
+import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImageComponent } from 'warskald-ui/components/image';
 import { TextBlockComponent } from 'warskald-ui/components/text-block';
 import { isString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
-import { Loggable, LogService } from 'warskald-ui/services';
+import { Loggable, LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
@@ -29,7 +29,7 @@ export class ElementRendererComponent extends ComponentClassBase implements Logg
 
     readonly LOCAL_ID: string = 'ElementRendererComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
 
     // #region public properties
 
@@ -57,7 +57,7 @@ export class ElementRendererComponent extends ComponentClassBase implements Logg
         return this._elements;
     }
     set elements(input: IComponentConfig[]) {
-        LogService.debug(this, 'setting elements', 'input:', input);
+        EzLogService.debug(this, 'setting elements', 'input:', input);
 
         this._elements = input;
         this.model$.next(this.toModels(input));

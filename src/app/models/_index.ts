@@ -1,3 +1,4 @@
+export * from './components/_index';
 export * from './data-source';
 export * from './dynamic-injector';
 export * from './extensions';

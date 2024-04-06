@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { BlockableUI } from 'primeng/api';
-import { Loggable, LogService } from 'warskald-ui/services';
-import { LoggableObject, LogLevel } from 'warskald-ui/models';
+import { Loggable, LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-blockable-ui',
@@ -15,10 +14,10 @@ import { LoggableObject, LogLevel } from 'warskald-ui/models';
 export class BlockableUiComponent implements BlockableUI, LoggableObject  {
     readonly LOCAL_ID: string = 'BlockableUiComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
 
     constructor(private el: ElementRef) {
-        LogService.debug(this, 'constructed');
+        EzLogService.debug(this, 'constructed');
     }
 
     @Loggable()

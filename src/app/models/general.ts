@@ -70,78 +70,15 @@ export interface ComponentDef<T> {
     config?: Partial<T>;
 }
 
-/**
- * Interface for objects that can be logged.
- */
-export interface LoggableObject {
+export interface BaseComponentClass {
     LOCAL_ID: string;
-    localLogLevel?: LogLevel;
+    localLogLevel?: number;
     canLog?: boolean;
-}
-
-export interface BaseComponentClass extends LoggableObject {
     cd: ChangeDetectorRef;
 
     [key: string]: unknown;
 }
 export type FunctionMap = Record<string, GeneralFunction<unknown>>;
-
-/**
- * Log levels in order of severity.
- */
-export enum LogLevel {
-    Experimental,
-    Trace,
-    Debug,
-    Info,
-    Log,
-    Warn,
-    Error,
-    Assert,
-    None
-}
-
-/**
- * Interface for log settings.
- */
-export type LocalLogSettings = Partial<LoggableObject>;
-
-/**
- * Access modes for white/black lists.
- */
-export type LogAccessMode = 'whitelist' | 'blacklist' | 'none';
-export type ConsoleFunctLevelMap = Record<ConsoleFunctName, ConsoleFunctDef>;export enum ConsoleFuncts {
-    Assert = 'assert',
-    Clear = 'clear',
-    Count = 'count',
-    CountReset = 'countReset',
-    Debug = 'debug',
-    Dir = 'dir',
-    Dirxml = 'dirxml',
-    Error = 'error',
-    Group = 'group',
-    GroupCollapsed = 'groupCollapsed',
-    GroupEnd = 'groupEnd',
-    Info = 'info',
-    Log = 'log',
-    Table = 'table',
-    Time = 'time',
-    TimeEnd = 'timeEnd',
-    TimeLog = 'timeLog',
-    TimeStamp = 'timeStamp',
-    Trace = 'trace',
-    Warn = 'warn'
-}
 // direct import of environment variables will be done for the work
 // version, since that will be a local service, not a packaged library
 // import { environment, logServiceConfig } from 'environment';
-
-export type ConsoleFunctName = Exclude<keyof Console, 'Console' | 'profile' | 'profileEnd'>;
-
-export interface ConsoleFunctDef {
-    logLevel: LogLevel;
-    getArgs: (...args: unknown[]) => unknown[];
-    /** if true, the context string will be included in the getArgs function */
-    contextStringInArgs?: boolean;
-}
-

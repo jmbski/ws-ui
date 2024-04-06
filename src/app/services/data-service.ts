@@ -7,15 +7,14 @@ import {
     RegisterDataSourceParams 
 } from 'warskald-ui/models';
 import { Subscription } from 'rxjs';
-import { LogService } from './log-service/log-service';
-import { LoggableObject, LogLevel } from 'warskald-ui/models';
+import { Loggable, LoggableObject, LogLevels, EzLogService } from './log-service/_index';
 
 export const DEFAULT_SRC_NAMES = new InjectionToken<string[]>('DEFAULT_SRC_NAMES');
 
 @Injectable({providedIn: 'root'})
 export class DataService implements LoggableObject {
     public readonly LOCAL_ID: string = 'data-service';
-    public localLogLevel?: LogLevel = LogLevel.Error;
+    public localLogLevel?: number = LogLevels.Error;
     // #region public properties
 
     public dataSources: Map<string, DataSource> = new Map<string, DataSource>();
@@ -57,7 +56,7 @@ export class DataService implements LoggableObject {
     constructor(
         @Inject(DEFAULT_SRC_NAMES) private defaultSrcNames?: string[],
     ) {
-        LogService.debug(this, 'entering', `defaultSrcNames: ${this.defaultSrcNames}`);
+        EzLogService.debug(this, 'entering', `defaultSrcNames: ${this.defaultSrcNames}`);
 
         if(this.defaultSrcNames) {
             Object.values(this.defaultSrcNames).forEach((dataSource) => {
@@ -71,14 +70,14 @@ export class DataService implements LoggableObject {
             }
         });
 
-        LogService.debug(this, 'exiting');
+        EzLogService.debug(this, 'exiting');
     }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
+    @Loggable()
     public registerDataSource(params: RegisterDataSourceParams): Promise<DataSource> {
-        LogService.debug(this, 'entering', `params: ${params}`);
 
         const {
             id, message, value, emitFirstValue, emitIfUndefined 
@@ -95,30 +94,30 @@ export class DataService implements LoggableObject {
             this.dataSources.set(id, dataSource);
         }
 
-        LogService.debug(this, 'exiting', dataSource);
+        EzLogService.debug(this, 'exiting', dataSource);
         return new Promise<DataSource>(resolve => {
             resolve(dataSource);
         
         });
     }
 
+    @Loggable()
     public getDataSource(id: string): DataSource | undefined {
-        LogService.debug(this, 'entering', `id: ${id}`);
         return this.dataSources.get(id);
     }
 
+    @Loggable()
     public removeDataSource(id: string): void {
-        LogService.debug(this, 'entering', `id: ${id}`);
         this.dataSources.delete(id);
     }
 
+    @Loggable()
     public clearDataSources(): void {
-        LogService.debug(this, 'entering');
         this.dataSources.clear();
     }
 
+    @Loggable()
     public subscribeToDataSource(id: string,  subscriber: LocalObject, callback: GeneralFunction<unknown>): Subscription | undefined {
-        LogService.debug(this, 'entering', `id: ${id}, subscriber: ${subscriber}, callback: ${callback}`);
 
         const dataSource: DataSource | undefined = this.getDataSource(id);
         
@@ -132,32 +131,29 @@ export class DataService implements LoggableObject {
         }
         
         else {
-            LogService.debug(this, 'exiting', dataSource.value$);
 
             return dataSource.value$.subscribe(message => {
                 message.readValue(subscriber, callback);
             });
         }
 
-        LogService.debug(this, 'exiting undefined');
         return undefined;
     }
 
+    @Loggable()
     public getDataSourceValue(id: string): unknown {
-        LogService.debug(this, 'entering', `id: ${id}`);
 
         const dataSource: DataSource | undefined = this.getDataSource(id);
         if(dataSource) {
-            LogService.debug(this, 'exiting', dataSource.getValue());
+            EzLogService.debug(this, 'exiting', dataSource.getValue());
             return dataSource.getValue();
         }
 
-        LogService.debug(this, 'exiting undefined');
         return undefined;
     }
 
+    @Loggable()
     public updateDataSource(id: string, content: DataSourceMessage | unknown): void {
-        LogService.debug(this, 'entering', `id: ${id}, content: ${content}`);
 
         const dataSource: DataSource | undefined = this.getDataSource(id);
         const dsMessage: DataSourceMessage = content instanceof DataSourceMessage ? content : new DataSourceMessage(content);
@@ -167,10 +163,9 @@ export class DataService implements LoggableObject {
         else {
             this.registerDataSource({id, message: dsMessage});
         }
-
-        LogService.debug(this, 'exiting');
     }
 
+    @Loggable()
     public debugSources(): void {
         console.log('DataSources output:');
         for(const [key, value] of this.dataSources) {

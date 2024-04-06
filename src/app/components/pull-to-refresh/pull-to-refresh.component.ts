@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { Loggable, LogService } from 'warskald-ui/services';
-import { LoggableObject, LogLevel } from 'warskald-ui/models';
+import { Loggable, LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
 
 @Component({
     selector: 'pull-to-refresh',
@@ -17,7 +16,7 @@ export class PullToRefreshComponent implements LoggableObject {
 
     readonly LOCAL_ID: string = 'PullToRefreshComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
     
     @ViewChild('pullToRefresh') pullToRefresh?: ElementRef;
 
@@ -34,14 +33,14 @@ export class PullToRefreshComponent implements LoggableObject {
     }
 
     ngAfterViewInit() {
-        LogService.debug(this, 'ngAfterViewInit');
+        EzLogService.debug(this, 'ngAfterViewInit');
 
         this.resizeObserver = new ResizeObserver((data: ResizeObserverEntry[]) => {
-            LogService.debug(this, 'entering resizeObserver', 'data:', data);
+            EzLogService.debug(this, 'entering resizeObserver', 'data:', data);
 
             this.pullHeightStart = data[0].contentRect.height * 0.15;
 
-            LogService.debug(this, 'exiting resizeObserver', 'this.pullHeightStart:', this.pullHeightStart);
+            EzLogService.debug(this, 'exiting resizeObserver', 'this.pullHeightStart:', this.pullHeightStart);
         });
 
         this.updateTranslateStyle();
@@ -80,7 +79,7 @@ export class PullToRefreshComponent implements LoggableObject {
             });
 
             document.addEventListener('touchend', () => {
-                LogService.debug(this, 'touchend', 'this.refreshTranslate:', this.refreshTranslate);
+                EzLogService.debug(this, 'touchend', 'this.refreshTranslate:', this.refreshTranslate);
 
                 if (this.refreshTranslate >= 0) {
                     location.reload();
@@ -92,7 +91,7 @@ export class PullToRefreshComponent implements LoggableObject {
                 this.refreshTranslate = -100;
                 this.updateTranslateStyle();
 
-                LogService.debug(this, 'exiting touchend');
+                EzLogService.debug(this, 'exiting touchend');
             });
         }
 
@@ -104,7 +103,7 @@ export class PullToRefreshComponent implements LoggableObject {
         const element: HTMLElement = this.pullToRefresh?.nativeElement as HTMLElement;
 
         if(element) {
-            LogService.debug(this, 'element:', element);
+            EzLogService.debug(this, 'element:', element);
             element.style.translate = this.refreshTranslatePx;
         }
     }

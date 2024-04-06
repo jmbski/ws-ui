@@ -3,7 +3,8 @@ import {
     ContainerConfig, 
     ElementType, 
     IComponentConfig, 
-    TextBlockConfig 
+    TextBlockConfig, 
+    WsImageConfig
 } from 'warskald-ui/models';
 
 import { 
@@ -16,10 +17,9 @@ import {
     OptionalWeakObjectProp, 
     OptionalStringProp, 
     OptionalStyleProp, 
-    StringProp 
+    StringProp, 
+    OptionalNumberProp
 } from './general-type-guards';
-
-import { ImageComponent, WsImageConfig } from 'warskald-ui/components/image';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
 
@@ -81,7 +81,10 @@ export const ContainerTypeMap: TypeMapping<ContainerConfig> = {
     elements: { typeGuard: IsIComponentConfigArray }
 };
 
-export const ImageTypeMap: TypeMapping<ImageComponent> = {
+export const ImageTypeMap: TypeMapping<WsImageConfig> = {
+    LOCAL_ID: StringProp,
+    canLog: OptionalBooleanProp,
+    localLogLevel: OptionalNumberProp,
     elementType: { typeGuard: IsImageEnum },
     src: OptionalStringProp,
 };

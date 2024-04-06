@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
 import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
-import { ComponentDef, LoggableObject, LogLevel, LocalObject, StyleGroup, ConsoleFuncts } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
-import { Loggable, LogService, Utils } from 'warskald-ui/services';
+import { ConsoleFuncts, Loggable, LoggableObject, LogLevels, EzLogService, Utils } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
+import { ComponentDef, StyleGroup } from 'warskald-ui/models';
 
 
 @Component({
@@ -22,7 +22,7 @@ import { nanoid } from 'nanoid';
 export class PageLayoutComponent implements LoggableObject {
     LOCAL_ID: string = 'PageLayoutComponent_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Debug;
+    localLogLevel?: number = LogLevels.Debug;
 
     // #region public properties
 
@@ -70,12 +70,12 @@ export class PageLayoutComponent implements LoggableObject {
         return this._pageLayoutStyle;
     }
     set pageLayoutStyle(input: StyleGroup | undefined) {
-        LogService.debug(this, 'entering', input);
+        EzLogService.debug(this, 'entering', input);
 
         this._pageLayoutStyle = input;
         this.pageLayoutStyleClasses = Utils.MergeStyleGroupClasses(input, this.defaultPageLayoutStyleClass);
 
-        LogService.debug(this, 'exiting', 'this.pageLayoutStyleClasses:', this.pageLayoutStyleClasses);
+        EzLogService.debug(this, 'exiting', 'this.pageLayoutStyleClasses:', this.pageLayoutStyleClasses);
     }
     
     private _pageContentStyle?: StyleGroup;
@@ -84,12 +84,12 @@ export class PageLayoutComponent implements LoggableObject {
         return this._pageContentStyle;
     }
     set pageContentStyle(input: StyleGroup | undefined) {
-        LogService.debug(this, 'entering', input);
+        EzLogService.debug(this, 'entering', input);
 
         this._pageContentStyle = input;
         this.pageContentStyleClasses = Utils.MergeStyleGroupClasses(input, this.defaultPageContentStyleClass);
 
-        LogService.debug(this, 'exiting', 'this.pageContentStyleClasses:', this.pageContentStyleClasses);
+        EzLogService.debug(this, 'exiting', 'this.pageContentStyleClasses:', this.pageContentStyleClasses);
     }
     
     private _config?: PageLayoutConfig;
@@ -102,12 +102,12 @@ export class PageLayoutComponent implements LoggableObject {
         this.localLogLevel = localLogLevel ?? this.localLogLevel;
         this.canLog = canLog ?? this.canLog;
         
-        LogService.debug(this, 'entering', input);
+        EzLogService.debug(this, 'entering', input);
 
         this._config = input;
         Object.assign(this, input);
 
-        LogService.debug(this, 'exiting', this._config);
+        EzLogService.debug(this, 'exiting', this._config);
     }
     
     // #endregion get/set inputs

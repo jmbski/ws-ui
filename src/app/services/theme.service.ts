@@ -1,9 +1,8 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
-import { LocalObject, UnionTypeOf, stringLiterals } from 'warskald-ui/models';
+import { UnionTypeOf, stringLiterals } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
-import { LogService } from './log-service/log-service';
-import { LoggableObject, LogLevel } from 'warskald-ui/models';
+import { LoggableObject, LogLevels, EzLogService } from './log-service/_index';
 
 export const ThemeNames = stringLiterals('viva-dark', 'viva-light', 'medieval-wood', 'blank', 'layout');
 export type ThemeName = UnionTypeOf<typeof ThemeNames>;
@@ -16,12 +15,12 @@ export const SecondaryTheme: BehaviorSubject<ThemeName> = new BehaviorSubject<Th
 })
 export class ThemeService implements LoggableObject {
     readonly LOCAL_ID: string = 'ThemeService';
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
 
     public linkElementMap: {[key: string]: HTMLLinkElement} = {};
 
     constructor(@Inject(DOCUMENT) private document: Document) {
-        LogService.debug(this, 'entering');
+        EzLogService.debug(this, 'entering');
 
         const linkElements: HTMLLinkElement[] = Array.from(document.getElementsByTagName('link'));
         const themeELements: HTMLLinkElement[] = linkElements.filter(element => element.rel === 'stylesheet' && element.id !== '');
@@ -29,12 +28,12 @@ export class ThemeService implements LoggableObject {
             this.linkElementMap[element.id] = element;
         });
 
-        LogService.debug(this, 'exiting');
+        EzLogService.debug(this, 'exiting');
     }
 
 
     switchTheme(theme: ThemeName, linkId: string = 'base-theme') {
-        LogService.debug(this, 'entering', `theme: ${theme}`, `linkId: ${linkId}`);
+        EzLogService.debug(this, 'entering', `theme: ${theme}`, `linkId: ${linkId}`);
 
         let themeLink: HTMLLinkElement | undefined = this.linkElementMap[linkId];
         /* <link id="secondary-theme" rel="stylesheet" type="text/css" href="/blank.css" /> */
@@ -57,6 +56,6 @@ export class ThemeService implements LoggableObject {
             themeLink.href = themeCSS;
         }
 
-        LogService.debug(this, 'exiting');
+        EzLogService.debug(this, 'exiting');
     }
 }

@@ -23,10 +23,9 @@ import {
     TopNavConfig,
     WsTableComponent
 } from 'warskald-ui/components';
-import { WSMenuItem, LoggableObject, LogLevel } from 'warskald-ui/models';
+import { WSMenuItem } from 'warskald-ui/models';
 import { PrimeNGConfig } from 'primeng/api';
-import { NavigationService } from '../services/navigation-service';
-import { Router } from 'express';
+import { LoggableObject, LogLevels, NavigationService } from 'warskald-ui/services';
 
 @Component({
     selector: 'ws-showcase',
@@ -55,7 +54,7 @@ import { Router } from 'express';
 export class ShowcaseComponent implements LoggableObject {
     readonly LOCAL_ID: string = 'ShowcaseComponent';
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
 
     // #region public properties
 

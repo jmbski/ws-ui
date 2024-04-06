@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
-import { LogService } from './log-service/log-service';
-import { LogLevel, LoggableObject } from 'warskald-ui/models';
+import { LoggableObject, LogLevels, EzLogService } from './log-service/_index';
 import { nanoid } from 'nanoid';
 
 @Injectable({providedIn: 'root'})
 export class ToastService implements LoggableObject {
     LOCAL_ID: string = 'ToastService_' + nanoid();
     canLog?: boolean = true;
-    localLogLevel?: LogLevel = LogLevel.Error;
+    localLogLevel?: number = LogLevels.Error;
 
     // #region public properties
     
@@ -57,12 +56,12 @@ export class ToastService implements LoggableObject {
     // #region public methods
 
     public showToast(message: Message) {
-        LogService.debug(this, 'message:', message);
+        EzLogService.debug(this, 'message:', message);
         this.messageService.add(message);
     }
 
     public showSuccess(detail: string, summary?: string, ): void {
-        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
 
         this.messageService.add({
             severity: 'success',
@@ -72,7 +71,7 @@ export class ToastService implements LoggableObject {
     }
 
     public showInfo(detail: string, summary?: string, ): void {
-        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
 
         this.messageService.add({
             severity: 'info',
@@ -82,7 +81,7 @@ export class ToastService implements LoggableObject {
     }
 
     public showWarn(detail: string, summary?: string, ): void {
-        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
 
         this.messageService.add({
             severity: 'warn',
@@ -92,7 +91,7 @@ export class ToastService implements LoggableObject {
     }
 
     public showError(detail: string, summary?: string, ): void {
-        LogService.debug(this, 'detail:', detail, 'summary:', summary);
+        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
         
         this.messageService.add({
             severity: 'error',
