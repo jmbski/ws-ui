@@ -6,8 +6,14 @@ import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
 import { ComponentDef, StyleGroup } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { nanoid } from 'nanoid';
-import { initStyleGroups, LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 
+@LoggableComponent({
+    LOCAL_ID: 'TopNavComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 @Component({
     selector: 'ws-top-nav',
     standalone: true,
@@ -22,11 +28,7 @@ import { initStyleGroups, LoggableObject, LogLevels, EzLogService } from 'warska
     styleUrl: './top-nav.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopNavComponent implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'TopNavComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class TopNavComponent {
     
     // #region public properties
     
@@ -103,15 +105,12 @@ export class TopNavComponent implements LoggableObject {
         return this._config;
     }
     set config(input: Partial<TopNavComponent> | undefined) {
-        EzLogService.debug(this, 'entering', 'input:', input);
 
         delete input?.config;
         this._config = input;
         Object.assign(this, input);
 
-        this.initStyleGroups();
-
-        EzLogService.debug(this, 'exiting');
+        initStyleGroups.bind(this)();
     }
     
     // #endregion get/set inputs
@@ -131,125 +130,7 @@ export class TopNavComponent implements LoggableObject {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        /* const menuItems: WSMenuItem[] = [
-            {
-                label: 'About',
-                isExpanded: false,
-                items: [
-                    {
-                        label: 'Our Story',
-                    },
-                    {
-                        label: 'Mission & Values',
-                    },
-                    {
-                        label: 'Meet The Members',
-                    }
-                ]
-            },
-            {
-                label: 'Historical Insights',
-                isExpanded: false,
-                items: [
-                    {
-                        label: 'Life in the Hundred Years\' War',
-                    },
-                    {
-                        label: 'Weapons & Warfare',
-                    },
-                    {
-                        label: 'Fashion & Culture',
-                    }
-                ]
-            },
-            {
-                label: 'Events',
-                isExpanded: false,
-                items: [
-                    {
-                        label: 'Event Calendar',
-                    },
-                    {
-                        label: 'Upcoming Events',
-                    },
-                    {
-                        label: 'Past Events',
-                    },
-                ]
-            },
-            {
-                label: 'Resources',
-                isExpanded: false,
-                items: [
-                    {
-                        label: 'Research Library',
-                    },
-                    {
-                        label: 'Educational Materials',
-                    },
-                    {
-                        label: 'Historical Recipes',
-                    },
-                    {
-                        label: 'Historical Games',
-                    },
-                    {
-                        label: 'External Links',
-                    },
-                    {
-                        label: 'Tutorials'
-                    },
-                ]
-            },
-            {
-                label: 'Contact Us',
-                isExpanded: false,
-                items: [
-                    {
-                        label: 'Contact Information',
-                    },
-                    {
-                        label: 'Books Us For An Event',
-                    },
-                    {
-                        label: 'Volunteer Opportunities',
-                    },
-                    {
-                        label: 'Join Our Mailing List',
-                    },
-                    {
-                        label: 'Donate',
-                    },
-                    {
-                        label: 'Heed The Clarion Call (Join)'
-                    }
-                ]
-            }
-        ];
-
-        this.model = [
-            {
-                label: 'Menu',
-                items: menuItems,
-                isExpanded: false,
-            }
-        ];
-
-        LogService.debug(this, 'this.model:', this.model); */
-    }
-
-    ngAfterViewInit() {
-        const appTopNav: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav');
-        EzLogService.debug(this, 'appTopNav:', appTopNav);
-
-        if(appTopNav) {
-            const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
-            EzLogService.debug(this, 'appTopNavShadow:', appTopNavShadow);
-            
-            if(appTopNavShadow) {
-                appTopNavShadow.style.height = `${appTopNav.offsetHeight}px`;
-            }
-        }
+        
     }
     
     // #endregion constructor and lifecycle hooks
@@ -259,10 +140,6 @@ export class TopNavComponent implements LoggableObject {
 
     public setMenuItems() {
         
-    }
-
-    public initStyleGroups() {
-        initStyleGroups.bind(this)();
     }
     
     // #endregion public methods

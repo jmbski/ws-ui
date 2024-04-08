@@ -1,7 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { LoggableObject, LogLevels } from 'warskald-ui/services';
+import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 
+@LoggableComponent({
+    LOCAL_ID: 'SvgComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+
+})
 @Component({
     selector: 'ws-svg',
     standalone: true,
@@ -10,11 +17,7 @@ import { LoggableObject, LogLevels } from 'warskald-ui/services';
     styleUrl: './svg.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SvgComponent implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'SvgComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class SvgComponent {
     
     public widthVal: string = '0';
     public heightVal: string = '48';
@@ -80,24 +83,10 @@ export class SvgComponent implements LoggableObject {
     
     // #region constructor and lifecycle hooks
     constructor(
-        private el: ElementRef,
-        private cd: ChangeDetectorRef
+        public el: ElementRef,
+        public cd: ChangeDetectorRef
     ) {
-        /* afterNextRender(() => {
-            if(this.el?.nativeElement) {
-                const element: HTMLElement = this.el.nativeElement;
-                const rootElement = element.closest('.ws-menubar-item');
-                
-                if(rootElement instanceof HTMLElement) {
-                    this.widthVal = `${rootElement?.offsetWidth}`;
-                    
-                    this.cd.detectChanges();
-                }
-                
-    
-            }
-
-        }); */
+        
     }
     
     // #endregion constructor and lifecycle hooks

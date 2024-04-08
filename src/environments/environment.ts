@@ -6,6 +6,7 @@ export const logServiceConfig: LogServiceConfig = {
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,
     showConsoleFunctArgs: true,
+    callerAccessMode: 'whitelist',
     customConsoleFunctDefs: {
         timeStamp: {
             logLevel: LogLevels.Debug,
@@ -26,10 +27,10 @@ export const logServiceConfig: LogServiceConfig = {
     enableToggleListener: true,
     persistCurrentState: true,
     customKeyListeners: {
-        '1': (event: KeyboardEvent) => {
+        '1': () => {
             EzLogService.loadState('primaryState');
         },
-        '2': (event: KeyboardEvent) => {
+        '2': () => {
             EzLogService.loadState('logEverything');
         }
     }

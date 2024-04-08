@@ -7,7 +7,7 @@ import {
     ElementType, 
     IComponentConfig, 
 } from 'warskald-ui/models';
-import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent } from 'warskald-ui/services';
 import { IsTextBlock } from 'warskald-ui/type-guards';
 
 
@@ -24,6 +24,12 @@ function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
     }
 }
 
+@LoggableComponent({
+    LOCAL_ID: 'TextBlockComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 @Component({
     selector: 'ws-text-block',
     standalone: true,
@@ -34,11 +40,7 @@ function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
     styleUrl: './text-block.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextBlockComponent extends ComponentClassBase implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'TextBlockComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class TextBlockComponent extends ComponentClassBase {
 
     // #region public properties
     public override elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
@@ -100,8 +102,6 @@ export class TextBlockComponent extends ComponentClassBase implements LoggableOb
 
     ngOnInit() {
         this.cd.detectChanges();
-        // console.log('border', this.config?.illuminatedBorder);
-        EzLogService.debug(this, 'entering', 'config:', this.config);
     }
 
     // #endregion constructor and lifecycle hooks

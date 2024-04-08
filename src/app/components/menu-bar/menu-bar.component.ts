@@ -1,31 +1,22 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, TemplateRef } from '@angular/core';
 import { LayoutChangeObserver$, UseMobile } from 'warskald-ui/common';
-import { ElementSelector, StyleGroup, WSMenuItem, WSMenuItemEvent } from 'warskald-ui/models'; 
+import { ElementSelector, StyleGroup, WeakObject, WSMenuItemEvent } from 'warskald-ui/models'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
-import { NgStyleValues } from 'warskald-ui/models';
 import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { initStyleGroups, EzLogService, Loggable, LoggableObject, LogLevels } from 'warskald-ui/services';
+import { EzLogService, LogLevels, WSMenuItem, NavigationService, LayoutService, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
-
-/* export interface MenuBarConfig {
-    model: WSMenuItem[];
-
-    menuBarClass?: string;
-    menuBarStyle?: NgStyleValues;
-
-    menuItemClass?: string;
-    menuItemStyle?: NgStyleValues;
-
-    [key: string]: unknown;
-
-} */
-
+@LoggableComponent({
+    localLogLevel: LogLevels.Debug,
+    LOCAL_ID: 'MenudBarComponent_' + nanoid(),
+    canLog: true,
+    autoAddLogs: true,
+})
 @Component({
     selector: 'ws-menu-bar',
     standalone: true,
@@ -39,11 +30,7 @@ import { nanoid } from 'nanoid';
     styleUrl: './menu-bar.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuBarComponent implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'MenuBarComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Debug;
+export class MenuBarComponent implements WeakObject {
 
     // #region public properties
     public model$: BehaviorSubject<WSMenuItem[]> = new BehaviorSubject<WSMenuItem[]>([]);
@@ -143,12 +130,10 @@ export class MenuBarComponent implements LoggableObject {
     
     // #region get/set inputs
     @Input()
-    @Loggable()
     get model() {
         return this.useMobile ? this.mobileMenuItems : this.stdMenuItems;
     }
     set model(input: WSMenuItem[]) {
-        EzLogService.debug(this, 'entering', 'input', input);
 
         this.mobileMenuItems = input;
         this.stdMenuItems = input[0]?.items || [];
@@ -186,6 +171,10 @@ export class MenuBarComponent implements LoggableObject {
         this.showMenu = true;
         this.cd.detectChanges();
         this.configureMenuLayout();
+
+        setTimeout(() => {
+            this.updateTopNavShadow();
+        });
         LayoutChangeObserver$.subscribe(() => {
             
             this.useMobile = UseMobile();
@@ -193,16 +182,17 @@ export class MenuBarComponent implements LoggableObject {
             this.model$.next(this.model);
             this.cd.detectChanges();
             this.configureMenuLayout();
-            
         });
+
+        
     }
     
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
+    
 
-    @Loggable()
     public getContainerElement() {
 
         let containerElement: HTMLElement | null = null;
@@ -233,7 +223,13 @@ export class MenuBarComponent implements LoggableObject {
         return containerElement;
     }
 
-    @Loggable()
+    public updateTopNavShadow(): void {
+        //if(!LayoutService.checkTopNavShaddow()) {
+        LayoutService.updateAppTopNavShadow();
+        //}
+        this.cd.detectChanges();
+    }
+
     public updateMenuScrolling() {
 
         const element: HTMLElement = this.el.nativeElement;
@@ -258,9 +254,10 @@ export class MenuBarComponent implements LoggableObject {
             }
         }
 
+        this.updateTopNavShadow();
+
     }
 
-    @Loggable()
     public configureMenuLayout() {
 
         const element: HTMLElement = this.el.nativeElement;
@@ -284,7 +281,7 @@ export class MenuBarComponent implements LoggableObject {
             wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
                 const model = models[index];
                 const subMenuItems: HTMLElement[] = <HTMLElement[]>Array.from(wsMenuItem.getElementsByClassName('ws-menubar-submenu'));
-                EzLogService.debug(this, 'subMenuItems:', subMenuItems, 'model:', model);
+                EzLogService.debug(this, 'configureMenuLayout::wsMenuItems.forEach','subMenuItems:', subMenuItems, 'model:', model);
 
                 subMenuItems.forEach((subMenuItem: HTMLElement) => {
                     subMenuItem.style.maxWidth = `${wsMenuItem.offsetWidth}px`;
@@ -305,7 +302,16 @@ export class MenuBarComponent implements LoggableObject {
         this.cd.detectChanges();
     }
 
-    @Loggable()
+    public collapseAll(models: WSMenuItem[] = this.useMobile ? this.mobileMenuItems : this.stdMenuItems) {
+        models.forEach((model) => {
+            model.isExpanded = false;
+            if(model.items?.length) {
+                this.collapseAll(model.items);
+            }
+        });
+        this.cd.detectChanges();
+    }
+
     public handleItemClick(event: WSMenuItemEvent, model: WSMenuItem) {
         if(model.items?.length) {
             model.isExpanded = !model.isExpanded;
@@ -320,6 +326,10 @@ export class MenuBarComponent implements LoggableObject {
         }
         if(model.command) {
             model.command(event);
+        }
+        if(model.navAction) {
+            this.collapseAll();
+            NavigationService.navigate(model.navAction);
         }
         this.cd.detectChanges();
     }

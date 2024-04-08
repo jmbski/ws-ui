@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
-import { LoggableObject, LogLevels } from './log-service/_index';
+import { LoggableClass, LogLevels } from './log-service/_index';
+import { PageLayoutConfig } from '../components/page-layout/page-layout.component';
+import { DataService, MenuService } from './_index';
+import { isWSMenuItemArray } from './menu-service/menu-service-typeguards';
 
+@LoggableClass({
+    LOCAL_ID: 'LayoutService',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Debug
+})
 @Injectable({
     providedIn: 'root'
 })
-export class LayoutService implements LoggableObject{
-    LOCAL_ID: string = 'LayoutService';
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Debug;
+export class LayoutService {
 
     // #region public properties
     
@@ -54,6 +60,42 @@ export class LayoutService implements LoggableObject{
     
     
     // #region public methods
+
+    public static formatID(id: string): string {
+        return id.startsWith('layout-') ? id : `layout-${id}`;
+    }
+
+    public static setLayout(id: string, layout: PageLayoutConfig): void {
+        if(isWSMenuItemArray(layout.wsTopNavConfig?.navMenuDef?.config)) {
+            MenuService.setMenu(id, layout.wsTopNavConfig.navMenuDef.config);
+        }
+        DataService.registerDataSource({
+            id: LayoutService.formatID(id),
+            emitFirstValue: true,
+            value: layout,
+        });
+    }
+
+    public static getLayout(id: string): PageLayoutConfig | undefined {
+        const layout = DataService.getDataSourceValue(`layout-${id}`);
+        return layout as PageLayoutConfig;
+    }
+
+    public static updateAppTopNavShadow(): void {
+        const appTopNav: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav');
+        if(appTopNav) {
+            const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
+
+            if(appTopNavShadow && appTopNav.offsetHeight > 0) {
+                appTopNavShadow.style.height = `${appTopNav.offsetHeight}px`;
+            }
+        }
+    }
+
+    public static checkTopNavShaddow(): boolean {
+        const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
+        return appTopNavShadow.clientHeight > 0;
+    }
     
     // #endregion public methods
     

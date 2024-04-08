@@ -1,10 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
+import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { isComponentClass, isTemplateRef } from 'warskald-ui/type-guards';
-import { ComponentDef, LocalObject } from 'warskald-ui/models';
-import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
+import { ComponentDef } from 'warskald-ui/models';
+import { LogLevels, LoggableComponent } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
+@LoggableComponent({
+    LOCAL_ID: 'DynamicComponent' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 @Component({
     selector: 'ws-dynamic',
     standalone: true,
@@ -14,10 +20,7 @@ import { nanoid } from 'nanoid';
     templateUrl: './dynamic.component.html',
     styleUrl: './dynamic.component.scss'
 })
-export class DynamicComponent implements LoggableObject {
-    readonly LOCAL_ID: string = 'DynamicComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class DynamicComponent {
 
     // #region public properties
     
@@ -58,15 +61,12 @@ export class DynamicComponent implements LoggableObject {
         return this._config;
     }
     set config(input: Partial<DynamicComponent> | undefined) {
-        EzLogService.debug(this, 'entering', 'input:', input);
 
         delete input?.config;
         this._config = input;
         Object.assign(this, input);
 
         this.cd.markForCheck();
-
-        EzLogService.debug(this, 'exiting');
     }
 
     // #endregion get/set inputs

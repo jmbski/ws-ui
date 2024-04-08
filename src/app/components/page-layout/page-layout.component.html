@@ -1,6 +1,6 @@
 <div 
     [ngClass]="pageLayoutStyleClasses"
-    [style]="pageLayoutStyle?.style">
+    [style]="pageLayoutStyles?.style">
     
     <ng-container *ngIf="customTopNavDef; else wsTopNav">
         <ws-dynamic [componentDef]="customTopNavDef"></ws-dynamic>
@@ -12,7 +12,7 @@
 
     <div 
         [ngClass]="pageContentStyleClasses"
-        [style]="pageContentStyle?.style">
+        [style]="pageContentStyles?.style">
         
         <ng-content></ng-content>
     </div>

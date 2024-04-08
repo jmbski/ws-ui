@@ -2,11 +2,42 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateR
 import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
-import { ConsoleFuncts, Loggable, LoggableObject, LogLevels, EzLogService, Utils } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 import { ComponentDef, StyleGroup } from 'warskald-ui/models';
+import { isComponentDef, objIsType, OptionalBooleanProp, OptionalNumberProp, OptionalStyleGroupProp, OptionalStyleProp, OptionalWeakObjectProp, TypeMapping } from 'warskald-ui/type-guards';
 
 
+export interface PageLayoutConfig {
+    LOCAL_ID?: string;
+    localLogLevel?: number;
+    canLog?: boolean;
+    pageLayoutStyles?: StyleGroup;
+    pageContentStyles?: StyleGroup;
+    customTopNavDef?: ComponentDef<unknown>;
+    wsTopNavConfig?: TopNavConfig;
+}
+
+const pageLayoutConfigTypeMap: TypeMapping<PageLayoutConfig> = {
+    LOCAL_ID: OptionalStyleProp,
+    localLogLevel: OptionalNumberProp,
+    canLog: OptionalBooleanProp,
+    pageLayoutStyles: OptionalStyleGroupProp,
+    pageContentStyles: OptionalStyleGroupProp,
+    customTopNavDef: { predicate: isComponentDef, optional: true },
+    wsTopNavConfig: OptionalWeakObjectProp,
+};
+
+export function isPageLayoutConfig(value: unknown): value is PageLayoutConfig {
+    return objIsType(value, pageLayoutConfigTypeMap);
+}
+
+@LoggableComponent({
+    LOCAL_ID: 'PageLayoutComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Debug
+})
 @Component({
     selector: 'ws-page-layout',
     standalone: true,
@@ -19,10 +50,9 @@ import { ComponentDef, StyleGroup } from 'warskald-ui/models';
     styleUrl: './page-layout.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PageLayoutComponent implements LoggableObject {
-    LOCAL_ID: string = 'PageLayoutComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Debug;
+export class PageLayoutComponent {
+
+    [key: string]: unknown;
 
     // #region public properties
 
@@ -51,46 +81,22 @@ export class PageLayoutComponent implements LoggableObject {
 
     @Input() topNavTemplate: TemplateRef<unknown> | null = null;
 
-    /* @Input() pageLayoutStyle?: StyleGroup;
+    /* @Input() pageLayoutStyles?: StyleGroup;
 
-    @Input() pageContentStyle?: StyleGroup; */
+    @Input() pageContentStyles?: StyleGroup; */
 
     @Input() customTopNavDef?: ComponentDef<unknown>;
 
     @Input() wsTopNavConfig?: TopNavConfig;
+
+    @Input() pageLayoutStyles?: StyleGroup;
+    
+    @Input() pageContentStyles?: StyleGroup;
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
-
-    private _pageLayoutStyle?: StyleGroup;
-    @Input()
-    get pageLayoutStyle() {
-        return this._pageLayoutStyle;
-    }
-    set pageLayoutStyle(input: StyleGroup | undefined) {
-        EzLogService.debug(this, 'entering', input);
-
-        this._pageLayoutStyle = input;
-        this.pageLayoutStyleClasses = Utils.MergeStyleGroupClasses(input, this.defaultPageLayoutStyleClass);
-
-        EzLogService.debug(this, 'exiting', 'this.pageLayoutStyleClasses:', this.pageLayoutStyleClasses);
-    }
-    
-    private _pageContentStyle?: StyleGroup;
-    @Input()
-    get pageContentStyle() {
-        return this._pageContentStyle;
-    }
-    set pageContentStyle(input: StyleGroup | undefined) {
-        EzLogService.debug(this, 'entering', input);
-
-        this._pageContentStyle = input;
-        this.pageContentStyleClasses = Utils.MergeStyleGroupClasses(input, this.defaultPageContentStyleClass);
-
-        EzLogService.debug(this, 'exiting', 'this.pageContentStyleClasses:', this.pageContentStyleClasses);
-    }
     
     private _config?: PageLayoutConfig;
     @Input()
@@ -98,16 +104,9 @@ export class PageLayoutComponent implements LoggableObject {
         return this._config;
     }
     set config(input: PageLayoutConfig | undefined) {
-        const { localLogLevel, canLog } = input ?? {};
-        this.localLogLevel = localLogLevel ?? this.localLogLevel;
-        this.canLog = canLog ?? this.canLog;
-        
-        EzLogService.debug(this, 'entering', input);
 
         this._config = input;
         Object.assign(this, input);
-
-        EzLogService.debug(this, 'exiting', this._config);
     }
     
     // #endregion get/set inputs
@@ -127,21 +126,17 @@ export class PageLayoutComponent implements LoggableObject {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
+    }
 
-        const test = this.testFunct(5, 10, 15);
-        console.log('testfunct result', test);
+    ngAfterViewInit() {
+
+        initStyleGroups.bind(this)();
     }
     
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
-
-    @Loggable(ConsoleFuncts.Debug)
-    public testFunct(...nums: number[]): number {
-        return nums.reduce((acc, curr) => acc + curr, 0);
-    
-    }
     
     // #endregion public methods
     
@@ -157,5 +152,3 @@ export class PageLayoutComponent implements LoggableObject {
     
     
 }
-
-export type PageLayoutConfig = Partial<PageLayoutComponent>;

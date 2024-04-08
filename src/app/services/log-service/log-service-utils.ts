@@ -1,10 +1,12 @@
-import { GeneralFunction, WeakObject } from 'warskald-ui/models';
+import { GenericFunction, WeakObject } from 'warskald-ui/models';
 import { isWeakObject, isStringArray, isString } from 'warskald-ui/type-guards';
 import { isConsoleDirOptions } from './log-service-typeguards';
 import { ConsoleDirOptions, ConsoleFunctLevelMap } from './log-service-types';
 import { LogLevels, LogSvcIgnoredStrings$ } from './log-service-constants';
 
-
+/**
+ * Map of console functions to their log levels and argument parsing functions
+ */
 export const consoleFunctDefMap: ConsoleFunctLevelMap = {
     assert: {
         logLevel: LogLevels.Assert,
@@ -102,11 +104,11 @@ export const consoleFunctDefMap: ConsoleFunctLevelMap = {
  * @returns - Array of argument names
  * @param fn - The function to parse
  */
-export function getArgNames(fn: GeneralFunction<unknown>): string[] {
+export function getArgNames(fn: GenericFunction<unknown>): string[] {
     // First match everything inside the function argument parentheses.
     const functStr = fn.toString();
     if(functStr) {
-        const args = functStr.match(/^\w+\((.+?)\)\s*{/)?.[1];
+        const args = functStr.match(/^.+\((.+?)\)\s{/)?.[1];
      
         if(args) {
             return args.split(',').map(function(arg) {
@@ -121,7 +123,14 @@ export function getArgNames(fn: GeneralFunction<unknown>): string[] {
     return [];
 }
 
-export function getArgsOutput(funct: GeneralFunction<unknown>, ...args: unknown[]): WeakObject {
+/**
+ * Parses the arguments of a function and returns an object with the argument names as keys
+ * 
+ * @param funct - The function to parse
+ * @param args - The arguments to parse
+ * @returns - Object with argument names as keys
+ */
+export function getArgsOutput(funct: GenericFunction<unknown>, ...args: unknown[]): WeakObject {
     const argNames = getArgNames(funct);
     const argsOutput: WeakObject = {};
     argNames.forEach((argName, index) => {
@@ -135,13 +144,24 @@ export function getArgsOutput(funct: GeneralFunction<unknown>, ...args: unknown[
 
     return argsOutput;
 }
-
+/**
+ * Retrieves the first string argument in the args array that is not in the ignored strings array
+ * 
+ * @param args - the log args passed through the log service
+ * @returns - the first string argument in the args array that is not in the ignored strings array
+ */
 export function getConsoleStringArg(...args: unknown[]): string[] {
     const prop = args.find(arg => isString(arg) && 
         !LogSvcIgnoredStrings$.getValue().includes(arg));
     return prop ? [prop as string] : [];
 }
 
+/**
+ * Retrieves the object and options arguments for the console.dir function
+ * 
+ * @param args - the log args passed through the log service
+ * @returns - the object and options arguments for the console.dir function
+ */
 export function getConsoleDirArgs(...args: unknown[]): object[] {
     const returnArgs: object[] = [];
 
@@ -159,6 +179,12 @@ export function getConsoleDirArgs(...args: unknown[]): object[] {
     return returnArgs;
 }
 
+/**
+ * Retrieves the data and columns arguments for the console.table function
+ * 
+ * @param args - the log args passed through the log service
+ * @returns - the data and columns arguments for the console.table function
+ */
 export function getConsoleTableArgs(...args: unknown[]) {
     const returnArgs: unknown[] = [];
 

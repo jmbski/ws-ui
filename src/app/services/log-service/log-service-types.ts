@@ -1,10 +1,13 @@
+import { WeakObject } from 'warskald-ui/models';
+
 /**
  * Interface for objects that can be logged.
  */
-export interface LoggableObject {
+export interface LoggableObject extends WeakObject {
     LOCAL_ID: string;
     localLogLevel?: number;
     canLog?: boolean;
+    autoAddLogs?: boolean;
 }
 
 export interface ConsoleDirOptions {

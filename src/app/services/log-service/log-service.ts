@@ -3,8 +3,9 @@ import { FunctionMap, WeakObject } from 'warskald-ui/models';
 import { LogServiceConfig } from './log-service-config';
 import { ConsoleFuncts, LogLevels, LogSvcIgnoredStrings$, logLevelConsoleFunctMap } from './log-service-constants';
 import { isLogLevel, isConsoleKey, isConsoleFunction } from './log-service-typeguards';
-import { ConsoleFunctName, ConsoleFunctLevelMap, LogAccessMode, LoggableObject, LocalLogSettings, ConsoleDirOptions, LogLevelOrFunct } from './log-service-types';
+import { ConsoleFunctName, ConsoleFunctLevelMap, LogAccessMode, LocalLogSettings, ConsoleDirOptions, LogLevelOrFunct } from './log-service-types';
 import { consoleFunctDefMap } from './log-service-utils';
+import { isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
 
 
 export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
@@ -188,7 +189,9 @@ export class EzLogService {
             'exiting',
             '\nargs:\n',
             'setting',
+            '\nsetting\n',
             'getting',
+            '\ngetting\n',
         ],
         showConsoleFunctArgs: true,
         callerWhiteList: [],
@@ -218,6 +221,9 @@ export class EzLogService {
         'defaultState': EzLogService._defaultState,
     };
 
+    /**
+     * Map of console function definitions.
+     */
     private static _consoleFunctDefMap: ConsoleFunctLevelMap = Object.assign({}, consoleFunctDefMap);
 
     // private static _envSettings: LogServiceConfig = logServiceConfig;
@@ -227,6 +233,9 @@ export class EzLogService {
     
     // #region getters/setters
 
+    /**
+     * Additional states that the service can switch between.
+     */
     static get additionalServiceStates(): Record<string, LogServiceConfig> {
         return EzLogService._serviceStates;
     }
@@ -238,6 +247,9 @@ export class EzLogService {
         }
     }
 
+    /**
+     * The default log function for the application.
+     */
     /**
      * The default log function for the application.
      */
@@ -298,51 +310,66 @@ export class EzLogService {
      * @param caller - The object that is attempting to log a message.
      * @returns - True if the message can be logged, false otherwise.
      */
-    public static canLog(callLogLevel: LogLevels, caller: LoggableObject, functName: string): boolean {
+    
+
+    /**
+     * Verifies that the provided calling object can log its output. This is based on 
+     * the log level of the calling object and the global log level, as well as the
+     * canLog property of the calling object. The service uses whichever log level is
+     * higher between the global log level and the local log level of the calling object.
+     * 
+     * @param callLogLevel - The log level of the message.
+     * @param caller - The object that is attempting to log a message.
+     * @returns - True if the message can be logged, false otherwise.
+     */
+    public static canLog(callLogLevel: LogLevels, caller: unknown, functName: string): boolean {
         
-        const { localLogLevel, canLog } = caller;
-
-        /** If the caller's canLog flag is false, return immediately before doing anything else */
-        if(canLog === false && EzLogService.useCanLog) {
-            return false;
-        }
-        
-        /** Check whitelist/blacklist properties in order of priority */
-
-        const hasAccess: boolean = [
-            {accessor: 'caller', prop: caller.LOCAL_ID},
-            {accessor: 'function', prop: functName},
-            {accessor: 'logLevel', prop: callLogLevel},
-        ].every(({accessor, prop}) => {
-            
-            const accessMode = EzLogService[`${accessor}AccessMode`];
-            let allowed: boolean = true;
-
-            if(<LogAccessMode>accessMode !== 'none') {
-                const whitelist = EzLogService[`${accessor}WhiteList`];
-                const blacklist = EzLogService[`${accessor}BlackList`];
-                
-                allowed = accessMode === 'whitelist' ?
-                    (<unknown[]>whitelist).includes(prop) :
-                    !(<unknown[]>blacklist).includes(prop);
+        if(isWeakObject(caller)) {
+            const { localLogLevel, canLog } = caller;
+    
+            /** If the caller's canLog flag is false, return immediately before doing anything else */
+            if(canLog === false && EzLogService.useCanLog) {
+                return false;
             }
-
-            return allowed;
-        });
-
-        if(!hasAccess) {
-            return false;
+            
+            /** Check whitelist/blacklist properties in order of priority */
+    
+            const hasAccess: boolean = [
+                {accessor: 'caller', prop: caller.LOCAL_ID},
+                {accessor: 'function', prop: functName},
+                {accessor: 'logLevel', prop: callLogLevel},
+            ].every(({accessor, prop}) => {
+                
+                const accessMode = EzLogService[`${accessor}AccessMode`];
+                let allowed: boolean = true;
+    
+                if(<LogAccessMode>accessMode !== 'none') {
+                    const whitelist = EzLogService[`${accessor}WhiteList`];
+                    const blacklist = EzLogService[`${accessor}BlackList`];
+                    
+                    allowed = accessMode === 'whitelist' ?
+                        (<unknown[]>whitelist).includes(prop) :
+                        !(<unknown[]>blacklist).includes(prop);
+                }
+    
+                return allowed;
+            });
+    
+            if(!hasAccess) {
+                return false;
+            }
+            
+            let logLevel = EzLogService.logLevel;
+    
+            if(EzLogService.useLocalLogLevel) {
+                logLevel = EzLogService.useStrictLocalLogLevel ? 
+                    Math.max(EzLogService.logLevel, <number>localLogLevel ?? LogLevels.Trace) :
+                    Math.min(EzLogService.logLevel, <number>localLogLevel ?? LogLevels.Trace);
+            }
+    
+            return callLogLevel >= logLevel;
         }
-        
-        let logLevel = EzLogService.logLevel;
-
-        if(EzLogService.useLocalLogLevel) {
-            logLevel = EzLogService.useStrictLocalLogLevel ? 
-                Math.max(EzLogService.logLevel, localLogLevel ?? LogLevels.Trace) :
-                Math.min(EzLogService.logLevel, localLogLevel ?? LogLevels.Trace);
-        }
-
-        return callLogLevel >= logLevel;
+        return false;
     }
 
     /**
@@ -351,16 +378,18 @@ export class EzLogService {
      * @param caller - the object that is updating its log settings
      * @param settings - the new log settings
      */
-    public static updateLocalLogSettings(caller: LoggableObject, settings: LocalLogSettings) {
-        const { canLog, localLogLevel } = settings;
-        caller.canLog = canLog ?? caller.canLog;
-        caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
-
-        EzLogService.debug(caller, 'entering', settings);
-
-        Object.assign(caller, settings);
-
-        EzLogService.debug(caller, 'exiting', caller);
+    public static updateLocalLogSettings(caller: unknown, settings: LocalLogSettings) {
+        if(isWeakObject(caller)) {
+            const { canLog, localLogLevel } = settings;
+            caller.canLog = canLog ?? caller.canLog;
+            caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
+    
+            EzLogService.debug(caller, 'entering', settings);
+    
+            Object.assign(caller, settings);
+    
+            EzLogService.debug(caller, 'exiting', caller);
+        }
     }
 
     /**
@@ -391,6 +420,9 @@ export class EzLogService {
         EzLogService.toggleKeyListener(true);
     }
 
+    /**
+     * @param functDefMap - a {@link ConsoleFunctLevelMap} to update the default console function definitions
+     */
     public static updateConsoleFunctDefMap(functDefMap: Partial<ConsoleFunctLevelMap>) {
         EzLogService._consoleFunctDefMap = Object.assign({}, consoleFunctDefMap, functDefMap);
     }
@@ -443,6 +475,11 @@ export class EzLogService {
         });
     }
 
+    /**
+     * Loads a saved state of the service settings.
+     * 
+     * @param stateName - the name of the state to load
+     */
     public static loadState(stateName: string) {
         const state: LogServiceConfig | undefined = EzLogService._serviceStates[stateName];
         if(state) {
@@ -487,6 +524,46 @@ export class EzLogService {
         }
     }
 
+    public static allowCaller(caller: unknown) {
+        if(isWeakObject(caller)) {
+            const { LOCAL_ID } = caller;
+            if(isString(LOCAL_ID)) {
+                EzLogService.callerWhiteList.push(LOCAL_ID);
+            }
+        }
+    }
+
+    public static blockCaller(caller: unknown) {
+        if(isWeakObject(caller)) {
+            const { LOCAL_ID } = caller;
+            if(isString(LOCAL_ID)) {
+                EzLogService.callerBlackList.push(LOCAL_ID);
+            }
+        }
+    }
+
+    public static allowFunction(functName: string) {
+        EzLogService.functionWhiteList.push(functName);
+    }
+
+    public static blockFunction(functName: string) {
+        EzLogService.functionBlackList.push(functName);
+    }
+
+    public static allowLogLevel(logLevel: LogLevels) {
+        EzLogService.logLevelWhiteList.push(logLevel);
+    }
+
+    public static blockLogLevel(logLevel: LogLevels) {
+        EzLogService.logLevelBlackList.push(logLevel);
+    }
+
+    /**
+     * Used to set the initial settings for the  log service.
+     * 
+     * @param settings - the settings to initialize the service with
+     * @param stateName - the name of the state to save
+     */
     public static initialize(settings?: LogServiceConfig, stateName?: string) {
 
         settings ??= EzLogService._defaultState;
@@ -549,14 +626,14 @@ export class EzLogService {
      * @param caller - the object that is asserting the condition
      * @param messages - additional messages to log
      */
-    public static assert(caller: LoggableObject, condition: boolean, ...messages: unknown[]) {
+    public static assert(caller: unknown, condition: boolean, ...messages: unknown[]) {
         EzLogService.writeLog(caller, 'assert', EzLogService._getCallerFunctionName(), condition, ...messages);
     }
 
     /**
      * Clears the console.
      */
-    public static clear(caller: LoggableObject) {
+    public static clear(caller: unknown) {
         EzLogService.writeLog(caller, 'clear', EzLogService._getCallerFunctionName());
     }
 
@@ -566,7 +643,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static count(caller: LoggableObject, label?: string) {
+    public static count(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'count', EzLogService._getCallerFunctionName(), label);
     }
 
@@ -576,7 +653,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to reset
      */
-    public static countReset(caller: LoggableObject, label?: string) {
+    public static countReset(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'countReset', EzLogService._getCallerFunctionName(), label);
     }
     
@@ -586,8 +663,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static debug(caller: LoggableObject, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'debug', EzLogService._getCallerFunctionName(), ...messages);
+    public static debug(caller: unknown, callingFunct: string, ...messages: unknown[]) {
+        
+        EzLogService.writeLog(caller, 'debug', callingFunct, ...messages);
     }
 
     /**
@@ -599,7 +677,7 @@ export class EzLogService {
      * @param obj - the object to log
      * @param options - the options for the dir function
      */
-    public static dir(caller: LoggableObject, obj: WeakObject, options?: ConsoleDirOptions) {
+    public static dir(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions) {
         EzLogService.writeLog(caller, 'dir', EzLogService._getCallerFunctionName(), obj, options);
     }
 
@@ -610,7 +688,7 @@ export class EzLogService {
      * @param obj - the object to log
      * @param options - the options for the dirxml function
      */
-    public static dirxml(caller: LoggableObject, obj: WeakObject, options?: ConsoleDirOptions) {
+    public static dirxml(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions) {
         EzLogService.writeLog(caller, 'dirxml', EzLogService._getCallerFunctionName(), obj, options);
     }
     
@@ -620,7 +698,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static error(caller: LoggableObject, ...messages: unknown[]) {
+    public static error(caller: unknown, ...messages: unknown[]) {
         EzLogService.writeLog(caller, 'error', EzLogService._getCallerFunctionName(), ...messages);
     }
 
@@ -630,7 +708,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static group(caller: LoggableObject, label?: string) {
+    public static group(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'group', EzLogService._getCallerFunctionName(), label);
     }
 
@@ -641,14 +719,14 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static groupCollapsed(caller: LoggableObject, label?: string) {
+    public static groupCollapsed(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'groupCollapsed', EzLogService._getCallerFunctionName(), label);
     }
 
     /**
      * Exits the current inline group in the console.
      */
-    public static groupEnd(caller: LoggableObject) {
+    public static groupEnd(caller: unknown) {
         EzLogService.writeLog(caller, 'groupEnd', EzLogService._getCallerFunctionName());
     }
     
@@ -658,7 +736,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static info(caller: LoggableObject, ...messages: unknown[]) {
+    public static info(caller: unknown, ...messages: unknown[]) {
         EzLogService.writeLog(caller, 'info', EzLogService._getCallerFunctionName(), ...messages);
     }
     
@@ -668,7 +746,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static log(caller: LoggableObject, ...messages: unknown[]) {
+    public static log(caller: unknown, ...messages: unknown[]) {
         EzLogService.writeLog(caller, 'log', EzLogService._getCallerFunctionName(), ...messages);
     }
 
@@ -680,7 +758,7 @@ export class EzLogService {
      * @param data - an object or array to show as a table
      * @param columns - an array of strings to use as the column headers
      */
-    public static table(caller: LoggableObject, data: unknown, columns?: string[]) {
+    public static table(caller: unknown, data: unknown, columns?: string[]) {
         EzLogService.writeLog(caller, 'table', EzLogService._getCallerFunctionName(), data, columns);
     }
 
@@ -690,7 +768,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static time(caller: LoggableObject, label?: string) {
+    public static time(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'time', EzLogService._getCallerFunctionName(), label);
     }
 
@@ -700,7 +778,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeEnd(caller: LoggableObject, label?: string) {
+    public static timeEnd(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'timeEnd', EzLogService._getCallerFunctionName(), label);
     }
 
@@ -710,7 +788,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeLog(caller: LoggableObject, label?: string) {
+    public static timeLog(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'timeLog', EzLogService._getCallerFunctionName(), label);
     }
 
@@ -720,7 +798,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeStamp(caller: LoggableObject, label?: string) {
+    public static timeStamp(caller: unknown, label?: string) {
         EzLogService.writeLog(caller, 'timeStamp', EzLogService._getCallerFunctionName(), label);
     }
     
@@ -730,7 +808,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static trace(caller: LoggableObject, ...messages: unknown[]) {
+    public static trace(caller: unknown, ...messages: unknown[]) {
         EzLogService.writeLog(caller, 'trace', EzLogService._getCallerFunctionName(), ...messages);
     }
     
@@ -740,7 +818,7 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static warn(caller: LoggableObject, ...messages: unknown[]) {
+    public static warn(caller: unknown, ...messages: unknown[]) {
         EzLogService.writeLog(caller, 'warn', EzLogService._getCallerFunctionName(), ...messages);
     }
 
@@ -753,7 +831,7 @@ export class EzLogService {
      * @param functionName - the name of the function that is logging the message
      * @param messages - additional messages to log
      */
-    public static writeLog(caller: LoggableObject, levelOrFunct: LogLevelOrFunct = DefaultLogFunct, callingFunctName: string, ...args: unknown[]): void {
+    /* public static writeLog(caller: unknown, levelOrFunct: LogLevelOrFunct = DefaultLogFunct, callingFunctName: string, ...args: unknown[]): void {
         
         if(isLogLevel(levelOrFunct)) {
             levelOrFunct = logLevelConsoleFunctMap[levelOrFunct];
@@ -784,6 +862,50 @@ export class EzLogService {
                 }
             }
         }
+    } */
+
+    /**
+     * Writes a message to the console. The message is prefixed with the log level, the
+     * local ID of the calling object, and the name of the function that is logging the message.
+     * 
+     * @param caller - the object that is logging the message
+     * @param levelOrFunct - {@link LogLevels} of the message
+     * @param functionName - the name of the function that is logging the message
+     * @param messages - additional messages to log
+     */
+    public static writeLog(caller: unknown, levelOrFunct: LogLevelOrFunct = DefaultLogFunct, callingFunctName: string, ...args: unknown[]): void {
+        
+        if(isWeakObject(caller)) {
+            if(isLogLevel(levelOrFunct)) {
+                levelOrFunct = logLevelConsoleFunctMap[levelOrFunct];
+            }
+    
+            if(isConsoleKey(levelOrFunct)) {
+                const { getArgs, logLevel, contextStringInArgs } = EzLogService._consoleFunctDefMap[levelOrFunct];
+            
+                if(EzLogService.canLog(logLevel, caller, callingFunctName)) {
+                    const logFunction = console[levelOrFunct];
+                    const contextString = contextStringInArgs ? 
+                        `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
+                        `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${levelOrFunct}::`;
+            
+                    const logArgs = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
+            
+                    if(!contextStringInArgs) {
+                        const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
+                        const levelLogFunction = console[levelConsoleFunctName];
+                        if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
+                            EzLogService.showConsoleFunctArgs ? 
+                                levelLogFunction(`${contextString}::console funct args:`, ...logArgs) :
+                                levelLogFunction(contextString);
+                        }
+                    }
+                    if(isConsoleFunction(logFunction, levelOrFunct)) {
+                        logFunction(...logArgs);
+                    }
+                }
+            }
+        }
     }
     
     // #endregion public methods
@@ -804,7 +926,8 @@ export class EzLogService {
     private static _getCallerFunctionName(functIndex: number = 3): string {
         const error = new Error();
         // in stack trace, line [2] pertains to the caller
-        const stacktraceLine = error.stack?.split('\n')[functIndex] ?? 'unknown';
+        const index = isNumber(functIndex) ? functIndex : 3;
+        const stacktraceLine = error.stack?.split('\n')[index] ?? 'unknown';
         const functNameRegex: RegExp = /at (.*) \(/;
         const results = functNameRegex.exec(stacktraceLine);
         const functName = results ? results[1] : 'unknown'; 
@@ -846,6 +969,12 @@ export class EzLogService {
         }
     }
 
+    /**
+     * Updates the local storage with the current state of the service, if the {@link persistCurrentState} 
+     * flag is set to true.
+     * 
+     * @param saveStateName - whether or not to save the state name to local storage
+     */
     private static _updateLocalStorage(saveStateName: boolean = false): void {
         if(EzLogService.persistCurrentState) {
             localStorage.setItem('logServiceStates', JSON.stringify(EzLogService._serviceStates));

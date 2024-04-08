@@ -1,13 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Message, MessageService } from 'primeng/api';
-import { LoggableObject, LogLevels, EzLogService } from './log-service/_index';
-import { nanoid } from 'nanoid';
+import { LogLevels, LoggableClass } from './log-service/_index';
 
+/**
+ * A service for displaying toast messages.
+ */
+@LoggableClass({
+    LOCAL_ID: 'ToastService',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Debug
+})
 @Injectable({providedIn: 'root'})
-export class ToastService implements LoggableObject {
-    LOCAL_ID: string = 'ToastService_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class ToastService {
 
     // #region public properties
     
@@ -56,12 +61,10 @@ export class ToastService implements LoggableObject {
     // #region public methods
 
     public showToast(message: Message) {
-        EzLogService.debug(this, 'message:', message);
         this.messageService.add(message);
     }
 
     public showSuccess(detail: string, summary?: string, ): void {
-        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
 
         this.messageService.add({
             severity: 'success',
@@ -71,7 +74,6 @@ export class ToastService implements LoggableObject {
     }
 
     public showInfo(detail: string, summary?: string, ): void {
-        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
 
         this.messageService.add({
             severity: 'info',
@@ -81,7 +83,6 @@ export class ToastService implements LoggableObject {
     }
 
     public showWarn(detail: string, summary?: string, ): void {
-        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
 
         this.messageService.add({
             severity: 'warn',
@@ -91,7 +92,6 @@ export class ToastService implements LoggableObject {
     }
 
     public showError(detail: string, summary?: string, ): void {
-        EzLogService.debug(this, 'detail:', detail, 'summary:', summary);
         
         this.messageService.add({
             severity: 'error',

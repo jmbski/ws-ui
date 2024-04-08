@@ -1,13 +1,19 @@
 import { Injectable } from '@angular/core';
-import { LoggableObject, LogLevels } from './log-service/_index';
+import { LoggableClass, LogLevels } from '../log-service/_index';
+import { DataService } from '../data-service/data-service';
+import { WSMenuItem } from './menu-service-types';
+import { isWSMenuItemArray } from './menu-service-typeguards';
 
+@LoggableClass({
+    LOCAL_ID: 'MenuService',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 @Injectable({
     providedIn: 'root'
 })
-export class MenuService implements LoggableObject {
-    LOCAL_ID: string = 'MenuService';
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Debug;
+export class MenuService {
 
     // #region public properties
     
@@ -46,7 +52,6 @@ export class MenuService implements LoggableObject {
     
     // #region constructor and lifecycle hooks
     constructor(
-        
     ) {
         
     }
@@ -54,6 +59,22 @@ export class MenuService implements LoggableObject {
     
     
     // #region public methods
+    
+    public static setMenu(id: string, menuModel: WSMenuItem[]): void {
+        DataService.registerDataSource({
+            id: `menu-${id}`,
+            emitFirstValue: true,
+            value: menuModel,
+
+        });
+    }
+
+    public static getMenu(id: string): WSMenuItem[] {
+        const menu = DataService.getDataSourceValue(`menu-${id}`);
+
+        return isWSMenuItemArray(menu) ? menu : [];
+        
+    }
     
     // #endregion public methods
     

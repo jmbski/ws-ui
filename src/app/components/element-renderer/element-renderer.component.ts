@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, Type, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
@@ -7,12 +7,18 @@ import { ImageComponent } from 'warskald-ui/components/image';
 import { TextBlockComponent } from 'warskald-ui/components/text-block';
 import { isString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
-import { Loggable, LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
+import { LogLevels, EzLogService, LoggableComponent } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
 
 
+@LoggableComponent({
+    LOCAL_ID: 'ElementRendererComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 @Component({
     selector: 'ws-element-renderer',
     standalone: true,
@@ -25,11 +31,7 @@ const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
     styleUrl: './element-renderer.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElementRendererComponent extends ComponentClassBase implements LoggableObject{
-
-    readonly LOCAL_ID: string = 'ElementRendererComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class ElementRendererComponent extends ComponentClassBase {
 
     // #region public properties
 
@@ -110,7 +112,6 @@ export class ElementRendererComponent extends ComponentClassBase implements Logg
     
     // #region public methods
 
-    @Loggable()
     public toModels(elements: IComponentConfig[]): ElementModel[] {
 
         const elementModels = elements.map((element: IComponentConfig) => {

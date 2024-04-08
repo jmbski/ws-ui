@@ -1,5 +1,5 @@
 import { TemplateRef, Type } from '@angular/core';
-import { CssStyleObject, GeneralFunction, WeakObject, TypedRecord, StyleGroup } from 'warskald-ui/models';
+import { CssStyleObject, GenericFunction, WeakObject, TypedRecord, StyleGroup, UnionTypeOf } from 'warskald-ui/models';
 import { isEmpty } from 'lodash';
 
 /**
@@ -9,7 +9,19 @@ import { isEmpty } from 'lodash';
      * @returns true if the input is a string indexed object, false otherwise
      */
 export function isWeakObject(input: unknown): input is WeakObject {
-    return typeof input === 'object' && input != null && !Array.isArray(input) && Object.keys(input).every(key => typeof key === 'string');
+    return /* typeof input === 'object' &&  */input != null && !Array.isArray(input) && Object.keys(input).every(key => typeof key === 'string');
+}
+
+/**
+ * Checks if the input is an object that is not an array.
+ * While this will typically result in the same value as isWeakObject, it is a quicker check,
+ * but also less strict.
+ * 
+ * @param input - The value to check if it is an object that is not an array
+ * @returns true if the input is an object that is not an array, false otherwise
+ */
+export function isWeakObjectQuick(input: unknown): input is WeakObject {
+    return typeof input === 'object' && input != null && !Array.isArray(input);
 }
 
 export function isArray(value: unknown): value is unknown[] {
@@ -108,7 +120,7 @@ export function isBooleanArray(value: unknown): value is boolean[] {
  * @param value - The value to check if it is a function
  * @returns true if the input is a function, false otherwise
  */
-export function isFunction(value: unknown): value is GeneralFunction<unknown> {
+export function isFunction(value: unknown): value is GenericFunction<unknown> {
     return typeof value === 'function';
 }
 
@@ -139,7 +151,7 @@ export function isUndefined(value: unknown): value is undefined {
 export type TypeGuard<T> = (input: unknown) => input is T;
 
 export interface PropertyTypeGuard {
-    typeGuard: TypeGuard<unknown>;
+    predicate: TypeGuard<unknown>;
     optional?: boolean;
 }
 export type Defined = Exclude<unknown, undefined | null>;
@@ -162,47 +174,69 @@ export function hasValue(obj: unknown): boolean {
     return true;
 }
 
+export function matchesAllOf<T extends unknown[]>(value: unknown, ...typeGuards: {[K in keyof T]: TypeGuard<T[K]>}): value is T {
+    return typeGuards.every(typeGuard => typeGuard(value));
+}
+
+export function matchesAnyOf<T extends unknown[]>(value: unknown, ...typeGuards: {[K in keyof T]: TypeGuard<T[K]>}): value is T {
+    return typeGuards.some(typeGuard => typeGuard(value));
+}
+
+export function matchesAllOfFactory<T extends unknown[]>(...typeGuards: {[K in keyof T]: TypeGuard<T[K]>}) {
+    return (value: unknown): value is T => matchesAllOf(value, ...typeGuards);
+}
+
+export function matchesAnyOfFactory<T extends unknown[]>(...typeGuards: {[K in keyof T]: TypeGuard<T[K]>}) {
+    return (value: unknown): value is T => matchesAnyOf(value, ...typeGuards);
+}
+
+export function stringUnionGuardFactory(...types: string[]): TypeGuard<UnionTypeOf<typeof types>> {
+    return (value: unknown): value is string => isString(value) && types.includes(value);
+}
+
 export type TypeMapping<T> = Record<keyof T, PropertyTypeGuard>;
 
-export const OptionalStringProp: PropertyTypeGuard = { typeGuard: isString, optional: true };
-export const OptionalNumberProp: PropertyTypeGuard = { typeGuard: isNumber, optional: true };
-export const OptionalBooleanProp: PropertyTypeGuard = { typeGuard: isBoolean, optional: true };
-export const OptionalDateProp: PropertyTypeGuard = { typeGuard: isDate, optional: true };
-export const OptionalFunctionProp: PropertyTypeGuard = { typeGuard: isFunction, optional: true };
-export const OptionalWeakObjectProp: PropertyTypeGuard = { typeGuard: isWeakObject, optional: true };
-export const OptionalWeakObjectArrayProp: PropertyTypeGuard = { typeGuard: isWeakObjectArray, optional: true };
-export const OptionalStringArrayProp: PropertyTypeGuard = { typeGuard: isStringArray, optional: true };
-export const OptionalNumberArrayProp: PropertyTypeGuard = { typeGuard: isNumberArray, optional: true };
-export const OptionalBooleanArrayProp: PropertyTypeGuard = { typeGuard: isBooleanArray, optional: true };
-export const OptionalDateArrayProp: PropertyTypeGuard = { typeGuard: isDateArray, optional: true };
-export const OptionalExistsProp: PropertyTypeGuard = { typeGuard: exists, optional: true };
-export const OptionalStyleProp: PropertyTypeGuard = { typeGuard: isStyle, optional: true };
-export const OptionalArrayProp: PropertyTypeGuard = { typeGuard: isArray, optional: true };
+export const OptionalStringProp: PropertyTypeGuard = { predicate: isString, optional: true };
+export const OptionalNumberProp: PropertyTypeGuard = { predicate: isNumber, optional: true };
+export const OptionalBooleanProp: PropertyTypeGuard = { predicate: isBoolean, optional: true };
+export const OptionalDateProp: PropertyTypeGuard = { predicate: isDate, optional: true };
+export const OptionalFunctionProp: PropertyTypeGuard = { predicate: isFunction, optional: true };
+export const OptionalWeakObjectProp: PropertyTypeGuard = { predicate: isWeakObject, optional: true };
+export const OptionalWeakObjectArrayProp: PropertyTypeGuard = { predicate: isWeakObjectArray, optional: true };
+export const OptionalStringArrayProp: PropertyTypeGuard = { predicate: isStringArray, optional: true };
+export const OptionalNumberArrayProp: PropertyTypeGuard = { predicate: isNumberArray, optional: true };
+export const OptionalBooleanArrayProp: PropertyTypeGuard = { predicate: isBooleanArray, optional: true };
+export const OptionalDateArrayProp: PropertyTypeGuard = { predicate: isDateArray, optional: true };
+export const OptionalExistsProp: PropertyTypeGuard = { predicate: exists, optional: true };
+export const OptionalStyleProp: PropertyTypeGuard = { predicate: isStyle, optional: true };
+export const OptionalArrayProp: PropertyTypeGuard = { predicate: isArray, optional: true };
+export const OptionalStyleGroupProp: PropertyTypeGuard = { predicate: isStyleGroup, optional: true };
 
-export const StringProp: PropertyTypeGuard = { typeGuard: isString };
-export const NumberProp: PropertyTypeGuard = { typeGuard: isNumber };
-export const BooleanProp: PropertyTypeGuard = { typeGuard: isBoolean };
-export const DateProp: PropertyTypeGuard = { typeGuard: isDate };
-export const FunctionProp: PropertyTypeGuard = { typeGuard: isFunction };
-export const RecordObjectProp: PropertyTypeGuard = { typeGuard: isWeakObject };
-export const RecordObjectArrayProp: PropertyTypeGuard = { typeGuard: isWeakObjectArray };
-export const StringArrayProp: PropertyTypeGuard = { typeGuard: isStringArray };
-export const NumberArrayProp: PropertyTypeGuard = { typeGuard: isNumberArray };
-export const BooleanArrayProp: PropertyTypeGuard = { typeGuard: isBooleanArray };
-export const DateArrayProp: PropertyTypeGuard = { typeGuard: isDateArray };
-export const ExistsProp: PropertyTypeGuard = { typeGuard: exists };
-export const StyleProp: PropertyTypeGuard = { typeGuard: isStyle };
-export const ArrayProp: PropertyTypeGuard = { typeGuard: isArray };
+export const StringProp: PropertyTypeGuard = { predicate: isString };
+export const NumberProp: PropertyTypeGuard = { predicate: isNumber };
+export const BooleanProp: PropertyTypeGuard = { predicate: isBoolean };
+export const DateProp: PropertyTypeGuard = { predicate: isDate };
+export const FunctionProp: PropertyTypeGuard = { predicate: isFunction };
+export const RecordObjectProp: PropertyTypeGuard = { predicate: isWeakObject };
+export const RecordObjectArrayProp: PropertyTypeGuard = { predicate: isWeakObjectArray };
+export const StringArrayProp: PropertyTypeGuard = { predicate: isStringArray };
+export const NumberArrayProp: PropertyTypeGuard = { predicate: isNumberArray };
+export const BooleanArrayProp: PropertyTypeGuard = { predicate: isBooleanArray };
+export const DateArrayProp: PropertyTypeGuard = { predicate: isDateArray };
+export const ExistsProp: PropertyTypeGuard = { predicate: exists };
+export const StyleProp: PropertyTypeGuard = { predicate: isStyle };
+export const ArrayProp: PropertyTypeGuard = { predicate: isArray };
+export const StyleGroupProp: PropertyTypeGuard = { predicate: isStyleGroup };
 
 
-export function objectIsType<T>(obj: unknown, typeGuards: TypeMapping<T> | string[]): obj is T {
+export function objIsType<T>(obj: unknown, typeGuards: TypeMapping<T> | string[]): obj is T {
     if(Array.isArray(typeGuards)) {
         return isWeakObject(obj) && typeGuards.every(key => isWeakObject(obj[key]));
     }
     return isWeakObject(obj) && Object.keys(typeGuards).every(key => {
-        const { typeGuard, optional } = typeGuards[key as keyof T];
+        const { predicate, optional } = typeGuards[key as keyof T];
         const property = obj[key];
-        return optional ? isUndefined(property) || typeGuard(property) : typeGuard(property);
+        return optional ? isUndefined(property) || predicate(property) : predicate(property);
     });
 }
 
@@ -253,13 +287,13 @@ export const StyleGroupTypeMap: TypeMapping<StyleGroup> = {
 };
 
 export function isStyleGroup(obj: unknown): obj is StyleGroup {
-    return objectIsType<StyleGroup>(obj, StyleGroupTypeMap);
+    return objIsType<StyleGroup>(obj, StyleGroupTypeMap);
 }
 
 export function isStyleGroupArray(obj: unknown): obj is StyleGroup[] {
     return Array.isArray(obj) && obj.every(isStyleGroup);
 }
 
-export function isFunctionRecord(obj: unknown): obj is Record<string, GeneralFunction<unknown>> {
+export function isFunctionRecord(obj: unknown): obj is Record<string, GenericFunction<unknown>> {
     return isTypedRecord(obj, isFunction);
 }

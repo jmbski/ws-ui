@@ -1,10 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ChangeDetectorRef, Component } from '@angular/core';
+import { Router, RouterOutlet } from '@angular/router';
+import { DeviceDetectorService } from 'ngx-device-detector';
+import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-import { BlockableUiComponent, PullToRefreshComponent } from 'warskald-ui/components';
+import { AppDeviceInfo, LayoutChangeObserver$ } from 'warskald-ui/common';
+import { BlockableUiComponent, MenuBarComponent, MenuBarConfig, NavLogoComponent, NavLogoConfig, PageLayoutConfig, PullToRefreshComponent, TopNavConfig } from 'warskald-ui/components';
+import { LayoutService, LoggableComponent, LogLevels, NavigationService, WSMenuItem } from 'warskald-ui/services';
 
+@LoggableComponent({
+    LOCAL_ID: 'AppComponent',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Debug
+
+})
 @Component({
     selector: 'app-root',
     standalone: true,
@@ -20,5 +30,206 @@ import { BlockableUiComponent, PullToRefreshComponent } from 'warskald-ui/compon
     styleUrl: './app.component.scss'
 })
 export class AppComponent {
-    title = 'ws-ui';
+
+    // #region public properties
+
+    public resizeObserver?: ResizeObserver;
+    
+    // #endregion public properties
+    
+    
+    // #region private properties
+    
+    // #endregion private properties
+    
+    
+    // #region getters/setters
+    
+    // #endregion getters/setters
+    
+    
+    // #region standard inputs
+    
+    // #endregion standard inputs
+    
+    
+    // #region get/set inputs
+    
+    // #endregion get/set inputs
+    
+    
+    // #region outputs, emitters, and event listeners
+    
+    // #endregion outputs, emitters, and event listeners
+    
+    
+    // #region viewchildren and contentchildren
+    
+    // #endregion viewchildren and contentchildren
+    
+    
+    // #region constructor and lifecycle hooks
+    constructor(
+        public cd: ChangeDetectorRef,
+        public router: Router,
+        private primengConfig: PrimeNGConfig,
+        private deviceDetector: DeviceDetectorService,
+    ) {
+        NavigationService.initialize(router);
+
+
+        AppDeviceInfo.isMobile = this.deviceDetector.isMobile();
+        AppDeviceInfo.isTablet = this.deviceDetector.isTablet();
+    }
+
+    ngAfterViewInit() {
+
+
+        this.resizeObserver = new ResizeObserver((data: ResizeObserverEntry[]) => {
+            const width: number = data[0].contentRect.width;
+            const height: number = data[0].contentRect.height;
+            
+            if (width <= 761 || height <= 600) {
+                AppDeviceInfo.isMobile = true;
+            }
+            else {
+                AppDeviceInfo.isMobile = false;
+            }
+            
+            LayoutChangeObserver$.next();
+                
+            LayoutService.updateAppTopNavShadow();
+            
+            this.cd.detectChanges();
+        });
+        /*  */
+        this.resizeObserver.observe(document.body);
+    }
+
+    ngOnInit() {
+
+        this.primengConfig.ripple = true;
+        
+        this.primengConfig.zIndex = {
+            modal: 11100,    // dialog, sidebar
+            overlay: 10000,  // dropdown, overlaypanel
+            menu: 11000,     // overlay menus
+            tooltip: 11050  // tooltip
+        };
+        const menuItems: WSMenuItem[] = [
+            {
+                label: 'About Us',
+                items: [
+                    {
+                        label: 'The Iron Lions',
+                        navAction: {
+                            route: '/'
+                        }
+                    },
+                    {
+                        label: 'Clubs',
+                    },
+                    {
+                        label: 'Partners & Sponsors',
+                    },
+                ]
+            },
+            {
+                label: 'Events',
+                items: [
+                    {
+                        label: 'Grapes of Wrath',
+                    },
+                    {
+                        label: 'Event Calendar',
+                    },
+                    {
+                        label: 'Upcoming Events',
+                    },
+                    {
+                        label: 'Past Events',
+                    },
+                ]
+            },
+            {
+                label: 'Test',
+                navAction: {
+                    route: 'test'
+                }
+            },
+            {
+                label: 'Contact Us',
+                items: [
+                    {
+                        label: 'Contact Information',
+                    },
+                    {
+                        label: 'Books Us For An Event',
+                    },
+                    {
+                        label: 'Join Our Mailing List',
+                    },
+                    {
+                        label: 'Donate',
+                    },
+                    {
+                        label: 'Harness the Roar of the Lion',
+                    },
+                ]
+
+            },
+        ];
+
+        const pageLayoutConfig: PageLayoutConfig = {
+            LOCAL_ID: 'ShowcasePageLayout',
+            wsTopNavConfig: <TopNavConfig>{
+                headerText: 'Iron Lions United',
+                logoDef: {
+                    component: NavLogoComponent,
+                    config: <NavLogoConfig>{
+                        config: {
+                            isLink: true,
+                            linkUrl: '/',
+                            logoImage: '/app/assets/images/lions-east.webp',
+                            logoAltText: 'Iron Lions United',
+                            imgStyle: {
+                                optionalClass: 'p-2'
+                            }
+                        }
+                    }
+                },
+                navMenuDef: {
+                    component: MenuBarComponent,
+                    config: <MenuBarConfig>{
+                        model: [
+                            {
+                                label: 'Menu',
+                                items: menuItems
+                            }
+                        ],
+                    },
+                },
+            },
+        };
+
+        LayoutService.setLayout('showcase', pageLayoutConfig);
+    }
+    // #endregion constructor and lifecycle hooks
+    
+    
+    // #region public methods
+    
+    // #endregion public methods
+    
+    
+    // #region protected methods
+    
+    // #endregion protected methods
+    
+    
+    // #region private methods
+    
+    // #endregion private methods
+    
+    
 }

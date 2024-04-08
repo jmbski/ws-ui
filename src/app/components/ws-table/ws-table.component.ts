@@ -9,8 +9,15 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent } from 'warskald-ui/services';
 
+@LoggableComponent({
+    LOCAL_ID: 'WsTableComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+
+})
 @Component({
     selector: 'ws-table',
     standalone: true,
@@ -26,11 +33,7 @@ import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
     templateUrl: './ws-table.component.html',
     styleUrl: './ws-table.component.scss'
 })
-export class WsTableComponent implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'WsTableComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class WsTableComponent {
     
     // #region public properties
 
@@ -110,14 +113,10 @@ export class WsTableComponent implements LoggableObject {
         return this._tableConfig;
     }
     set tableConfig(input: TableConfig | undefined) {
-        EzLogService.debug(this, 'entering', 'input:', input);
-
         this._tableConfig = input;
         this.columnDefs = input?.columnDefs ?? [];
         this.rowData = input?.rowData ?? [];
         this.cd.detectChanges();
-
-        EzLogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs
@@ -154,7 +153,6 @@ export class WsTableComponent implements LoggableObject {
     }
 
     public filterInput(event: Event) {
-        EzLogService.debug(this, 'entering', 'event:', event);
         
         if(event instanceof InputEvent) {
             this.tableRef?.filterGlobal((<HTMLInputElement>event.target).value, 'contains');

@@ -1,6 +1,6 @@
-import { isFunction, isFunctionRecord, isTypedRecord, objectIsType, OptionalBooleanProp, OptionalNumberProp, OptionalStringArrayProp, OptionalStringProp, TypeMapping } from 'warskald-ui/type-guards';
+import { isFunction, isFunctionRecord, isTypedRecord, objIsType, OptionalBooleanProp, OptionalNumberProp, OptionalStringArrayProp, OptionalStringProp, PropertyTypeGuard, TypeMapping } from 'warskald-ui/type-guards';
 import { ConsoleDirOptions, ConsoleFunctName, LogAccessMode } from './log-service-types';
-import { GeneralFunction } from 'warskald-ui/models';
+import { GenericFunction } from 'warskald-ui/models';
 import { LogServiceConfig } from './log-service-config';
 import { LogLevels } from './log-service-constants';
 
@@ -12,10 +12,10 @@ const dirOptionsTypeMap: TypeMapping<ConsoleDirOptions> = {
 };
 
 export function isConsoleDirOptions(value: unknown): value is ConsoleDirOptions {
-    return objectIsType<ConsoleDirOptions>(value, dirOptionsTypeMap);
+    return objIsType<ConsoleDirOptions>(value, dirOptionsTypeMap);
 }
 
-export function isConsoleFunction(value: unknown, name: string): value is GeneralFunction<void> {
+export function isConsoleFunction(value: unknown, name: string): value is GenericFunction<void> {
     return Object.keys(console).includes(name) && name !== 'Console' && isFunction(value);
 }
 
@@ -35,10 +35,10 @@ export function isLogAccessMode(value: unknown): value is LogAccessMode {
     return typeof value === 'string' && ['whitelist', 'blacklist', 'none'].includes(value);
 }
 
-const AccessModeProp = { typeGuard: isLogAccessMode, optional: true };
+const AccessModeProp: PropertyTypeGuard = { predicate: isLogAccessMode, optional: true };
 
 const logServiceTypeMap: TypeMapping<LogServiceConfig> = {
-    logLevel: { typeGuard: isLogLevel, optional: true },
+    logLevel: { predicate: isLogLevel, optional: true },
     useLocalLogLevel: OptionalBooleanProp,
     useStrictLocalLogLevel: OptionalBooleanProp,
     useCanLog: OptionalBooleanProp,
@@ -50,22 +50,22 @@ const logServiceTypeMap: TypeMapping<LogServiceConfig> = {
     functionWhiteList: OptionalStringArrayProp,
     functionBlackList: OptionalStringArrayProp,
     functionAccessMode: AccessModeProp,
-    logLevelWhiteList: { typeGuard: isLogLevelArray, optional: true },
-    logLevelBlackList: { typeGuard: isLogLevelArray, optional: true },
+    logLevelWhiteList: { predicate: isLogLevelArray, optional: true },
+    logLevelBlackList: { predicate: isLogLevelArray, optional: true },
     logLevelAccessMode: AccessModeProp,
     enableReportListener: OptionalBooleanProp,
     reportKey: OptionalStringProp,
     enableToggleListener: OptionalBooleanProp,
     toggleKey: OptionalStringProp,
-    toggleState: { typeGuard: isLogServiceConfig, optional: true },
+    toggleState: { predicate: isLogServiceConfig, optional: true },
     defaultStateName: OptionalStringProp,
     persistCurrentState: OptionalBooleanProp,
-    additonalServiceStates: { typeGuard: isLogServiceConfigRecord, optional: true },
-    customKeyListeners: { typeGuard: isFunctionRecord, optional: true}
+    additonalServiceStates: { predicate: isLogServiceConfigRecord, optional: true },
+    customKeyListeners: { predicate: isFunctionRecord, optional: true}    
 };
 
 export function isLogServiceConfig(value: unknown): value is LogServiceConfig {
-    return objectIsType(value, logServiceTypeMap);
+    return objIsType(value, logServiceTypeMap);
 }
 
 export function isLogServiceConfigArray(value: unknown): value is LogServiceConfig[] {

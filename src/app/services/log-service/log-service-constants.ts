@@ -18,6 +18,9 @@ export enum LogLevels {
     None = 90,
 }
 
+/**
+ * Enum of console functions that can be called
+ */
 export enum ConsoleFuncts {
     Assert = 'assert',
     Clear = 'clear',
@@ -41,6 +44,9 @@ export enum ConsoleFuncts {
     Warn = 'warn'
 }
 
+/**
+ * Map of log levels to console functions
+ */
 export const logLevelConsoleFunctMap: LogLevelConsoleFunctMap = {
     [LogLevels.Assert]: 'assert',
     [LogLevels.Debug]: 'debug',
@@ -53,4 +59,7 @@ export const logLevelConsoleFunctMap: LogLevelConsoleFunctMap = {
     [LogLevels.Experimental]: undefined,
 };
 
+/**
+ * BehaviorSubject containing strings to be ignored when parsing out the logging arguments
+ */
 export const LogSvcIgnoredStrings$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);

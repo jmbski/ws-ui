@@ -1,13 +1,13 @@
 import {
     BaseComponentClass,
     capitalizeFirst,
-    LocalObject,
     StyleGroup,
-    WSMenuItem,
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
-import { isString, isStringArray, isStyleGroup } from 'warskald-ui/type-guards';
-import { Loggable, LoggableObject, LogLevels, EzLogService } from './log-service/_index';
+import { isString, isStringArray, isStyleGroup, isWeakObject } from 'warskald-ui/type-guards';
+import { LogLevels, EzLogService, LoggableClass } from './log-service/_index';
+import { WSMenuItem } from './menu-service/_index';
+import { ChangeDetectorRef } from '@angular/core';
 
 export interface XMLPropertyDef {
     name: string;
@@ -20,10 +20,16 @@ export interface XMLCollectionDef {
     count: number;
 }
 
-export class Utils implements LoggableObject {
-    public readonly LOCAL_ID: string = 'Utils';
-    canLog?: boolean | undefined = true;
-    localLogLevel?: number | undefined = LogLevels.Debug;
+/**
+ * A utility class for providing various helper functions.
+ */
+@LoggableClass({
+    LOCAL_ID: 'Utils',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Debug
+})
+export class Utils  {
     
     public static printMap(map: Map<unknown, unknown>): void {
         for (const [key, value] of map.entries()) {
@@ -264,7 +270,6 @@ export class Utils implements LoggableObject {
         return classes.split(/[\s|,]/).filter((value: string) => value !== '');
     }
 
-    @Loggable()
     public static MergeStyleGroupClasses(styleGroup?: StyleGroup, defaultClass?: string | string[]): string[] {
         const classes: string[] = [];
         const { optionalClass, baseClass } = styleGroup ?? {};
@@ -289,9 +294,19 @@ export class Utils implements LoggableObject {
 
 }
 
-export function initStyleGroups(this: BaseComponentClass, onlyStylePropNames: boolean = true) {
+export function hasChangeDetector(value: unknown): value is BaseComponentClass {
+    return isWeakObject(value) && Object.hasOwn(value, 'cd');
+}
+
+export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = true) {
+
+    if(!(hasChangeDetector(this))) {
+        console.error('initStyleGroups called on object without ChangeDetectorRef:', this);
+        return;
+    }
+
     EzLogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
-    
+
     for(const propName in this) {
         if(propName.endsWith('Styles') || !onlyStylePropNames) {
             const property = this[propName];

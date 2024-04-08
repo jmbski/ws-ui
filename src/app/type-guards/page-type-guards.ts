@@ -1,5 +1,7 @@
 import { 
     ComponentClassBase, 
+    ComponentDef, 
+    ComponentType, 
     ContainerConfig, 
     ElementType, 
     IComponentConfig, 
@@ -10,7 +12,7 @@ import {
 import { 
     isArray, 
     isString, 
-    objectIsType, 
+    objIsType, 
     TypeMapping, 
     OptionalBooleanProp, 
     OptionalExistsProp, 
@@ -20,27 +22,42 @@ import {
     StringProp, 
     OptionalNumberProp
 } from './general-type-guards';
+import { TemplateRef, Type } from '@angular/core';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
+
+
+export function isComponentType(value: unknown): value is ComponentType {
+    return value instanceof TemplateRef || value instanceof Type;
+}
 
 export function IsElementType(value: unknown): value is ElementType {
     return isString(value) && (<string[]>Object.values(ElementType)).includes(value);
 }
 
+const componentDefTypeMap: TypeMapping<ComponentDef<unknown>> = {
+    component: { predicate: isComponentType },
+    config: OptionalWeakObjectProp,
+};
+
+export function isComponentDef<T>(value: unknown): value is ComponentDef<T> {
+    return objIsType<ComponentDef<T>>(value, componentDefTypeMap);
+}
+
 export const IComponentConfigTypeMap: TypeMapping<IComponentConfig> = {
-    elementType: { typeGuard: IsElementType },
+    elementType: { predicate: IsElementType },
     id: StringProp,
     content: OptionalExistsProp,
     style: OptionalStyleProp,
     styleClass: OptionalStringProp,
     options: OptionalWeakObjectProp,
-    children: { typeGuard: IsIComponentConfigArray, optional: true },
+    children: { predicate: IsIComponentConfigArray, optional: true },
     layoutClass: OptionalStringProp,
     layoutStyle: OptionalStyleProp,
 };
 
 export function IsIComponentConfig(value: unknown): value is IComponentConfig {
-    return objectIsType(value, IComponentConfigTypeMap);
+    return objIsType(value, IComponentConfigTypeMap);
 }
 
 export function IsIComponentConfigArray(value: unknown): value is IComponentConfig[] {
@@ -69,23 +86,23 @@ export function IsElementTypeOf<T extends ElementType>(value: unknown, elementTy
 }
 
 export const TextBlockTypeMap: TypeMapping<TextBlockConfig> = {
-    elementType: { typeGuard: IsTextBlockEnum },
-    content: { typeGuard: isString },
+    elementType: { predicate: IsTextBlockEnum },
+    content: { predicate: isString },
     illuminated: OptionalBooleanProp,
     illuminatedColor: OptionalStringProp,
     illuminatedBorder: OptionalStringProp,
 };
 
 export const ContainerTypeMap: TypeMapping<ContainerConfig> = {
-    elementType: { typeGuard: IsContainerEnum },
-    elements: { typeGuard: IsIComponentConfigArray }
+    elementType: { predicate: IsContainerEnum },
+    elements: { predicate: IsIComponentConfigArray }
 };
 
 export const ImageTypeMap: TypeMapping<WsImageConfig> = {
     LOCAL_ID: StringProp,
     canLog: OptionalBooleanProp,
     localLogLevel: OptionalNumberProp,
-    elementType: { typeGuard: IsImageEnum },
+    elementType: { predicate: IsImageEnum },
     src: OptionalStringProp,
 };
 
@@ -96,7 +113,7 @@ export const ImageTypeMap: TypeMapping<WsImageConfig> = {
  * @returns true if the input is a text block config, false otherwise
  */
 export function IsTextBlock(value: unknown): value is TextBlockConfig {
-    return IsIComponentConfig(value) && objectIsType(value, TextBlockTypeMap);
+    return IsIComponentConfig(value) && objIsType(value, TextBlockTypeMap);
 }
 
 export function IsTextBlockArray(value: unknown): value is TextBlockConfig[] {
@@ -104,7 +121,7 @@ export function IsTextBlockArray(value: unknown): value is TextBlockConfig[] {
 }
 
 export function IsContainer(value: unknown): value is ContainerConfig {
-    return IsIComponentConfig(value) && objectIsType<ContainerConfig>(value, ContainerTypeMap);
+    return IsIComponentConfig(value) && objIsType<ContainerConfig>(value, ContainerTypeMap);
 }
 
 export function IsContainerArray(value: unknown): value is ContainerConfig[] {
@@ -112,7 +129,7 @@ export function IsContainerArray(value: unknown): value is ContainerConfig[] {
 }
 
 export function IsImage(value: unknown): value is WsImageConfig {
-    return IsIComponentConfig(value) && objectIsType<WsImageConfig>(value, ImageTypeMap);
+    return IsIComponentConfig(value) && objIsType<WsImageConfig>(value, ImageTypeMap);
 }
 
 export function IsImageArray(value: unknown): value is WsImageConfig[] {

@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { Type } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';

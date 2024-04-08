@@ -3,8 +3,14 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { RouterModule } from '@angular/router';
 import { nanoid } from 'nanoid';
 import { StyleGroup } from 'warskald-ui/models';
-import { LoggableObject, LogLevels, EzLogService, Utils } from 'warskald-ui/services';
+import { LogLevels, Utils, LoggableComponent } from 'warskald-ui/services';
 
+@LoggableComponent({
+    LOCAL_ID: 'NavLogoComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 @Component({
     selector: 'ws-nav-logo',
     standalone: true,
@@ -16,11 +22,7 @@ import { LoggableObject, LogLevels, EzLogService, Utils } from 'warskald-ui/serv
     styleUrl: './nav-logo.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavLogoComponent implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'NavLogoComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class NavLogoComponent {
 
     // #region public properties
 
@@ -72,12 +74,9 @@ export class NavLogoComponent implements LoggableObject {
         return this._imgStyle;
     }
     set imgStyle(input: StyleGroup | undefined) {
-        EzLogService.debug(this, 'entering', 'input:', input);
 
         this._imgStyle = input;
         this.imgStyleClasses = Utils.MergeStyleGroupClasses(this.imgStyle, this.defaultImgStyleClass);
-
-        EzLogService.debug(this, 'exiting', 'this.imgStyleClasses:', this.imgStyleClasses);
     }
 
     private _wrapperStyle?: StyleGroup;
@@ -86,12 +85,9 @@ export class NavLogoComponent implements LoggableObject {
         return this._wrapperStyle;
     }
     set wrapperStyle(input: StyleGroup | undefined) {
-        EzLogService.debug(this, 'entering', 'input:', input);
 
         this._wrapperStyle = input;
         this.wrapperStyleClasses = Utils.MergeStyleGroupClasses(this.wrapperStyle, this.defaultWrapperStyleClass);
-
-        EzLogService.debug(this, 'exiting', 'this.wrapperStyleClasses:', this.wrapperStyleClasses);
     }
     
     private _config?: Partial<NavLogoComponent>;
@@ -100,16 +96,11 @@ export class NavLogoComponent implements LoggableObject {
         return this._config;
     }
     set config(input: Partial<NavLogoComponent> | undefined) {
-        EzLogService.debug(this, 'entering', 'input:', input);
 
         this._config = input;
         Object.assign(this, input);
 
-        console.log('imgStyle:', this.imgStyle, this.imgStyleClasses);
-
         this.cd.detectChanges();
-
-        EzLogService.debug(this, 'exiting');
     }
     
     // #endregion get/set inputs

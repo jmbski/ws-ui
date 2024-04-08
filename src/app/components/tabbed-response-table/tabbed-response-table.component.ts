@@ -10,7 +10,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { nanoid } from 'nanoid';
-import { LoggableObject, LogLevels, EzLogService } from 'warskald-ui/services';
+import { LogLevels, EzLogService, LoggableComponent } from 'warskald-ui/services';
 
 export interface TabbedResponseData {
     tabName: string,
@@ -21,6 +21,13 @@ export interface TabbedResponseTableConfig {
     xmlCollectionTags: string[];
 }
 
+@LoggableComponent({
+    LOCAL_ID: 'TabbedResponseTableComponent_' + nanoid(),
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+
+})
 @Component({
     selector: 'ws-tabbed-response-table',
     standalone: true,
@@ -32,11 +39,7 @@ export interface TabbedResponseTableConfig {
     templateUrl: './tabbed-response-table.component.html',
     styleUrl: './tabbed-response-table.component.scss'
 })
-export class TabbedResponseTableComponent implements LoggableObject {
-
-    readonly LOCAL_ID: string = 'TabbedResponseTableComponent_' + nanoid();
-    canLog?: boolean = true;
-    localLogLevel?: number = LogLevels.Error;
+export class TabbedResponseTableComponent {
 
     // #region public properties
 
@@ -121,11 +124,9 @@ export class TabbedResponseTableComponent implements LoggableObject {
     // #region public methods
 
     public onTabChange(event: unknown) {
-        EzLogService.debug(this, 'entering', 'event:', event);
     }
 
     public parseElementValue(textContent: string | null): string {
-        EzLogService.debug(this, 'entering', 'textContent:', textContent);
         
         if(!textContent) {
             EzLogService.debug(this, 'exiting', 'string');
@@ -144,12 +145,10 @@ export class TabbedResponseTableComponent implements LoggableObject {
             return 'date';
         }
 
-        EzLogService.debug(this, 'exiting', 'string');
         return 'string';
     }
 
     public measureTextWidth(text: string, fontSize: number): number {
-        EzLogService.debug(this, 'entering', 'text:', text, 'fontSize:', fontSize);
 
         const el = document.createElement('div');
         el.style.position = 'absolute'; 
@@ -163,12 +162,10 @@ export class TabbedResponseTableComponent implements LoggableObject {
     
         document.body.removeChild(el);
 
-        EzLogService.debug(this, 'exiting', 'width:', width);
         return width;
     }
 
     public xmlElementToColumnDef(element: Element, tagPrefix: string = 'ws:'): ColumnDefinition {
-        EzLogService.debug(this, 'entering', 'element:', element, 'tagPrefix:', tagPrefix);
 
         const { tagName, textContent } = element;
         const columnDef: ColumnDefinition = {
@@ -181,23 +178,19 @@ export class TabbedResponseTableComponent implements LoggableObject {
             width: this.measureTextWidth(tagName, 16) + 'px',
         };
         
-        EzLogService.debug(this, 'exiting', 'columnDef:', columnDef);
         return columnDef;
     }
 
     public addXmlColumnDef(columnDefs: ColumnDefinition[], element: Element): void {
-        EzLogService.debug(this, 'entering', 'columnDefs:', columnDefs, 'element:', element);
 
         const columnDef = this.xmlElementToColumnDef(element);
         if(columnDefs.findIndex((def: ColumnDefinition) => def.field === columnDef.field) === -1) {
             columnDefs.push(columnDef);
         }
 
-        EzLogService.debug(this, 'exiting', 'columnDefs:', columnDefs);
     }
 
     public parseXmlToTabbedResponseData(xmlString: string, tagPrefix: string = 'ws:'): TabbedResponseData[] {
-        EzLogService.debug(this, 'entering', 'xmlString:', xmlString, 'tagPrefix:', tagPrefix);
 
         const data: TabbedResponseData[] = [];
         if(this.config) {
@@ -234,7 +227,6 @@ export class TabbedResponseTableComponent implements LoggableObject {
             });
         }
         
-        EzLogService.debug(this, 'exiting', 'data:', data);
         return data;
     }
     

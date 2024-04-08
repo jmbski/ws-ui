@@ -1,4 +1,3 @@
-import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { WeakObject } from './general';
 import { CssStyleObject } from './style-types';
 import { Type } from '@angular/core';

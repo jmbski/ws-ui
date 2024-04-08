@@ -1,6 +1,6 @@
 import { MegaMenuItem, MenuItem } from 'primeng/api';
-import { NgStyleValues } from './style-types';
 import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
+import { WSMenuItem } from '../services/menu-service/menu-service-types';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -41,16 +41,7 @@ export interface MenuItemEventMods {
 export type WSMenuItemEvent = ModdableType<Event, MenuItemEventMods>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type GeneralFunction<T> = (...args: any[]) => T;
-
-export interface WSMenuItem extends MenuItem {
-    customIcon?: NgStyleValues;
-    command?: (event: WSMenuItemEvent) => void;
-    wsStyle?: NgStyleValues | null;
-    styleClass?: string;
-    isExpanded?: boolean;
-    maxHeight?: string;
-}
+export type GenericFunction<T> = (...args: any[]) => T;
 
 export interface SelectButtonItem {
     label: string;
@@ -70,15 +61,10 @@ export interface ComponentDef<T> {
     config?: Partial<T>;
 }
 
-export interface BaseComponentClass {
+export interface BaseComponentClass extends Record<string, unknown> {
     LOCAL_ID: string;
     localLogLevel?: number;
     canLog?: boolean;
     cd: ChangeDetectorRef;
-
-    [key: string]: unknown;
 }
-export type FunctionMap = Record<string, GeneralFunction<unknown>>;
-// direct import of environment variables will be done for the work
-// version, since that will be a local service, not a packaged library
-// import { environment, logServiceConfig } from 'environment';
+export type FunctionMap = Record<string, GenericFunction<unknown>>;
