@@ -300,6 +300,7 @@ export function hasChangeDetector(value: unknown): value is BaseComponentClass {
 
 export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = true) {
 
+    
     if(!(hasChangeDetector(this))) {
         console.error('initStyleGroups called on object without ChangeDetectorRef:', this);
         return;

@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { LoggableClass, LogLevels } from './log-service/_index';
-import { PageLayoutConfig } from '../components/page-layout/page-layout.component';
-import { DataService, MenuService } from './_index';
+import { DataService } from './data-service/_index';
+import { MenuService } from './menu-service/menu-service';
 import { isWSMenuItemArray } from './menu-service/menu-service-typeguards';
+import { PageLayoutConfig } from 'warskald-ui/models';
 
 @LoggableClass({
     LOCAL_ID: 'LayoutService',

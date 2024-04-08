@@ -10,7 +10,6 @@ import {
     MenuBarComponent,
     NavLogoComponent,
     PageLayoutComponent,
-    PageLayoutConfig,
     PullToRefreshComponent,
     SvgComponent,
     TabbedResponseTableComponent,
@@ -18,6 +17,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
+import { PageLayoutConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 

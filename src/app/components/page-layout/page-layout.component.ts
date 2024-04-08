@@ -1,36 +1,11 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { TopNavComponent, TopNavConfig } from 'warskald-ui/components/top-nav';
+import { TopNavComponent } from 'warskald-ui/components/top-nav';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { CommonModule } from '@angular/common';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
-import { ComponentDef, StyleGroup } from 'warskald-ui/models';
-import { isComponentDef, objIsType, OptionalBooleanProp, OptionalNumberProp, OptionalStyleGroupProp, OptionalStyleProp, OptionalWeakObjectProp, TypeMapping } from 'warskald-ui/type-guards';
+import { ComponentDef, PageLayoutConfig, StyleGroup, TopNavConfig } from 'warskald-ui/models';
 
-
-export interface PageLayoutConfig {
-    LOCAL_ID?: string;
-    localLogLevel?: number;
-    canLog?: boolean;
-    pageLayoutStyles?: StyleGroup;
-    pageContentStyles?: StyleGroup;
-    customTopNavDef?: ComponentDef<unknown>;
-    wsTopNavConfig?: TopNavConfig;
-}
-
-const pageLayoutConfigTypeMap: TypeMapping<PageLayoutConfig> = {
-    LOCAL_ID: OptionalStyleProp,
-    localLogLevel: OptionalNumberProp,
-    canLog: OptionalBooleanProp,
-    pageLayoutStyles: OptionalStyleGroupProp,
-    pageContentStyles: OptionalStyleGroupProp,
-    customTopNavDef: { predicate: isComponentDef, optional: true },
-    wsTopNavConfig: OptionalWeakObjectProp,
-};
-
-export function isPageLayoutConfig(value: unknown): value is PageLayoutConfig {
-    return objIsType(value, pageLayoutConfigTypeMap);
-}
 
 @LoggableComponent({
     LOCAL_ID: 'PageLayoutComponent_' + nanoid(),
@@ -50,7 +25,7 @@ export function isPageLayoutConfig(value: unknown): value is PageLayoutConfig {
     styleUrl: './page-layout.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PageLayoutComponent {
+export class PageLayoutComponent implements PageLayoutConfig {
 
     [key: string]: unknown;
 

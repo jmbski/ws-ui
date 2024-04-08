@@ -3,10 +3,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { NavLogoComponent } from 'warskald-ui/components/nav-logo';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
-import { ComponentDef, StyleGroup } from 'warskald-ui/models';
+import { ComponentDef, StyleGroup, TopNavConfig } from 'warskald-ui/models';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
 import { nanoid } from 'nanoid';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
+import { isComponentDef, objIsType, OptionalStringProp, OptionalStyleGroupProp, TypeMapping } from 'warskald-ui/type-guards';
 
 @LoggableComponent({
     LOCAL_ID: 'TopNavComponent_' + nanoid(),
@@ -28,7 +29,7 @@ import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/servi
     styleUrl: './top-nav.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TopNavComponent {
+export class TopNavComponent implements TopNavConfig {
     
     // #region public properties
     
@@ -99,14 +100,13 @@ export class TopNavComponent {
     
     // #region get/set inputs
 
-    private _config?: Partial<TopNavComponent>;
+    private _config?: Partial<TopNavConfig>;
     @Input()
     get config() {
         return this._config;
     }
-    set config(input: Partial<TopNavComponent> | undefined) {
+    set config(input: Partial<TopNavConfig> | undefined) {
 
-        delete input?.config;
         this._config = input;
         Object.assign(this, input);
 
@@ -156,5 +156,3 @@ export class TopNavComponent {
     
     
 }
-
-export type TopNavConfig = Partial<TopNavComponent>;

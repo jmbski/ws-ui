@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ComponentClassBase } from 'warskald-ui/models';
 import { ImageModule } from 'primeng/image';
 import { nanoid } from 'nanoid';
-import { LoggableComponent, LogLevels } from '../../services/log-service/_index';
+import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
     LOCAL_ID: 'ImageComponent_' + nanoid(),

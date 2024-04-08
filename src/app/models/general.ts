@@ -1,6 +1,4 @@
-import { MegaMenuItem, MenuItem } from 'primeng/api';
 import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
-import { WSMenuItem } from '../services/menu-service/menu-service-types';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -32,13 +30,6 @@ export type UnionTypeOf<T extends ReadonlyArray<unknown>> = T extends ReadonlyAr
 export type ModdableType<T, M> = Omit<T, Extract<keyof T, keyof M>> & M;
 
 export type WSParams = TypedRecord<unknown>;
-
-export interface MenuItemEventMods {
-    item?: MenuItem | MegaMenuItem | WSMenuItem;
-    data?: WSParams;
-}
-    
-export type WSMenuItemEvent = ModdableType<Event, MenuItemEventMods>;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GenericFunction<T> = (...args: any[]) => T;

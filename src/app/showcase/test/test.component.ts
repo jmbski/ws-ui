@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { PageLayoutComponent, PageLayoutConfig } from 'warskald-ui/components';
+import { PageLayoutComponent } from 'warskald-ui/components';
+import { PageLayoutConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableClass, LogLevels } from 'warskald-ui/services';
 
 /**

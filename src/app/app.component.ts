@@ -5,7 +5,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { MessageService, PrimeNGConfig } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { AppDeviceInfo, LayoutChangeObserver$ } from 'warskald-ui/common';
-import { BlockableUiComponent, MenuBarComponent, MenuBarConfig, NavLogoComponent, NavLogoConfig, PageLayoutConfig, PullToRefreshComponent, TopNavConfig } from 'warskald-ui/components';
+import { BlockableUiComponent, MenuBarComponent, MenuBarConfig, NavLogoComponent, NavLogoConfig, PullToRefreshComponent } from 'warskald-ui/components';
+import { PageLayoutConfig, TopNavConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels, NavigationService, WSMenuItem } from 'warskald-ui/services';
 
 @LoggableComponent({
