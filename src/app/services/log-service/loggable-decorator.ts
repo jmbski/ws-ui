@@ -227,6 +227,19 @@ export function buildProperty(value: unknown): PropertyDescriptor {
     };
 }
 
+/**
+ * Decorator function for adding logging to an Angular Component class. 
+ * Requires a configuration object with the desired logging options.
+ * 
+ * Config options:
+ * - autoAddLogs: boolean - Automatically add logging to all class methods
+ * - canLog: boolean - Whether or not the class can log
+ * - localLogLevel: {@link LogLevels} - The default log level for the class
+ * - LOCAL_ID: string - The local ID for the class, used to provide context for log statements
+ * 
+ * @param config - Logging options for the component class
+ * @returns - A class decorator
+ */
 export function LoggableComponent<T>(config: LoggableObject) {
     return function(_class: Type<T>) {
 

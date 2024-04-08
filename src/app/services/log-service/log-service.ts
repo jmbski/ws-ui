@@ -299,17 +299,6 @@ export class EzLogService {
     
     
     // #region public methods
-
-    /**
-     * Verifies that the provided calling object can log its output. This is based on 
-     * the log level of the calling object and the global log level, as well as the
-     * canLog property of the calling object. The service uses whichever log level is
-     * higher between the global log level and the local log level of the calling object.
-     * 
-     * @param callLogLevel - The log level of the message.
-     * @param caller - The object that is attempting to log a message.
-     * @returns - True if the message can be logged, false otherwise.
-     */
     
 
     /**
@@ -589,12 +578,6 @@ export class EzLogService {
             const currentState = localStorage.getItem('currentStateName');
 
             if(currentState) {
-                
-                // LogService.saveState(currentState, settings);
-
-                // const storedStates = localStorage.getItem('logServiceStates');
-
-                // Object.assign(LogService._serviceStates, JSON.parse(storedStates ?? '{}'));
 
                 EzLogService.loadState(currentState);
             }
@@ -606,18 +589,13 @@ export class EzLogService {
         EzLogService.toggleKeyListener(true);
 
     }
-
+    
     /**
-     * Determines if a value is a LogLevel.
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
      * 
-     * @param value - the value to check
-     * @returns true if the value is a LogLevel, false otherwise
-     */
-    public static isAccessMode(value: unknown): value is LogAccessMode {
-        return value === 'whitelist' || value === 'blacklist' || value === 'none';
-    }
-
-    /**
      * Asserts that a condition is true. 
      * Writes an error message to the console if the assertion is false. 
      * If the assertion is true, nothing happens.
@@ -627,48 +605,73 @@ export class EzLogService {
      * @param messages - additional messages to log
      */
     public static assert(caller: unknown, condition: boolean, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'assert', EzLogService._getCallerFunctionName(), condition, ...messages);
+
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Assert, callingFunct, condition, ...messages);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Clears the console.
      */
-    public static clear(caller: unknown) {
-        EzLogService.writeLog(caller, 'clear', EzLogService._getCallerFunctionName());
+    public static clear(caller: unknown, callingFunct?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Clear, callingFunct);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs the number of times that count() has been called with the same label.
      * 
      * @param caller - the object that is logging the message
+     * @param callingFunct - the name of the function that is logging the message
      * @param label - the label to log
      */
-    public static count(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'count', EzLogService._getCallerFunctionName(), label);
+    public static count(caller: unknown, callingFunct?: string, label?: string,) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Count, callingFunct, label);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Resets the count for the label.
      * 
      * @param caller - the object that is logging the message
+     * @param callingFunct - the name of the function that is logging the message
      * @param label - the label to reset
      */
-    public static countReset(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'countReset', EzLogService._getCallerFunctionName(), label);
+    public static countReset(caller: unknown, callingFunct?: string, label?: string,) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.CountReset, callingFunct, label);
     }
     
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs a message at the debug level.
      * 
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
-    public static debug(caller: unknown, callingFunct: string, ...messages: unknown[]) {
+    public static debug(caller: unknown, ...messages: unknown[]) {
         
-        EzLogService.writeLog(caller, 'debug', callingFunct, ...messages);
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Debug, callingFunct, ...messages);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Displays an interactive list of the properties of the specified JavaScript object. 
      * The output is presented as a hierarchical listing with disclosure triangles that let
      * you see the contents of child objects.
@@ -676,81 +679,121 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param obj - the object to log
      * @param options - the options for the dir function
+     * @param callingFunct - the name of the function that is logging the message
      */
-    public static dir(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions) {
-        EzLogService.writeLog(caller, 'dir', EzLogService._getCallerFunctionName(), obj, options);
+    public static dir(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions, callingFunct?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Dir, callingFunct, obj, options);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Displays an XML/HTML Element representation of the specified object.
      * 
      * @param caller - the object that is logging the message
      * @param obj - the object to log
      * @param options - the options for the dirxml function
+     * @param callingFunct - the name of the function that is logging the message
      */
-    public static dirxml(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions) {
-        EzLogService.writeLog(caller, 'dirxml', EzLogService._getCallerFunctionName(), obj, options);
+    public static dirxml(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions, callingFunct?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Dirxml, callingFunct, obj, options);
     }
     
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs a message at the error level.
      * 
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
     public static error(caller: unknown, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'error', EzLogService._getCallerFunctionName(), ...messages);
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Error, callingFunct, ...messages);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Creates a new inline group in the console. This indents following console messages by an additional level, until console.groupEnd() is called.
      * 
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static group(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'group', EzLogService._getCallerFunctionName(), label);
+    public static group(caller: unknown, callingFunct?: string, label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Group, callingFunct, label);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Creates a new inline group in the console. However, the new group is created as collapsed, 
      * needing to be expanded before the user can see the messages.
      * 
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static groupCollapsed(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'groupCollapsed', EzLogService._getCallerFunctionName(), label);
+    public static groupCollapsed(caller: unknown, callingFunct?: string, label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.GroupCollapsed, callingFunct, label);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Exits the current inline group in the console.
      */
-    public static groupEnd(caller: unknown) {
-        EzLogService.writeLog(caller, 'groupEnd', EzLogService._getCallerFunctionName());
+    public static groupEnd(caller: unknown, callingFunct?: string, label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.GroupEnd, callingFunct, label);
     }
     
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs a message at the info level.
      * 
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
     public static info(caller: unknown, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'info', EzLogService._getCallerFunctionName(), ...messages);
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Info, callingFunct, ...messages);
     }
     
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs a message at the log level.
      * 
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
     public static log(caller: unknown, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'log', EzLogService._getCallerFunctionName(), ...messages);
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Log, callingFunct, ...messages);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Displays tabular data as a table. This function takes one mandatory argument data, 
      * which must be an array or an object, and one additional optional parameter columns.
      * 
@@ -758,113 +801,102 @@ export class EzLogService {
      * @param data - an object or array to show as a table
      * @param columns - an array of strings to use as the column headers
      */
-    public static table(caller: unknown, data: unknown, columns?: string[]) {
-        EzLogService.writeLog(caller, 'table', EzLogService._getCallerFunctionName(), data, columns);
+    public static table(caller: unknown, data: unknown, columns?: string[], callingFunct?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Table, callingFunct, data, columns);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Starts a new timer. The timer is identified by the label parameter.
      * 
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static time(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'time', EzLogService._getCallerFunctionName(), label);
+    public static time(caller: unknown, callingFunct?: string ,label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.Time, callingFunct, label);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Stops a timer that was previously started by calling console.time().
      * 
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeEnd(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'timeEnd', EzLogService._getCallerFunctionName(), label);
+    public static timeEnd(caller: unknown, callingFunct?: string, label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.TimeEnd, callingFunct, label);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs the value of the timer to the console.
      * 
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeLog(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'timeLog', EzLogService._getCallerFunctionName(), label);
+    public static timeLog(caller: unknown, callingFunct?: string, label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.TimeLog, callingFunct, label);
     }
 
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Adds a marker to the browser's Timeline or Waterfall tool.
      * 
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeStamp(caller: unknown, label?: string) {
-        EzLogService.writeLog(caller, 'timeStamp', EzLogService._getCallerFunctionName(), label);
+    public static timeStamp(caller: unknown, callingFunct?: string, label?: string) {
+        callingFunct ??= EzLogService._getCallerFunctionName();
+        EzLogService.writeLog(caller, ConsoleFuncts.TimeStamp, callingFunct, label);
     }
     
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs a message at the trace level.
      * 
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
     public static trace(caller: unknown, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'trace', EzLogService._getCallerFunctionName(), ...messages);
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Trace, callingFunct, ...messages);
     }
     
     /**
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
+     * If a function name is provided, prefix the string with 'fn:' so that it doesn't get included with 
+     * `...messages`
+     * If a function name is not provided, the function name will be determined from the stack trace.
+     * 
      * Logs a message at the warn level.
      * 
      * @param caller - the object that is logging the message
      * @param messages - the messages to log
      */
     public static warn(caller: unknown, ...messages: unknown[]) {
-        EzLogService.writeLog(caller, 'warn', EzLogService._getCallerFunctionName(), ...messages);
+        const callingFunct = EzLogService._getCallerFunctionName(messages);
+        EzLogService.writeLog(caller, ConsoleFuncts.Warn, callingFunct, ...messages);
     }
 
     /**
-     * Writes a message to the console. The message is prefixed with the log level, the
-     * local ID of the calling object, and the name of the function that is logging the message.
+     * **IMPORTANT** To use this function, the caller must have a LOCAL_ID property that is a string.
      * 
-     * @param caller - the object that is logging the message
-     * @param levelOrFunct - {@link LogLevels} of the message
-     * @param functionName - the name of the function that is logging the message
-     * @param messages - additional messages to log
-     */
-    /* public static writeLog(caller: unknown, levelOrFunct: LogLevelOrFunct = DefaultLogFunct, callingFunctName: string, ...args: unknown[]): void {
-        
-        if(isLogLevel(levelOrFunct)) {
-            levelOrFunct = logLevelConsoleFunctMap[levelOrFunct];
-        }
-
-        if(isConsoleKey(levelOrFunct)) {
-            const { getArgs, logLevel, contextStringInArgs } = EzLogService._consoleFunctDefMap[levelOrFunct];
-        
-            if(EzLogService.canLog(logLevel, caller, callingFunctName)) {
-                const logFunction = console[levelOrFunct];
-                const contextString = contextStringInArgs ? 
-                    `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
-                    `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${levelOrFunct}::`;
-        
-                const logArgs = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
-        
-                if(!contextStringInArgs) {
-                    const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
-                    const levelLogFunction = console[levelConsoleFunctName];
-                    if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
-                        EzLogService.showConsoleFunctArgs ? 
-                            levelLogFunction(`${contextString}::console funct args:`, ...logArgs) :
-                            levelLogFunction(contextString);
-                    }
-                }
-                if(isConsoleFunction(logFunction, levelOrFunct)) {
-                    logFunction(...logArgs);
-                }
-            }
-        }
-    } */
-
-    /**
      * Writes a message to the console. The message is prefixed with the log level, the
      * local ID of the calling object, and the name of the function that is logging the message.
      * 
@@ -923,14 +955,25 @@ export class EzLogService {
      * 
      * @returns the name of the function that called the logging function
      */
-    private static _getCallerFunctionName(functIndex: number = 3): string {
-        const error = new Error();
-        // in stack trace, line [2] pertains to the caller
-        const index = isNumber(functIndex) ? functIndex : 3;
-        const stacktraceLine = error.stack?.split('\n')[index] ?? 'unknown';
-        const functNameRegex: RegExp = /at (.*) \(/;
-        const results = functNameRegex.exec(stacktraceLine);
-        const functName = results ? results[1] : 'unknown'; 
+    private static _getCallerFunctionName(messages: unknown[] = [], functIndex: number = 3): string {
+        let functName: string = 'unknown';
+        if(messages.length > 0) {
+            const functNameIndex = messages.findIndex(item => isString(item) && item.startsWith('fn:'));
+            if(functNameIndex > -1) {
+                functName = (<string>messages[functNameIndex]).slice(3);
+                messages = messages.filter((item, index) => index !== functNameIndex);
+            }
+        }
+        else {
+            const error = new Error();
+            // in stack trace, line [2] pertains to the caller
+            const index = isNumber(functIndex) ? functIndex : 3;
+            const stacktraceLine = error.stack?.split('\n')[index] ?? 'unknown';
+            const functNameRegex: RegExp = /at (.*) \(/;
+            const results = functNameRegex.exec(stacktraceLine);
+            functName = results ? results[1] : 'unknown'; 
+        }
+        
         return functName;
     }
 
