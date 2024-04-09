@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { TopNavComponent } from 'warskald-ui/components/top-nav';
-import { DynamicComponent } from 'warskald-ui/components/dynamic';
+import { TopNavComponent } from '../top-nav/_index';
+import { DynamicComponent } from '../dynamic/_index';
 import { CommonModule } from '@angular/common';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';

@@ -4,7 +4,7 @@ import {
     isNumericString, 
     stringToDate 
 } from 'warskald-ui/type-guards';
-import { ColumnDefinition, TableConfig, WsTableComponent } from 'warskald-ui/components/ws-table';
+import { ColumnDefinition, TableConfig, WsTableComponent } from '../ws-table/_index';
 import { WeakObject, toLabelCase } from 'warskald-ui/models';
 import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';

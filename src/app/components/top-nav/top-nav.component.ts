@@ -1,10 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { NavLogoComponent } from 'warskald-ui/components/nav-logo';
+import { NavLogoComponent } from '../nav-logo/_index';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuBarComponent } from 'warskald-ui/components/menu-bar';
+import { MenuBarComponent } from '../menu-bar/_index';
 import { ComponentDef, StyleGroup, TopNavConfig } from 'warskald-ui/models';
-import { DynamicComponent } from 'warskald-ui/components/dynamic';
+import { DynamicComponent } from '../dynamic/_index';
 import { nanoid } from 'nanoid';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { isComponentDef, objIsType, OptionalStringProp, OptionalStyleGroupProp, TypeMapping } from 'warskald-ui/type-guards';

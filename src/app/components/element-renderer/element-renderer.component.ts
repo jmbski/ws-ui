@@ -3,10 +3,10 @@ import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ImageComponent } from 'warskald-ui/components/image';
-import { TextBlockComponent } from 'warskald-ui/components/text-block';
+import { ImageComponent } from '../image/_index';
+import { TextBlockComponent } from '../text-block/_index';
 import { isString } from 'warskald-ui/type-guards';
-import { DynamicComponent } from 'warskald-ui/components/dynamic';
+import { DynamicComponent } from '../dynamic/_index';
 import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 

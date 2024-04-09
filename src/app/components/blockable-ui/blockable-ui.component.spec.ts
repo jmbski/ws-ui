@@ -13,7 +13,7 @@ describe('BlockableUiComponent', () => {
     .compileComponents();
     
     fixture = TestBed.createComponent(BlockableUiComponent);
-    component = fixture.componentInstance;
+    component = fixture.componentInstance; 
     fixture.detectChanges();
   });
 

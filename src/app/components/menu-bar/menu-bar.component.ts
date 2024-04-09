@@ -3,7 +3,7 @@ import { LayoutChangeObserver$, UseMobile } from 'warskald-ui/common';
 import { ElementSelector, StyleGroup, WeakObject } from 'warskald-ui/models'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
-import { SvgComponent } from 'warskald-ui/components/svg';
+import { SvgComponent } from '../svg/_index';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
