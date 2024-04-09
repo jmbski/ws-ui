@@ -7,7 +7,7 @@ import { SvgComponent } from 'warskald-ui/components/svg';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { EzLogService, LogLevels, WSMenuItem, NavigationService, LayoutService, LoggableComponent, initStyleGroups, WSMenuItemEvent } from 'warskald-ui/services';
+import { NgLogService, LogLevels, WSMenuItem, NavigationService, LayoutService, LoggableComponent, initStyleGroups, WSMenuItemEvent } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
@@ -196,13 +196,13 @@ export class MenuBarComponent implements WeakObject {
     public getContainerElement() {
 
         let containerElement: HTMLElement | null = null;
-        EzLogService.debug(this, 'this.containerElement:', this.containerElement);
+        NgLogService.debug(this, 'this.containerElement:', this.containerElement);
 
         if(this.containerElement) {
 
             if(this.containerElement instanceof TemplateRef) {
                 const { nativeElement } = this.containerElement.elementRef;
-                EzLogService.debug(this, 'containerElement is TemplateRef, nativeElement:', nativeElement);
+                NgLogService.debug(this, 'containerElement is TemplateRef, nativeElement:', nativeElement);
 
                 if(nativeElement instanceof HTMLElement) {
                     containerElement = nativeElement;
@@ -211,12 +211,12 @@ export class MenuBarComponent implements WeakObject {
 
             else if(this.containerElement instanceof HTMLElement) {
                 containerElement = this.containerElement;
-                EzLogService.debug(this, 'containerElement is HTMLElement, containerElement:', containerElement);
+                NgLogService.debug(this, 'containerElement is HTMLElement, containerElement:', containerElement);
             }
 
             else {
                 containerElement = document.querySelector(this.containerElement);
-                EzLogService.debug(this, 'containerElement is querySelector, containerElement:', containerElement);
+                NgLogService.debug(this, 'containerElement is querySelector, containerElement:', containerElement);
             }
         }
 
@@ -240,13 +240,13 @@ export class MenuBarComponent implements WeakObject {
         if(containerElement) {
             const menubarItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-submenu-wrapper'));
 
-            EzLogService.debug(this, 'menubarItems:', menubarItems, 'containerElement:', containerElement);
+            NgLogService.debug(this, 'menubarItems:', menubarItems, 'containerElement:', containerElement);
             if(menubarItems.length > 0) {
                 const { bottom } = containerElement.getBoundingClientRect();
                 const pageHeight: number = window.innerHeight;
                 const maxHeight: number = pageHeight - bottom;
 
-                EzLogService.debug(this, 'bottom:', bottom, 'pageHeight:', pageHeight, 'maxHeight:', maxHeight);
+                NgLogService.debug(this, 'bottom:', bottom, 'pageHeight:', pageHeight, 'maxHeight:', maxHeight);
                 menubarItems.forEach((submenu: HTMLElement) => {
                     submenu.style.maxHeight = `${maxHeight}px`;
                     submenu.style.overflowY = 'auto';
@@ -269,10 +269,10 @@ export class MenuBarComponent implements WeakObject {
         this.updateMenuScrolling();
 
         if(!this.useMobile) {
-            EzLogService.debug(this, 'not mobile, configuring menu layout');
+            NgLogService.debug(this, 'not mobile, configuring menu layout');
 
             const wsMenuItems: HTMLElement[] = Array.from(element.querySelectorAll('.ws-menubar-item'));
-            EzLogService.debug(this, 'wsMenuItems:', wsMenuItems);
+            NgLogService.debug(this, 'wsMenuItems:', wsMenuItems);
 
             wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
                 this.modelElementMap.set(wsMenuItem, models[index]);
@@ -281,7 +281,7 @@ export class MenuBarComponent implements WeakObject {
             wsMenuItems.forEach((wsMenuItem: HTMLElement, index: number) => {
                 const model = models[index];
                 const subMenuItems: HTMLElement[] = <HTMLElement[]>Array.from(wsMenuItem.getElementsByClassName('ws-menubar-submenu'));
-                EzLogService.debug(this, 'configureMenuLayout::wsMenuItems.forEach','subMenuItems:', subMenuItems, 'model:', model);
+                NgLogService.debug(this, 'configureMenuLayout::wsMenuItems.forEach','subMenuItems:', subMenuItems, 'model:', model);
 
                 subMenuItems.forEach((subMenuItem: HTMLElement) => {
                     subMenuItem.style.maxWidth = `${wsMenuItem.offsetWidth}px`;

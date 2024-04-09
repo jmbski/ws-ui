@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { LogLevels, EzLogService, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
 
 @LoggableComponent({
     LOCAL_ID: 'PullToRefreshComponent_' + nanoid(),
@@ -37,11 +37,11 @@ export class PullToRefreshComponent {
     ngAfterViewInit() {
 
         this.resizeObserver = new ResizeObserver((data: ResizeObserverEntry[]) => {
-            EzLogService.debug(this, 'entering resizeObserver', 'data:', data);
+            NgLogService.debug(this, 'entering resizeObserver', 'data:', data);
 
             this.pullHeightStart = data[0].contentRect.height * 0.15;
 
-            EzLogService.debug(this, 'exiting resizeObserver', 'this.pullHeightStart:', this.pullHeightStart);
+            NgLogService.debug(this, 'exiting resizeObserver', 'this.pullHeightStart:', this.pullHeightStart);
         });
 
         this.updateTranslateStyle();
@@ -80,7 +80,7 @@ export class PullToRefreshComponent {
             });
 
             document.addEventListener('touchend', () => {
-                EzLogService.debug(this, 'touchend', 'this.refreshTranslate:', this.refreshTranslate);
+                NgLogService.debug(this, 'touchend', 'this.refreshTranslate:', this.refreshTranslate);
 
                 if (this.refreshTranslate >= 0) {
                     location.reload();
@@ -92,7 +92,7 @@ export class PullToRefreshComponent {
                 this.refreshTranslate = -100;
                 this.updateTranslateStyle();
 
-                EzLogService.debug(this, 'exiting touchend');
+                NgLogService.debug(this, 'exiting touchend');
             });
         }
 
@@ -102,7 +102,7 @@ export class PullToRefreshComponent {
         const element: HTMLElement = this.pullToRefresh?.nativeElement as HTMLElement;
 
         if(element) {
-            EzLogService.debug(this, 'element:', element);
+            NgLogService.debug(this, 'element:', element);
             element.style.translate = this.refreshTranslatePx;
         }
     }

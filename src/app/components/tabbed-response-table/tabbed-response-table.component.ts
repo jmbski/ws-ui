@@ -10,7 +10,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { nanoid } from 'nanoid';
-import { LogLevels, EzLogService, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
 
 export interface TabbedResponseData {
     tabName: string,
@@ -95,7 +95,7 @@ export class TabbedResponseTableComponent {
     }
 
     ngAfterViewInit() {
-        EzLogService.debug(this, 'entering', 'xmlString:', this.xmlString, 'config:', this.config);
+        NgLogService.debug(this, 'entering', 'xmlString:', this.xmlString, 'config:', this.config);
         if(this.xmlString) {
             this.tabbedResponseData = this.parseXmlToTabbedResponseData(this.xmlString);
             this.tabMenuModel = this.tabbedResponseData.map((data: TabbedResponseData, index: number) => {
@@ -113,7 +113,7 @@ export class TabbedResponseTableComponent {
                 };
             });
 
-            EzLogService.debug(this, 'tabbedResponseData:', this.tabbedResponseData, 'tabMenuModel:', this.tabMenuModel);
+            NgLogService.debug(this, 'tabbedResponseData:', this.tabbedResponseData, 'tabMenuModel:', this.tabMenuModel);
             this.cd.detectChanges();
         }
     }
@@ -129,19 +129,19 @@ export class TabbedResponseTableComponent {
     public parseElementValue(textContent: string | null): string {
         
         if(!textContent) {
-            EzLogService.debug(this, 'exiting', 'string');
+            NgLogService.debug(this, 'exiting', 'string');
             return 'string';
         }
         if(isBooleanString(textContent)) {
-            EzLogService.debug(this, 'exiting', 'boolean');
+            NgLogService.debug(this, 'exiting', 'boolean');
             return 'boolean';
         }
         if(isNumericString(textContent)) {
-            EzLogService.debug(this, 'exiting', 'number');
+            NgLogService.debug(this, 'exiting', 'number');
             return 'number';
         }
         if(stringToDate(textContent)) {
-            EzLogService.debug(this, 'exiting', 'date');
+            NgLogService.debug(this, 'exiting', 'date');
             return 'date';
         }
 
@@ -219,7 +219,7 @@ export class TabbedResponseTableComponent {
                     tableConfig.rowData.push(rowItem);
                 });
 
-                EzLogService.debug(this, 'tableConfig:', tableConfig, 'tag:', tag);
+                NgLogService.debug(this, 'tableConfig:', tableConfig, 'tag:', tag);
                 data.push({
                     tabName: tag,
                     tableConfig,

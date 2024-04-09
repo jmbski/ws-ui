@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { GenericFunction, WeakObject } from 'warskald-ui/models';
-import { EzLogService } from './log-service';
+import { NgLogService } from './log-service';
 import { ConsoleFuncts, LogLevels } from './log-service-constants';
 import { ConsoleDirOptions, ConsoleFunctName, LogLevelOrFunct, LoggableObject } from './log-service-types';
 import { getArgsOutput } from './log-service-utils';
@@ -171,19 +171,19 @@ export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]):
         const originalGetter = descriptor.get;
         const originalSetter = descriptor.set;
 
-        if(originalGetter && EzLogService.logGetters) {
+        if(originalGetter && NgLogService.logGetters) {
             descriptor.get = function (this: LoggableObject) {
                 const value = originalGetter?.call(this);
-                EzLogService.writeLog(this, levelOrFunct, propertyKey, '\ngetting\n', ...logArgs, value);
+                NgLogService.writeLog(this, levelOrFunct, propertyKey, '\ngetting\n', ...logArgs, value);
                 return value;
             };
         }
         
-        if(originalSetter && EzLogService.logSetters) {
+        if(originalSetter && NgLogService.logSetters) {
             descriptor.set = function (this: LoggableObject, value: unknown) {
                 const argsOutput: WeakObject = getArgsOutput(originalSetter, value);
         
-                EzLogService.writeLog(this, levelOrFunct!, propertyKey, '\nsetting\n', argsOutput, ...logArgs);
+                NgLogService.writeLog(this, levelOrFunct!, propertyKey, '\nsetting\n', argsOutput, ...logArgs);
                 originalSetter?.call(this, value);
             };
         }
@@ -195,16 +195,16 @@ export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]):
             
                 let returnVal: unknown = null;
                 
-                EzLogService.writeLog(this, levelOrFunct!, propertyKey, 'entering;', '\nargs:\n', argsOutput, ...logArgs);
+                NgLogService.writeLog(this, levelOrFunct!, propertyKey, 'entering;', '\nargs:\n', argsOutput, ...logArgs);
             
                 try {
                     returnVal = originalMethod.apply(this, args);
                 }
                 catch(error: unknown) {
-                    EzLogService.writeLog(this, ConsoleFuncts.Error, propertyKey, 'error:', error, ...logArgs);
+                    NgLogService.writeLog(this, ConsoleFuncts.Error, propertyKey, 'error:', error, ...logArgs);
                 }
             
-                EzLogService.writeLog(this, levelOrFunct!, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
+                NgLogService.writeLog(this, levelOrFunct!, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
                             
                 return returnVal;
             };
@@ -232,10 +232,11 @@ export function buildProperty(value: unknown): PropertyDescriptor {
  * Requires a configuration object with the desired logging options.
  * 
  * Config options:
- * - autoAddLogs: boolean - Automatically add logging to all class methods
- * - canLog: boolean - Whether or not the class can log
- * - localLogLevel: {@link LogLevels} - The default log level for the class
- * - LOCAL_ID: string - The local ID for the class, used to provide context for log statements
+ * - LOCAL_ID: string - **Required** The local ID for the class, used to provide context for log statements
+ * - autoAddLogs: boolean (optional) - Automatically add logging to all class methods
+ * - canLog: boolean (optional) - Whether or not the class can log
+ * - className: string (optional) - The name of the class, used for black/white listing
+ * - localLogLevel: {@link LogLevels} (optional) - The default log level for the class
  * 
  * @param config - Logging options for the component class
  * @returns - A class decorator
@@ -258,6 +259,13 @@ export function LoggableComponent<T>(config: LoggableObject) {
     };
 }
 
+/**
+ * Decorator function for adding logging to a class. Requires a
+ * configuration object with the desired logging options.
+ * 
+ * @param config - options to pass to the LoggableClass decorator
+ * @returns - A class decorator
+ */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
 export function LoggableClass(config: LoggableObject) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
@@ -272,6 +280,7 @@ export function LoggableClass(config: LoggableObject) {
         const classProps = Object.getOwnPropertyDescriptors(constructor);
 
         for(const key in classProps) {
+            console.log('LOGGABLE:', key, classProps[key]);
             const classProp = classProps[key];
             const { value, get, set } = classProp;
             if(isFunction(value) || isFunction(get) || isFunction(set)){

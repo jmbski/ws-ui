@@ -7,7 +7,7 @@ import { ImageComponent } from 'warskald-ui/components/image';
 import { TextBlockComponent } from 'warskald-ui/components/text-block';
 import { isString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from 'warskald-ui/components/dynamic';
-import { LogLevels, EzLogService, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
@@ -59,7 +59,7 @@ export class ElementRendererComponent extends ComponentClassBase {
         return this._elements;
     }
     set elements(input: IComponentConfig[]) {
-        EzLogService.debug(this, 'setting elements', 'input:', input);
+        NgLogService.debug(this, 'setting elements', 'input:', input);
 
         this._elements = input;
         this.model$.next(this.toModels(input));

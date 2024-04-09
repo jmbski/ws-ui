@@ -1,4 +1,4 @@
-import { getConsoleStringArg, LogLevels, EzLogService, LogServiceConfig } from 'warskald-ui/services';
+import { getConsoleStringArg, LogLevels, NgLogService, LogServiceConfig } from 'warskald-ui/services';
 
 export const logServiceConfig: LogServiceConfig = {
     logLevel: LogLevels.Debug,
@@ -28,10 +28,10 @@ export const logServiceConfig: LogServiceConfig = {
     persistCurrentState: true,
     customKeyListeners: {
         '1': () => {
-            EzLogService.loadState('primaryState');
+            NgLogService.loadState('primaryState');
         },
         '2': () => {
-            EzLogService.loadState('logEverything');
+            NgLogService.loadState('logEverything');
         }
     }
 };

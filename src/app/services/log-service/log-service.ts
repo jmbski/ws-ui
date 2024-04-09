@@ -1,6 +1,30 @@
+/**
+ * Configurable logging service aimed at Angular applications.
+ * 
+ * All of the properties and functions are static, so there is no need to instantiate the service.
+ * However, you can use the {@link initialize} function to set the initial settings for the service.
+ * Individual settings can still be modified before and/or after initialization though by calling them
+ * directly (i.e. `NgLogService.logLevel = LogLevels.Debug;`).
+ * 
+ * It is recommended that you define log settings in environment files and pass them to the service
+ * in the `initialize` function, in the `app.module.ts` or `app.config.ts` file of your application. 
+ * This will allow you to easily switch between different log settings for development, production, etc...
+ * 
+ * 
+ */
+
+/**
+ * Any allowed here because it's quite possible the log functions will be called 
+ * many, many times and the performance hit of type checking could be significant.
+ * We also aren't concerned with the type of the arguments, just that they exist.
+ * No critical functionality is occurring here that relies on types, so it's safe to
+ * use any. 
+ */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Injectable } from '@angular/core';
 import { FunctionMap, WeakObject } from 'warskald-ui/models';
-import { LogServiceConfig } from './log-service-config';
+import { ILogServiceConfig, LogServiceConfig } from './log-service-config';
 import { ConsoleFuncts, LogLevels, LogSvcIgnoredStrings$, logLevelConsoleFunctMap } from './log-service-constants';
 import { isLogLevel, isConsoleKey, isConsoleFunction } from './log-service-typeguards';
 import { ConsoleFunctName, ConsoleFunctLevelMap, LogAccessMode, LocalLogSettings, ConsoleDirOptions, LogLevelOrFunct } from './log-service-types';
@@ -16,10 +40,10 @@ export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
 @Injectable({
     providedIn: 'root'
 })
-export class EzLogService {
+export class NgLogService {
 
     // #region public properties
-
+    
     /** 
      * The log level for the application.
      */
@@ -162,6 +186,7 @@ export class EzLogService {
      */
     public static persistCurrentState: boolean = true;
 
+    [key: string]: unknown;
     static [key: string]: unknown;
     
     // #endregion public properties
@@ -172,7 +197,7 @@ export class EzLogService {
     /**
      * Default state of the service
      */
-    private static _defaultState: LogServiceConfig = {
+    private static _defaultState: ILogServiceConfig = {
         logLevel: LogLevels.Trace,
         useLocalLogLevel: true,
         useCanLog: true,
@@ -180,7 +205,7 @@ export class EzLogService {
         logGetters: true,
         logSetters: true,
         additionalServiceStates: {},
-        customConsoleFunctDefs: undefined,
+        customConsoleFunctDefs: {},
         defaultLogFunct: ConsoleFuncts.Info,
         ignoredStrings: [
             'entering;',
@@ -218,7 +243,7 @@ export class EzLogService {
      * Collection of states to switch between
      */
     private static _serviceStates: Record<string, LogServiceConfig> = {
-        'defaultState': EzLogService._defaultState,
+        'defaultState': NgLogService._defaultState,
     };
 
     /**
@@ -237,12 +262,12 @@ export class EzLogService {
      * Additional states that the service can switch between.
      */
     static get additionalServiceStates(): Record<string, LogServiceConfig> {
-        return EzLogService._serviceStates;
+        return NgLogService._serviceStates;
     }
     static set additionalServiceStates(states: Record<string, LogServiceConfig> | undefined) {
         if(states) {
             Object.keys(states).forEach((key: string) => {
-                EzLogService._serviceStates[key] = states[key];
+                NgLogService._serviceStates[key] = states[key];
             });
         }
     }
@@ -317,7 +342,7 @@ export class EzLogService {
             const { localLogLevel, canLog } = caller;
     
             /** If the caller's canLog flag is false, return immediately before doing anything else */
-            if(canLog === false && EzLogService.useCanLog) {
+            if(canLog === false && NgLogService.useCanLog) {
                 return false;
             }
             
@@ -329,12 +354,12 @@ export class EzLogService {
                 {accessor: 'logLevel', prop: callLogLevel},
             ].every(({accessor, prop}) => {
                 
-                const accessMode = EzLogService[`${accessor}AccessMode`];
+                const accessMode = NgLogService[`${accessor}AccessMode`];
                 let allowed: boolean = true;
     
                 if(<LogAccessMode>accessMode !== 'none') {
-                    const whitelist = EzLogService[`${accessor}WhiteList`];
-                    const blacklist = EzLogService[`${accessor}BlackList`];
+                    const whitelist = NgLogService[`${accessor}WhiteList`];
+                    const blacklist = NgLogService[`${accessor}BlackList`];
                     
                     allowed = accessMode === 'whitelist' ?
                         (<unknown[]>whitelist).includes(prop) :
@@ -348,12 +373,12 @@ export class EzLogService {
                 return false;
             }
             
-            let logLevel = EzLogService.logLevel;
+            let logLevel = NgLogService.logLevel;
     
-            if(EzLogService.useLocalLogLevel) {
-                logLevel = EzLogService.useStrictLocalLogLevel ? 
-                    Math.max(EzLogService.logLevel, <number>localLogLevel ?? LogLevels.Trace) :
-                    Math.min(EzLogService.logLevel, <number>localLogLevel ?? LogLevels.Trace);
+            if(NgLogService.useLocalLogLevel) {
+                logLevel = NgLogService.useStrictLocalLogLevel ? 
+                    Math.max(NgLogService.logLevel, <number>localLogLevel ?? LogLevels.Trace) :
+                    Math.min(NgLogService.logLevel, <number>localLogLevel ?? LogLevels.Trace);
             }
     
             return callLogLevel >= logLevel;
@@ -367,18 +392,19 @@ export class EzLogService {
      * @param caller - the object that is updating its log settings
      * @param settings - the new log settings
      */
-    public static updateLocalLogSettings(caller: unknown, settings: LocalLogSettings) {
-        if(isWeakObject(caller)) {
-            const { canLog, localLogLevel } = settings;
-            caller.canLog = canLog ?? caller.canLog;
-            caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
-    
-            EzLogService.debug(caller, 'entering', settings);
-    
-            Object.assign(caller, settings);
-    
-            EzLogService.debug(caller, 'exiting', caller);
-        }
+    public static updateLocalLogSettings(caller: any, settings: LocalLogSettings) {
+        
+        // update canLog and localLogLevel first so that they can be used in the debug logs
+        const { canLog, localLogLevel } = settings;
+        caller.canLog = canLog ?? caller.canLog;
+        caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
+
+        NgLogService.debug(caller, 'entering', settings, 'fn:updateLocalLogSettings');
+
+        Object.assign(caller, settings);
+
+        NgLogService.debug(caller, 'exiting', caller, 'fn:updateLocalLogSettings');
+        
     }
 
     /**
@@ -386,34 +412,31 @@ export class EzLogService {
      * 
      * @param settings - the new log settings
      */
-    public static updateLogServiceSettings(
-        settings: LogServiceConfig,
-        stateName?: string
-    ) {
+    public static updateLogServiceSettings(settings: LogServiceConfig, stateName?: string) {
         Object.keys(settings).forEach((key: string) => {
-            EzLogService[key] = settings[key] ?? EzLogService[key];
+            NgLogService[key] = settings[key] ?? NgLogService[key];
         });
 
-        EzLogService.saveState(stateName, settings);
+        NgLogService.saveState(stateName, settings);
 
-        EzLogService.currentStateName = stateName ?? 'latestState';
+        NgLogService.currentStateName = stateName ?? 'latestState';
 
         if(settings.toggleState) {
-            EzLogService.saveState('toggleState', settings.toggleState);
+            NgLogService.saveState('toggleState', settings.toggleState);
         }
 
         if(settings.customConsoleFunctDefs) {
-            EzLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
+            NgLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
         }
         
-        EzLogService.toggleKeyListener(true);
+        NgLogService.toggleKeyListener(true);
     }
 
     /**
      * @param functDefMap - a {@link ConsoleFunctLevelMap} to update the default console function definitions
      */
     public static updateConsoleFunctDefMap(functDefMap: Partial<ConsoleFunctLevelMap>) {
-        EzLogService._consoleFunctDefMap = Object.assign({}, consoleFunctDefMap, functDefMap);
+        NgLogService._consoleFunctDefMap = Object.assign({}, consoleFunctDefMap, functDefMap);
     }
 
     /**
@@ -424,32 +447,32 @@ export class EzLogService {
     public static saveState(stateName?: string, state?: LogServiceConfig) {
         stateName ??= 'latestState';
         state ??= {
-            logLevel: EzLogService.logLevel,
-            useLocalLogLevel: EzLogService.useLocalLogLevel,
-            useCanLog: EzLogService.useCanLog,
-            useStrictLocalLogLevel: EzLogService.useStrictLocalLogLevel,
-            callerWhiteList: EzLogService.callerWhiteList,
-            callerBlackList: EzLogService.callerBlackList,
-            callerAccessMode: EzLogService.callerAccessMode,
-            functionWhiteList: EzLogService.functionWhiteList,
-            functionBlackList: EzLogService.functionBlackList,
-            functionAccessMode: EzLogService.functionAccessMode,
-            logLevelWhiteList: EzLogService.logLevelWhiteList,
-            logLevelBlackList: EzLogService.logLevelBlackList,
-            logLevelAccessMode: EzLogService.logLevelAccessMode,
-            reportKey: EzLogService.reportKey,
-            enableReportListener: EzLogService.enableReportListener,
-            toggleKey: EzLogService.toggleKey,
-            enableToggleListener: EzLogService.enableToggleListener,
-            customKeyListeners: EzLogService.customKeyListeners,
+            logLevel: NgLogService.logLevel,
+            useLocalLogLevel: NgLogService.useLocalLogLevel,
+            useCanLog: NgLogService.useCanLog,
+            useStrictLocalLogLevel: NgLogService.useStrictLocalLogLevel,
+            callerWhiteList: NgLogService.callerWhiteList,
+            callerBlackList: NgLogService.callerBlackList,
+            callerAccessMode: NgLogService.callerAccessMode,
+            functionWhiteList: NgLogService.functionWhiteList,
+            functionBlackList: NgLogService.functionBlackList,
+            functionAccessMode: NgLogService.functionAccessMode,
+            logLevelWhiteList: NgLogService.logLevelWhiteList,
+            logLevelBlackList: NgLogService.logLevelBlackList,
+            logLevelAccessMode: NgLogService.logLevelAccessMode,
+            reportKey: NgLogService.reportKey,
+            enableReportListener: NgLogService.enableReportListener,
+            toggleKey: NgLogService.toggleKey,
+            enableToggleListener: NgLogService.enableToggleListener,
+            customKeyListeners: NgLogService.customKeyListeners,
         };
 
-        state = Object.assign({}, EzLogService._defaultState, state);
+        state = Object.assign({}, NgLogService._defaultState, state);
 
 
         if(stateName !== 'defaultState') {
-            EzLogService._serviceStates[stateName] = state;
-            EzLogService._updateLocalStorage();
+            NgLogService._serviceStates[stateName] = state;
+            NgLogService._updateLocalStorage();
         }
     }
 
@@ -460,7 +483,7 @@ export class EzLogService {
      */
     public static saveStates(states: Record<string, LogServiceConfig>) {
         Object.keys(states).forEach((key: string) => {
-            EzLogService.saveState(key, states[key]);
+            NgLogService.saveState(key, states[key]);
         });
     }
 
@@ -470,28 +493,28 @@ export class EzLogService {
      * @param stateName - the name of the state to load
      */
     public static loadState(stateName: string) {
-        const state: LogServiceConfig | undefined = EzLogService._serviceStates[stateName];
+        const state: LogServiceConfig | undefined = NgLogService._serviceStates[stateName];
         if(state) {
-            EzLogService.currentStateName = stateName;
+            NgLogService.currentStateName = stateName;
             console.log(`Switching to state: ${stateName}`);
 
-            EzLogService._updateLocalStorage(true);
+            NgLogService._updateLocalStorage(true);
 
             Object.keys(state).forEach((key: string) => {
-                EzLogService[key] = state[key] ?? EzLogService[key];
+                NgLogService[key] = state[key] ?? NgLogService[key];
             });
 
             if(state.customConsoleFunctDefs) {
-                EzLogService.updateConsoleFunctDefMap(state.customConsoleFunctDefs);
+                NgLogService.updateConsoleFunctDefMap(state.customConsoleFunctDefs);
             }
 
-            EzLogService.toggleKeyListener(true);
+            NgLogService.toggleKeyListener(true);
         }
     }
 
     public static deleteState(stateName: string) {
-        delete EzLogService._serviceStates[stateName];
-        EzLogService._updateLocalStorage();
+        delete NgLogService._serviceStates[stateName];
+        NgLogService._updateLocalStorage();
     }
 
     /**
@@ -500,16 +523,16 @@ export class EzLogService {
      * @param toggleValue - whether or not to toggle the report listener
      */
     public static toggleKeyListener(toggleValue?: boolean) {
-        toggleValue ??= !EzLogService.keyListenerActive;
+        toggleValue ??= !NgLogService.keyListenerActive;
         
         if(!toggleValue) {
-            window.removeEventListener('keyup', EzLogService._keyListenHandler);
-            EzLogService.keyListenerActive = false;
+            window.removeEventListener('keyup', NgLogService._keyListenHandler);
+            NgLogService.keyListenerActive = false;
         } 
         else {
             // remove the listener first in case it is already active
-            window.removeEventListener('keyup', EzLogService._keyListenHandler);
-            window.addEventListener('keyup', EzLogService._keyListenHandler);
+            window.removeEventListener('keyup', NgLogService._keyListenHandler);
+            window.addEventListener('keyup', NgLogService._keyListenHandler);
         }
     }
 
@@ -517,7 +540,7 @@ export class EzLogService {
         if(isWeakObject(caller)) {
             const { LOCAL_ID } = caller;
             if(isString(LOCAL_ID)) {
-                EzLogService.callerWhiteList.push(LOCAL_ID);
+                NgLogService.callerWhiteList.push(LOCAL_ID);
             }
         }
     }
@@ -526,25 +549,25 @@ export class EzLogService {
         if(isWeakObject(caller)) {
             const { LOCAL_ID } = caller;
             if(isString(LOCAL_ID)) {
-                EzLogService.callerBlackList.push(LOCAL_ID);
+                NgLogService.callerBlackList.push(LOCAL_ID);
             }
         }
     }
 
     public static allowFunction(functName: string) {
-        EzLogService.functionWhiteList.push(functName);
+        NgLogService.functionWhiteList.push(functName);
     }
 
     public static blockFunction(functName: string) {
-        EzLogService.functionBlackList.push(functName);
+        NgLogService.functionBlackList.push(functName);
     }
 
     public static allowLogLevel(logLevel: LogLevels) {
-        EzLogService.logLevelWhiteList.push(logLevel);
+        NgLogService.logLevelWhiteList.push(logLevel);
     }
 
     public static blockLogLevel(logLevel: LogLevels) {
-        EzLogService.logLevelBlackList.push(logLevel);
+        NgLogService.logLevelBlackList.push(logLevel);
     }
 
     /**
@@ -555,38 +578,38 @@ export class EzLogService {
      */
     public static initialize(settings?: LogServiceConfig, stateName?: string) {
 
-        settings ??= EzLogService._defaultState;
+        settings ??= NgLogService._defaultState;
         stateName ??= 'primaryState';
 
         Object.keys(settings).forEach((key: string) => {
             // using a bang operator since we know settings will be defined
-            EzLogService[key] = settings![key] ?? EzLogService[key];
+            NgLogService[key] = settings![key] ?? NgLogService[key];
         });
 
         if(settings.customConsoleFunctDefs) {
-            EzLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
+            NgLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
         }
 
 
         if(settings.toggleState) {
-            EzLogService.saveState('toggleState', settings.toggleState);
+            NgLogService.saveState('toggleState', settings.toggleState);
         }
 
-        EzLogService.saveState(stateName, settings);
+        NgLogService.saveState(stateName, settings);
         
-        if(EzLogService.persistCurrentState) {
+        if(NgLogService.persistCurrentState) {
             const currentState = localStorage.getItem('currentStateName');
 
             if(currentState) {
 
-                EzLogService.loadState(currentState);
+                NgLogService.loadState(currentState);
             }
         }
         else {
-            EzLogService.currentStateName = stateName;
+            NgLogService.currentStateName = stateName;
         }
         
-        EzLogService.toggleKeyListener(true);
+        NgLogService.toggleKeyListener(true);
 
     }
     
@@ -606,8 +629,8 @@ export class EzLogService {
      */
     public static assert(caller: unknown, condition: boolean, ...messages: unknown[]) {
 
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Assert, callingFunct, condition, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Assert, callingFunct, condition, ...messages);
     }
 
     /**
@@ -617,8 +640,8 @@ export class EzLogService {
      * Clears the console.
      */
     public static clear(caller: unknown, callingFunct?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Clear, callingFunct);
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Clear, callingFunct);
     }
 
     /**
@@ -631,9 +654,9 @@ export class EzLogService {
      * @param callingFunct - the name of the function that is logging the message
      * @param label - the label to log
      */
-    public static count(caller: unknown, callingFunct?: string, label?: string,) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Count, callingFunct, label);
+    public static count(caller: unknown, label?: string, callingFunct?: string,) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Count, callingFunct, label);
     }
 
     /**
@@ -646,9 +669,9 @@ export class EzLogService {
      * @param callingFunct - the name of the function that is logging the message
      * @param label - the label to reset
      */
-    public static countReset(caller: unknown, callingFunct?: string, label?: string,) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.CountReset, callingFunct, label);
+    public static countReset(caller: unknown, label?: string, callingFunct?: string,) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.CountReset, callingFunct, label);
     }
     
     /**
@@ -664,8 +687,8 @@ export class EzLogService {
      */
     public static debug(caller: unknown, ...messages: unknown[]) {
         
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Debug, callingFunct, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Debug, callingFunct, ...messages);
     }
 
     /**
@@ -682,8 +705,8 @@ export class EzLogService {
      * @param callingFunct - the name of the function that is logging the message
      */
     public static dir(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions, callingFunct?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Dir, callingFunct, obj, options);
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Dir, callingFunct, obj, options);
     }
 
     /**
@@ -698,8 +721,8 @@ export class EzLogService {
      * @param callingFunct - the name of the function that is logging the message
      */
     public static dirxml(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions, callingFunct?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Dirxml, callingFunct, obj, options);
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Dirxml, callingFunct, obj, options);
     }
     
     /**
@@ -714,8 +737,8 @@ export class EzLogService {
      * @param messages - the messages to log
      */
     public static error(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Error, callingFunct, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Error, callingFunct, ...messages);
     }
 
     /**
@@ -727,9 +750,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static group(caller: unknown, callingFunct?: string, label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Group, callingFunct, label);
+    public static group(caller: unknown, label?: string, callingFunct?: string,) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Group, callingFunct, label);
     }
 
     /**
@@ -742,9 +765,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static groupCollapsed(caller: unknown, callingFunct?: string, label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.GroupCollapsed, callingFunct, label);
+    public static groupCollapsed(caller: unknown, label?: string, callingFunct?: string,) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.GroupCollapsed, callingFunct, label);
     }
 
     /**
@@ -753,9 +776,9 @@ export class EzLogService {
      * 
      * Exits the current inline group in the console.
      */
-    public static groupEnd(caller: unknown, callingFunct?: string, label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.GroupEnd, callingFunct, label);
+    public static groupEnd(caller: unknown, label?: string, callingFunct?: string,) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.GroupEnd, callingFunct, label);
     }
     
     /**
@@ -770,8 +793,8 @@ export class EzLogService {
      * @param messages - the messages to log
      */
     public static info(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Info, callingFunct, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Info, callingFunct, ...messages);
     }
     
     /**
@@ -786,8 +809,8 @@ export class EzLogService {
      * @param messages - the messages to log
      */
     public static log(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Log, callingFunct, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Log, callingFunct, ...messages);
     }
 
     /**
@@ -802,8 +825,8 @@ export class EzLogService {
      * @param columns - an array of strings to use as the column headers
      */
     public static table(caller: unknown, data: unknown, columns?: string[], callingFunct?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Table, callingFunct, data, columns);
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Table, callingFunct, data, columns);
     }
 
     /**
@@ -815,9 +838,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static time(caller: unknown, callingFunct?: string ,label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.Time, callingFunct, label);
+    public static time(caller: unknown, label?: string, callingFunct?: string,) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.Time, callingFunct, label);
     }
 
     /**
@@ -829,9 +852,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeEnd(caller: unknown, callingFunct?: string, label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.TimeEnd, callingFunct, label);
+    public static timeEnd(caller: unknown, label?: string, callingFunct?: string) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.TimeEnd, callingFunct, label);
     }
 
     /**
@@ -843,9 +866,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeLog(caller: unknown, callingFunct?: string, label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.TimeLog, callingFunct, label);
+    public static timeLog(caller: unknown, label?: string, callingFunct?: string) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.TimeLog, callingFunct, label);
     }
 
     /**
@@ -857,9 +880,9 @@ export class EzLogService {
      * @param caller - the object that is logging the message
      * @param label - the label to log
      */
-    public static timeStamp(caller: unknown, callingFunct?: string, label?: string) {
-        callingFunct ??= EzLogService._getCallerFunctionName();
-        EzLogService.writeLog(caller, ConsoleFuncts.TimeStamp, callingFunct, label);
+    public static timeStamp(caller: unknown, label?: string, callingFunct?: string) {
+        callingFunct ??= NgLogService._getCallerFunctionName();
+        NgLogService.writeLog(caller, ConsoleFuncts.TimeStamp, callingFunct, label);
     }
     
     /**
@@ -874,8 +897,8 @@ export class EzLogService {
      * @param messages - the messages to log
      */
     public static trace(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Trace, callingFunct, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Trace, callingFunct, ...messages);
     }
     
     /**
@@ -890,8 +913,8 @@ export class EzLogService {
      * @param messages - the messages to log
      */
     public static warn(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = EzLogService._getCallerFunctionName(messages);
-        EzLogService.writeLog(caller, ConsoleFuncts.Warn, callingFunct, ...messages);
+        const callingFunct = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Warn, callingFunct, ...messages);
     }
 
     /**
@@ -913,9 +936,9 @@ export class EzLogService {
             }
     
             if(isConsoleKey(levelOrFunct)) {
-                const { getArgs, logLevel, contextStringInArgs } = EzLogService._consoleFunctDefMap[levelOrFunct];
+                const { getArgs, logLevel, contextStringInArgs } = NgLogService._consoleFunctDefMap[levelOrFunct];
             
-                if(EzLogService.canLog(logLevel, caller, callingFunctName)) {
+                if(NgLogService.canLog(logLevel, caller, callingFunctName)) {
                     const logFunction = console[levelOrFunct];
                     const contextString = contextStringInArgs ? 
                         `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
@@ -927,7 +950,7 @@ export class EzLogService {
                         const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
                         const levelLogFunction = console[levelConsoleFunctName];
                         if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
-                            EzLogService.showConsoleFunctArgs ? 
+                            NgLogService.showConsoleFunctArgs ? 
                                 levelLogFunction(`${contextString}::console funct args:`, ...logArgs) :
                                 levelLogFunction(contextString);
                         }
@@ -983,30 +1006,30 @@ export class EzLogService {
      * @param event - the keyup event
      */
     private static _keyListenHandler(event: KeyboardEvent) {
-        if(event.key === EzLogService.reportKey && EzLogService.enableReportListener) {
+        if(event.key === NgLogService.reportKey && NgLogService.enableReportListener) {
             console.log('\nLOGSERVICE SETTINGS:');
-            for(const key in EzLogService) {
-                const prop = EzLogService[key];
+            for(const key in NgLogService) {
+                const prop = NgLogService[key];
                 if(typeof prop !== 'function' && key !== 'ɵprov') {
                     console.log(key, prop);
                 }
             }
         }
-        else if(event.key === EzLogService.toggleKey && EzLogService.enableToggleListener) {
-            const { currentStateName, defaultStateName } = EzLogService;
+        else if(event.key === NgLogService.toggleKey && NgLogService.enableToggleListener) {
+            const { currentStateName, defaultStateName } = NgLogService;
             if(currentStateName !== 'toggleState') {
-                EzLogService.loadState('toggleState');
+                NgLogService.loadState('toggleState');
             }
             else {
-                EzLogService._serviceStates[defaultStateName] != null ? 
-                    EzLogService.loadState(EzLogService.defaultStateName) : 
-                    EzLogService.loadState('defaultState');
+                NgLogService._serviceStates[defaultStateName] != null ? 
+                    NgLogService.loadState(NgLogService.defaultStateName) : 
+                    NgLogService.loadState('defaultState');
             }
         }
         else {
-            for(const key in EzLogService.customKeyListeners) {
+            for(const key in NgLogService.customKeyListeners) {
                 if(event.key === key) {
-                    EzLogService.customKeyListeners[key](event);
+                    NgLogService.customKeyListeners[key](event);
                 }
             }
         }
@@ -1019,10 +1042,10 @@ export class EzLogService {
      * @param saveStateName - whether or not to save the state name to local storage
      */
     private static _updateLocalStorage(saveStateName: boolean = false): void {
-        if(EzLogService.persistCurrentState) {
-            localStorage.setItem('logServiceStates', JSON.stringify(EzLogService._serviceStates));
+        if(NgLogService.persistCurrentState) {
+            localStorage.setItem('logServiceStates', JSON.stringify(NgLogService._serviceStates));
             if(saveStateName) {
-                localStorage.setItem('currentStateName', EzLogService.currentStateName);
+                localStorage.setItem('currentStateName', NgLogService.currentStateName);
             }
         }
     }

@@ -7,7 +7,7 @@ import {
     RegisterDataSourceParams 
 } from 'warskald-ui/models';
 import { Subscription } from 'rxjs';
-import { LogLevels, EzLogService, LoggableClass } from '../log-service/_index';
+import { LogLevels, NgLogService, LoggableClass } from '../log-service/_index';
 
 /**
  * A token for the default data sources to be registered with the data service.
@@ -101,7 +101,7 @@ export class DataService {
     
     // #region public methods
     public static initialize() {
-        EzLogService.customKeyListeners['4'] = () => {
+        NgLogService.customKeyListeners['4'] = () => {
             DataService.debugSources();
         };
     }
@@ -129,7 +129,7 @@ export class DataService {
             DataService.dataSources.set(id, dataSource);
         }
 
-        EzLogService.debug(this, 'exiting', dataSource);
+        NgLogService.debug(this, 'exiting', dataSource);
         return new Promise<DataSource>(resolve => {
             resolve(dataSource);
         
@@ -203,7 +203,7 @@ export class DataService {
 
         const dataSource: DataSource | undefined = DataService.getDataSource(id);
         if(dataSource) {
-            EzLogService.debug(this, 'exiting', dataSource.getValue());
+            NgLogService.debug(this, 'exiting', dataSource.getValue());
             return dataSource.getValue();
         }
 

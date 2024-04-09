@@ -5,7 +5,7 @@ import {
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
 import { isString, isStringArray, isStyleGroup, isWeakObject } from 'warskald-ui/type-guards';
-import { LogLevels, EzLogService, LoggableClass } from './log-service/_index';
+import { LogLevels, NgLogService, LoggableClass } from './log-service/_index';
 import { WSMenuItem } from './menu-service/_index';
 import { ChangeDetectorRef } from '@angular/core';
 
@@ -306,12 +306,12 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
         return;
     }
 
-    EzLogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
+    NgLogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
 
     for(const propName in this) {
         if(propName.endsWith('Styles') || !onlyStylePropNames) {
             const property = this[propName];
-            EzLogService.debug(this, 'property:', propName, property);
+            NgLogService.debug(this, 'property:', propName, property);
 
             if(isStyleGroup(property)) {
                 const strippedPropName: string = propName.replace('Styles', '');
@@ -322,7 +322,7 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
                 let defaultClass: string | string[] | undefined = undefined;
                 const defaultClassProp = this[defaultClassPropName];
 
-                EzLogService.debug(this, 
+                NgLogService.debug(this, 
                     'strippedPropName:', strippedPropName, 
                     'formattedPropName:', formattedPropName, 
                     'defaultClassPropName:', defaultClassPropName, 
@@ -337,7 +337,7 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
 
                 this.cd.detectChanges();
                 
-                EzLogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
+                NgLogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
             }
         }
     }
