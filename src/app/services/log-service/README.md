@@ -1,5 +1,6 @@
 # NgLogService
 
+
 ## General Overview
 
 The NgLogService is designed to be a highly customizable logging service that's also 
@@ -14,6 +15,6 @@ without running `initialize()`, this function is required if you want to use the
 or `customKeyListeners` properties (since the event listener is created during the 
 `initialize()` function).
 
-The service is also decorated with Angular's `@Injectable` decorator with `providedIn` set to 
+The service is also decorated with Angular's `@Injectable()` decorator with `providedIn` set to 
 `root`, so it does not need to be provided anywhere either. The goal was to reduce the amount 
 of work needed to be able to implement the service.
