@@ -63,7 +63,7 @@ console in the catch.
 
 ## Main NgLogService functions
 
-### initialize(settings?: LogServiceConfig)
+* ### initialize(settings?: LogServiceConfig)
 
     The initialize function applies the passed in settings if provided, or the default settings
     otherwise. It also sets up the state saving if turned on, as well as creates the key event
