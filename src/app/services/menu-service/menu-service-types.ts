@@ -1,8 +1,6 @@
-import { NgStyleValues } from 'warskald-ui/models';
+import { GenericFunction, ModdableType, NgStyleValues, WSParams } from 'warskald-ui/models';
 import { NavAction } from '../nav-service/_index';
-import { GenericFunction } from 'src/app/models/general';
 import { MegaMenuItem, MenuItem, TooltipOptions } from 'primeng/api';
-import { WSParams, ModdableType } from 'src/app/models/general';
 
 
 export interface WSMenuItem {
@@ -58,7 +56,9 @@ export interface WSMenuItem {
     maxHeight?: string;
     
     navAction?: NavAction;
-}export interface MenuItemEventMods {
+}
+
+export interface MenuItemEventMods {
     item?: MenuItem | MegaMenuItem | WSMenuItem;
     data?: WSParams;
 }
