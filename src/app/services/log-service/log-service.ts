@@ -412,24 +412,10 @@ export class NgLogService {
      * 
      * @param settings - the new log settings
      */
-    public static updateLogServiceSettings(settings: LogServiceConfig, stateName?: string) {
+    public static updateLogServiceSettings(settings: LogServiceConfig) {
         Object.keys(settings).forEach((key: string) => {
-            NgLogService[key] = settings[key] ?? NgLogService[key];
+            NgLogService[key] = settings[key] ?? NgLogService._defaultState[key];
         });
-
-        NgLogService.saveState(stateName, settings);
-
-        NgLogService.currentStateName = stateName ?? 'latestState';
-
-        if(settings.toggleState) {
-            NgLogService.saveState('toggleState', settings.toggleState);
-        }
-
-        if(settings.customConsoleFunctDefs) {
-            NgLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
-        }
-        
-        NgLogService.toggleKeyListener(true);
     }
 
     /**
@@ -500,9 +486,7 @@ export class NgLogService {
 
             NgLogService._updateLocalStorage(true);
 
-            Object.keys(state).forEach((key: string) => {
-                NgLogService[key] = state[key] ?? NgLogService[key];
-            });
+            NgLogService.updateLogServiceSettings(state);
 
             if(state.customConsoleFunctDefs) {
                 NgLogService.updateConsoleFunctDefMap(state.customConsoleFunctDefs);
@@ -581,10 +565,7 @@ export class NgLogService {
         settings ??= NgLogService._defaultState;
         stateName ??= 'primaryState';
 
-        Object.keys(settings).forEach((key: string) => {
-            // using a bang operator since we know settings will be defined
-            NgLogService[key] = settings![key] ?? NgLogService[key];
-        });
+        NgLogService.updateLogServiceSettings(settings);
 
         if(settings.customConsoleFunctDefs) {
             NgLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
