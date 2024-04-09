@@ -26,7 +26,7 @@ settings. These settings are used to provide logging context and help determine 
 call can log or not.
 
 Properties:
-- **LOCAL_ID**: string **Required** - The local ID for the class, used to provide context for log statements
+- **__LOCAL_ID__**: string **Required** - The local ID for the class, used to provide context for log statements
 - **autoAddLogs**: boolean (optional) - Automatically add logging to all class methods
 - **canLog**: boolean (optional) - Whether or not the class can log
 - **className**: string (optional) - The name of the class, used for black/white listing
