@@ -18,3 +18,16 @@ or `customKeyListeners` properties (since the event listener is created during t
 The service is also decorated with Angular's `@Injectable()` decorator with `providedIn` set to 
 `root`, so it does not need to be provided anywhere either. The goal was to reduce the amount 
 of work needed to be able to implement the service.
+
+## LoggableObject
+
+This is a simple interface with a log configuration specific to a single class with local log
+settings. These settings are used to provide logging context and help determine whether the
+call can log or not.
+
+Properties:
+- LOCAL_ID: string **Required** - The local ID for the class, used to provide context for log statements
+- autoAddLogs: boolean (optional) - Automatically add logging to all class methods
+- canLog: boolean (optional) - Whether or not the class can log
+- className: string (optional) - The name of the class, used for black/white listing
+- localLogLevel: {@link LogLevels} (optional) - The default log level for the class
