@@ -67,9 +67,9 @@ export class TextBlockComponent {
 
     @Input() illuminatedBorder?: string = 'illuminated-border';
 
-    @Input() styles?: StyleGroup;
+    @Input() styles?: StyleGroup = {};
 
-    @Input() bodyStyles?: StyleGroup;
+    @Input() bodyStyles?: StyleGroup = {};
     
     
     // #endregion standard inputs

@@ -68,7 +68,7 @@ export class ElementRendererComponent implements BaseComponentConfig {
 
     @Input() content?: unknown;
     
-    @Input() styles?: StyleGroup;
+    @Input() styles?: StyleGroup = {};
     
     @Input() styleClass?: string | undefined;
     
@@ -76,7 +76,7 @@ export class ElementRendererComponent implements BaseComponentConfig {
     
     @Input() children?: BaseComponentConfig[] | undefined;
     
-    @Input() layoutStyles?: StyleGroup;
+    @Input() layoutStyles?: StyleGroup = {};
 
     
     
