@@ -1,7 +1,7 @@
-<div class="grid grid-nogutter">
+<div [class]="styleClasses" [style]="styles?.style">
         @for(element of model$ | async; track elementId) {
             @if(element.config && element.classType != null) {
-                <div [class]="element.config.layoutClass ?? 'grid-row-std'">
+                <div [class]="element.config.layoutStyles?.baseClass ?? 'grid-row-std'">
                     <ng-container *ngComponentOutlet="element.classType; inputs: element.config;">
                         
                     </ng-container>

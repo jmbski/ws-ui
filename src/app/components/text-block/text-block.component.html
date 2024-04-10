@@ -1,12 +1,14 @@
-<div class="text-block w-full">
-    <ng-container *ngIf="illuminated">
+<div [class]="styleClasses" [style]="styles?.style">
+    
+    @if(illuminated) {
         <div [class]="illuminatedBorder">
             <span [class]="illuminatedColor">
                 {{illuminatedChar}}
             </span>
         </div>
-    </ng-container>
-    <span class="black-castle text-2xl">
+    }
+    
+    <span [class]="bodyStyleClasses" [style]="bodyStyles?.style">
         {{body}}
     </span>
     

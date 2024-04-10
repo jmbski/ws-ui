@@ -2,28 +2,11 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { 
-    ComponentClassBase, 
-    ElementType, 
-    IComponentConfig, 
+    ElementType,
+    StyleGroup, 
 } from 'warskald-ui/models';
-import { LogLevels, LoggableComponent, NgLogService } from 'warskald-ui/services';
-import { IsTextBlock } from 'warskald-ui/type-guards';
+import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 
-
-/* function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
-    NgLogService.debug(this, 'fn:processTextConfig', 'input', input);
-    DefaultConfigParser.call(this, input);
-    if(IsTextBlock(input)) {
-        NgLogService.debug(this, 'fn:processTextConfig', 'input.illuminated', input.illuminated);
-        if(input.illuminated && input.content?.length > 0) {
-            this.illuminatedChar = input.content.charAt(0);
-            this.body = input.content.substring(1);
-        }
-        else {
-            this.body = input.content;
-        }
-    }
-} */
 
 @LoggableComponent({
     LOCAL_ID: 'TextBlockComponent_' + nanoid(),
@@ -45,6 +28,14 @@ export class TextBlockComponent {
 
     // #region public properties
 
+    public defaultStyleClass = 'text-block w-full';
+
+    public defaultBodyStyleClass = 'black-castle text-2xl';
+
+    public styleClasses: string[] = [this.defaultStyleClass];
+
+    public bodyStyleClasses: string[] = [this.defaultBodyStyleClass];
+
     
     // #endregion public properties
     
@@ -60,6 +51,7 @@ export class TextBlockComponent {
     
     
     // #region standard inputs
+    @Input() id: string = nanoid();
     
     @Input() elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
 
@@ -74,6 +66,10 @@ export class TextBlockComponent {
     @Input() illuminatedColor?: string = 'illuminated';
 
     @Input() illuminatedBorder?: string = 'illuminated-border';
+
+    @Input() styles?: StyleGroup;
+
+    @Input() bodyStyles?: StyleGroup;
     
     
     // #endregion standard inputs
@@ -102,7 +98,8 @@ export class TextBlockComponent {
     }
 
     ngOnInit() {
-        this.cd.detectChanges();
+        initStyleGroups.bind(this)();
+
         if(this.illuminated && this.content?.length > 0) {
             this.illuminatedChar = this.content.charAt(0);
             this.body = this.content.substring(1);

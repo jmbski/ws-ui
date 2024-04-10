@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ComponentClassBase } from 'warskald-ui/models';
 import { ImageModule } from 'primeng/image';
 import { nanoid } from 'nanoid';
-import { LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { ElementType, StyleGroup, WsImageConfig } from 'warskald-ui/models';
 
 @LoggableComponent({
     LOCAL_ID: 'ImageComponent_' + nanoid(),
@@ -22,9 +22,15 @@ import { LoggableComponent, LogLevels } from 'warskald-ui/services';
     templateUrl: './image.component.html',
     styleUrl: './image.component.scss'
 })
-export class ImageComponent {
+export class ImageComponent implements WsImageConfig {
     
     // #region public properties
+
+    public defaultStyleClass = '';
+
+    public styleClasses: string[] = [this.defaultStyleClass];
+
+    [key: string]: unknown;
     
     // #endregion public properties
     
@@ -40,8 +46,13 @@ export class ImageComponent {
     
     
     // #region standard inputs
+    @Input() elementType: ElementType.IMAGE = ElementType.IMAGE;
+
+    @Input() id: string = nanoid();
     
     @Input() src?: string;
+
+    @Input() styles?: StyleGroup;
     
     // #endregion standard inputs
     
@@ -65,6 +76,10 @@ export class ImageComponent {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
+    }
+
+    ngOnInit() {
+        initStyleGroups.bind(this)();
     }
     // #endregion constructor and lifecycle hooks
     

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap, WeakObject } from 'warskald-ui/models';
+import { BaseComponentConfig, ElementModel, ElementType, ElementComponentMap, WeakObject, StyleGroup } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImageComponent } from '../image/_index';
 import { TextBlockComponent } from '../text-block/_index';
 import { isString } from 'warskald-ui/type-guards';
 import { DynamicComponent } from '../dynamic/_index';
-import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
@@ -31,22 +31,21 @@ const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
     styleUrl: './element-renderer.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElementRendererComponent implements ComponentClassBase {
+export class ElementRendererComponent implements BaseComponentConfig {
 
     // #region public properties
 
     /** @todo convert to using ComponentDef so templates can be passed in */
     public model$: BehaviorSubject<ElementModel[]> = new BehaviorSubject<ElementModel[]>([]);
 
-    
-    
-    
-    
-    
-    
-    
-    
-    
+    public defaultStyleClass = '';
+
+    public defaultLayoutClass = 'grid grid-nogutter';
+
+    public styleClasses: string[] = [this.defaultStyleClass];
+
+    public layoutClasses: string[] = [this.defaultLayoutClass];
+
     [key: string]: unknown;
     // #endregion public properties
     
@@ -64,14 +63,20 @@ export class ElementRendererComponent implements ComponentClassBase {
     // #region standard inputs
 
     @Input() elementType: ElementType = COMPONENT;
+
     @Input() id: string = nanoid();
+
     @Input() content?: unknown;
-    @Input() style?: string | Partial<CSSStyleDeclaration> | undefined;
+    
+    @Input() styles?: StyleGroup;
+    
     @Input() styleClass?: string | undefined;
+    
     @Input() options?: WeakObject | undefined;
-    @Input() children?: IComponentConfig[] | undefined;
-    @Input() layoutClass?: string | undefined;
-    @Input() layoutStyle?: string | undefined;
+    
+    @Input() children?: BaseComponentConfig[] | undefined;
+    
+    @Input() layoutStyles?: StyleGroup;
 
     
     
@@ -80,12 +85,12 @@ export class ElementRendererComponent implements ComponentClassBase {
     
     // #region get/set inputs
 
-    private _elements: IComponentConfig[] = [];
+    private _elements: BaseComponentConfig[] = [];
     @Input()
     get elements() {
         return this._elements;
     }
-    set elements(input: IComponentConfig[]) {
+    set elements(input: BaseComponentConfig[]) {
 
         this._elements = input;
         this.model$.next(this.toModels(input));
@@ -93,12 +98,12 @@ export class ElementRendererComponent implements ComponentClassBase {
     //        LogService.debug(this, 'exiting', `model$: ${this.model$.value}`);
     }
     
-    private _elementConfig?: IComponentConfig;
+    private _elementConfig?: BaseComponentConfig;
     @Input()
     get elementConfig() {
         return this._elementConfig;
     }
-    set elementConfig(input: IComponentConfig | undefined) {
+    set elementConfig(input: BaseComponentConfig | undefined) {
         this._elementConfig = input;
         this.config = input;
     }
@@ -125,6 +130,7 @@ export class ElementRendererComponent implements ComponentClassBase {
     }
 
     ngAfterViewInit() {
+        initStyleGroups.bind(this)();
         this.cd.detectChanges();
     }
     // #endregion constructor and lifecycle hooks
@@ -132,9 +138,9 @@ export class ElementRendererComponent implements ComponentClassBase {
     
     // #region public methods
 
-    public toModels(elements: IComponentConfig[]): ElementModel[] {
+    public toModels(elements: BaseComponentConfig[]): ElementModel[] {
 
-        const elementModels = elements.map((element: IComponentConfig) => {
+        const elementModels = elements.map((element: BaseComponentConfig) => {
             const { elementType } = element;
             if(isString(elementType)) {
                 NgLogService.debug(this, 'fn:toModels', `type: ${elementType}`);

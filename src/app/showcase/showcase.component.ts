@@ -18,7 +18,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, IComponentConfig, PageLayoutConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 
@@ -68,7 +68,7 @@ export class ShowcaseComponent {
         }
     });
 
-    public elements: IComponentConfig[] = [];
+    public elements: BaseComponentConfig[] = [];
 
     public charClasses: string[] = [
         'illuminated',
@@ -140,9 +140,9 @@ export class ShowcaseComponent {
         this.borderClasses.forEach((borderClass, borderIndex) => {
             this.charClasses.forEach((charClass, index) => {
                 const text = this.lorem.generateParagraphs(1);
-                const newElements: IComponentConfig[] = [];
+                const newElements: BaseComponentConfig[] = [];
 
-                const newElement: IComponentConfig = {
+                const newElement: BaseComponentConfig = {
                     elementType: ElementType.TEXT_BLOCK, 
                     content: text,
                     illuminated: index % 2 === 0,
@@ -157,9 +157,11 @@ export class ShowcaseComponent {
                     newElements.push({
                         elementType: ElementType.IMAGE,
                         src: 'app/assets/images/wulfgard-ermine-alpha.png',
-                        style: {
-                            width: '150px',
-                            float: 'right',
+                        styles: {
+                            style: {
+                                width: '150px',
+                                float: 'right',
+                            }
                         },
                         id: `image-${index + borderIndex * 7}`,
                     });

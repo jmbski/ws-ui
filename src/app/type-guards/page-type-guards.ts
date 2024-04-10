@@ -1,10 +1,9 @@
 import { 
-    ComponentClassBase, 
     ComponentDef, 
     ComponentType, 
     ContainerConfig, 
     ElementType, 
-    IComponentConfig, 
+    BaseComponentConfig, 
     TextBlockConfig, 
     WsImageConfig
 } from 'warskald-ui/models';
@@ -20,7 +19,8 @@ import {
     OptionalStringProp, 
     OptionalStyleProp, 
     StringProp, 
-    OptionalNumberProp
+    OptionalNumberProp,
+    isWeakObject
 } from './general-type-guards';
 import { TemplateRef, Type } from '@angular/core';
 
@@ -44,7 +44,7 @@ export function isComponentDef<T>(value: unknown): value is ComponentDef<T> {
     return objIsType<ComponentDef<T>>(value, componentDefTypeMap);
 }
 
-export const IComponentConfigTypeMap: TypeMapping<IComponentConfig> = {
+export const IComponentConfigTypeMap: TypeMapping<BaseComponentConfig> = {
     elementType: { predicate: IsElementType },
     id: StringProp,
     content: OptionalExistsProp,
@@ -56,11 +56,11 @@ export const IComponentConfigTypeMap: TypeMapping<IComponentConfig> = {
     layoutStyle: OptionalStyleProp,
 };
 
-export function IsIComponentConfig(value: unknown): value is IComponentConfig {
+export function IsIComponentConfig(value: unknown): value is BaseComponentConfig {
     return objIsType(value, IComponentConfigTypeMap);
 }
 
-export function IsIComponentConfigArray(value: unknown): value is IComponentConfig[] {
+export function IsIComponentConfigArray(value: unknown): value is BaseComponentConfig[] {
     return isArray(value) && value.every(IsIComponentConfig);
 }
 
@@ -136,10 +136,10 @@ export function IsImageArray(value: unknown): value is WsImageConfig[] {
     return isArray(value) && value.every(IsImage);
 }
 
-export function IsComponent(value: unknown): value is ComponentClassBase {
-    return value instanceof ComponentClassBase;
+export function IsComponent(value: unknown): value is BaseComponentConfig {
+    return isWeakObject(value) && IsElementType(value.elementType);
 }
 
-export function IsComponentArray(value: unknown): value is IComponentConfig[] {
+export function IsComponentArray(value: unknown): value is BaseComponentConfig[] {
     return isArray(value) && value.every(IsComponent);
 }
