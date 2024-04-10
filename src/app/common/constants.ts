@@ -1,5 +1,4 @@
 import { CommonModule } from '@angular/common';
-import { InjectionToken } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -16,7 +15,6 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { ToolbarModule } from 'primeng/toolbar';
 import { TooltipModule } from 'primeng/tooltip';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { ComponentClassBase, IComponentConfig } from '../models/page-elements';
 
 
 export interface AppDeviceSettings {
@@ -62,17 +60,3 @@ export const COMMON_PRIME_MODULES = [
 export const GlobalResizeObserver: BehaviorSubject<ResizeObserver | undefined> = new BehaviorSubject<ResizeObserver | undefined>(undefined);
 
 export const LayoutChangeObserver$: Subject<void> = new Subject<void>();
-
-export const CONFIG_PARSER = new InjectionToken<string[]>('CONFIG_PARSER');
-export function DefaultConfigParser(this: ComponentClassBase, config: IComponentConfig): void {
-    Object.keys(config).forEach((key) => {
-        try {
-            this[key] = config[key];
-        }
-        catch (error: unknown) {
-            if (!(error instanceof TypeError)) {
-                console.error(error);
-            }
-        }
-    });
-}

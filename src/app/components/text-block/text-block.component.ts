@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { DefaultConfigParser } from 'warskald-ui/common';
 import { 
     ComponentClassBase, 
     ElementType, 
@@ -11,7 +10,7 @@ import { LogLevels, LoggableComponent, NgLogService } from 'warskald-ui/services
 import { IsTextBlock } from 'warskald-ui/type-guards';
 
 
-function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
+/* function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
     NgLogService.debug(this, 'fn:processTextConfig', 'input', input);
     DefaultConfigParser.call(this, input);
     if(IsTextBlock(input)) {
@@ -24,7 +23,7 @@ function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
             this.body = input.content;
         }
     }
-}
+} */
 
 @LoggableComponent({
     LOCAL_ID: 'TextBlockComponent_' + nanoid(),
@@ -42,7 +41,7 @@ function processTextConfig(this: ComponentClassBase, input: IComponentConfig) {
     styleUrl: './text-block.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextBlockComponent extends ComponentClassBase {
+export class TextBlockComponent {
 
     // #region public properties
 
@@ -62,7 +61,7 @@ export class TextBlockComponent extends ComponentClassBase {
     
     // #region standard inputs
     
-    @Input() override elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
+    @Input() elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
 
     @Input() body?: string = '';
 
@@ -70,11 +69,12 @@ export class TextBlockComponent extends ComponentClassBase {
 
     @Input() illuminated: boolean = false;
 
-    @Input() override content: string = '';
+    @Input() content: string = '';
 
     @Input() illuminatedColor?: string = 'illuminated';
 
     @Input() illuminatedBorder?: string = 'illuminated-border';
+    
     
     // #endregion standard inputs
     
@@ -98,8 +98,6 @@ export class TextBlockComponent extends ComponentClassBase {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        super();
-        this.parseConfig = processTextConfig;
         
     }
 

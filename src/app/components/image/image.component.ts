@@ -22,7 +22,7 @@ import { LoggableComponent, LogLevels } from 'warskald-ui/services';
     templateUrl: './image.component.html',
     styleUrl: './image.component.scss'
 })
-export class ImageComponent extends ComponentClassBase {
+export class ImageComponent {
     
     // #region public properties
     
@@ -65,7 +65,6 @@ export class ImageComponent extends ComponentClassBase {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        super();
     }
     // #endregion constructor and lifecycle hooks
     

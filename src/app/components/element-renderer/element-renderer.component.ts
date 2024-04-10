@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap } from 'warskald-ui/models';
+import { ComponentClassBase, IComponentConfig, ElementModel, ElementType, ElementComponentMap, WeakObject } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ImageComponent } from '../image/_index';
@@ -31,13 +31,23 @@ const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
     styleUrl: './element-renderer.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElementRendererComponent extends ComponentClassBase {
+export class ElementRendererComponent implements ComponentClassBase {
 
     // #region public properties
 
     /** @todo convert to using ComponentDef so templates can be passed in */
     public model$: BehaviorSubject<ElementModel[]> = new BehaviorSubject<ElementModel[]>([]);
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    [key: string]: unknown;
     // #endregion public properties
     
     
@@ -52,6 +62,23 @@ export class ElementRendererComponent extends ComponentClassBase {
     
     
     // #region standard inputs
+
+    @Input() elementType: ElementType = COMPONENT;
+    @Input() id: string = nanoid();
+    @Input() content?: unknown;
+    @Input() style?: string | Partial<CSSStyleDeclaration> | undefined;
+    @Input() styleClass?: string | undefined;
+    @Input() options?: WeakObject | undefined;
+    @Input() children?: IComponentConfig[] | undefined;
+    @Input() layoutClass?: string | undefined;
+    @Input() layoutStyle?: string | undefined;
+
+    
+    
+    // #endregion standard inputs
+    
+    
+    // #region get/set inputs
 
     private _elements: IComponentConfig[] = [];
     @Input()
@@ -75,12 +102,7 @@ export class ElementRendererComponent extends ComponentClassBase {
         this._elementConfig = input;
         this.config = input;
     }
-    
-    // #endregion standard inputs
-    
-    
-    // #region get/set inputs
-    
+
     // #endregion get/set inputs
     
     
@@ -100,7 +122,6 @@ export class ElementRendererComponent extends ComponentClassBase {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        super();
     }
 
     ngAfterViewInit() {

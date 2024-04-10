@@ -1,4 +1,3 @@
-import { CONFIG_PARSER, DefaultConfigParser } from '../common/constants';
 import { WeakObject } from './general';
 import { CssStyleObject } from './style-types';
 import { Component, Inject, Input, Type } from '@angular/core';
@@ -167,6 +166,7 @@ export class ComponentClassBase implements IComponentConfig {
     /* constructor(@Inject(CONFIG_PARSER)parser?: ConfigParser) {
         this.parseConfig = parser?.bind(this) ?? DefaultConfigParser.bind(this);
     } */
+    constructor() {}
 
     /* parseConfig: (config: IComponentConfig) => void = DefaultConfigParser.bind(this); */
 }
