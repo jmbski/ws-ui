@@ -3,7 +3,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { nanoid } from 'nanoid';
 import { 
     ElementType,
-    StyleGroup, 
+    StyleGroup,
+    TextBlockConfig, 
 } from 'warskald-ui/models';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 
@@ -24,7 +25,7 @@ import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/servi
     styleUrl: './text-block.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextBlockComponent {
+export class TextBlockComponent implements TextBlockConfig {
 
     // #region public properties
 
@@ -36,6 +37,7 @@ export class TextBlockComponent {
 
     public bodyStyleClasses: string[] = [this.defaultBodyStyleClass];
 
+    [key: string]: unknown;
     
     // #endregion public properties
     
