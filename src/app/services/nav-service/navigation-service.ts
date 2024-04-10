@@ -11,7 +11,7 @@ import { isStringArray } from 'warskald-ui/type-guards';
     LOCAL_ID: 'NavigationService',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Injectable({
     providedIn: 'root'

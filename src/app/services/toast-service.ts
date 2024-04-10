@@ -9,7 +9,7 @@ import { LogLevels, LoggableClass } from './log-service/_index';
     LOCAL_ID: 'ToastService',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Injectable({providedIn: 'root'})
 export class ToastService {

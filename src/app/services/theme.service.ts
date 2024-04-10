@@ -18,7 +18,7 @@ export const SecondaryTheme: BehaviorSubject<ThemeName> = new BehaviorSubject<Th
     LOCAL_ID: 'ThemeService',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Injectable({
     providedIn: 'root'

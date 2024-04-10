@@ -11,7 +11,7 @@ import { ComponentDef, PageLayoutConfig, StyleGroup, TopNavConfig } from 'warska
     LOCAL_ID: 'PageLayoutComponent_' + nanoid(),
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Component({
     selector: 'ws-page-layout',

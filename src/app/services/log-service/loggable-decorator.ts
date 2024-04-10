@@ -280,7 +280,7 @@ export function LoggableClass(config: LoggableObject) {
         const classProps = Object.getOwnPropertyDescriptors(constructor);
 
         for(const key in classProps) {
-            console.log('LOGGABLE:', key, classProps[key]);
+            // console.log('LOGGABLE:', key, classProps[key]);
             const classProp = classProps[key];
             const { value, get, set } = classProp;
             if(isFunction(value) || isFunction(get) || isFunction(set)){

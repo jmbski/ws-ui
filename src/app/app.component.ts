@@ -13,7 +13,7 @@ import { LayoutService, LoggableComponent, LogLevels, NavigationService, WSMenuI
     LOCAL_ID: 'AppComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 
 })
 @Component({

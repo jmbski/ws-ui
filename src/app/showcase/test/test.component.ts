@@ -11,7 +11,7 @@ import { LayoutService, LoggableClass, LogLevels } from 'warskald-ui/services';
     LOCAL_ID: 'TestComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Component({
     selector: 'ws-test',

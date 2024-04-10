@@ -1,12 +1,11 @@
 import { getConsoleStringArg, LogLevels, NgLogService, LogServiceConfig } from 'warskald-ui/services';
 
 export const logServiceConfig: LogServiceConfig = {
-    logLevel: LogLevels.Debug,
+    logLevel: LogLevels.All,
     defaultStateName: 'primaryState',
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,
     showConsoleFunctArgs: true,
-    callerAccessMode: 'whitelist',
     customConsoleFunctDefs: {
         timeStamp: {
             logLevel: LogLevels.Debug,
@@ -15,7 +14,7 @@ export const logServiceConfig: LogServiceConfig = {
     },
     additionalServiceStates: {
         logEverything: {
-            logLevel: LogLevels.Trace,
+            logLevel: LogLevels.All,
             useLocalLogLevel: false,
             enableReportListener: true,
             enableToggleListener: true,

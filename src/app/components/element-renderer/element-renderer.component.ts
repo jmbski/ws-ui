@@ -17,7 +17,7 @@ const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
     LOCAL_ID: 'ElementRendererComponent_' + nanoid(),
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Error
+    localLogLevel: LogLevels.Debug
 })
 @Component({
     selector: 'ws-element-renderer',
@@ -59,7 +59,6 @@ export class ElementRendererComponent extends ComponentClassBase {
         return this._elements;
     }
     set elements(input: IComponentConfig[]) {
-        NgLogService.debug(this, 'setting elements', 'input:', input);
 
         this._elements = input;
         this.model$.next(this.toModels(input));
@@ -115,11 +114,13 @@ export class ElementRendererComponent extends ComponentClassBase {
     public toModels(elements: IComponentConfig[]): ElementModel[] {
 
         const elementModels = elements.map((element: IComponentConfig) => {
-            const { type } = element;
-            if(isString(type)) {
-                const classType = ElementComponentsMap[type];
+            const { elementType } = element;
+            if(isString(elementType)) {
+                NgLogService.debug(this, 'fn:toModels', `type: ${elementType}`);
+                const classType = ElementComponentsMap[elementType];
                 const model: ElementModel = {
                     classType,
+                    elementId: element.id ?? nanoid(),
                     config: element,
                 };
                 return model;

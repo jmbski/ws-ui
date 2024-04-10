@@ -9,7 +9,7 @@ import { PageLayoutConfig } from 'warskald-ui/models';
     LOCAL_ID: 'LayoutService',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Injectable({
     providedIn: 'root'

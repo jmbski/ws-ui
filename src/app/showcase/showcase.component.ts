@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { LoremIpsum } from 'lorem-ipsum';
 import { ToastModule } from 'primeng/toast';
 import { 
     BlockableUiComponent, 
@@ -17,7 +18,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { PageLayoutConfig } from 'warskald-ui/models';
+import { ElementType, IComponentConfig, PageLayoutConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 
@@ -25,7 +26,7 @@ import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/service
     LOCAL_ID: 'ShowcaseComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Component({
     selector: 'ws-showcase',
@@ -55,6 +56,39 @@ export class ShowcaseComponent {
 
     // #region public properties
 
+
+    public lorem = new LoremIpsum({
+        sentencesPerParagraph: {
+            max: 8,
+            min: 4
+        },
+        wordsPerSentence: {
+            max: 16,
+            min: 4
+        }
+    });
+
+    public elements: IComponentConfig[] = [];
+
+    public charClasses: string[] = [
+        'illuminated',
+        'illuminated-red',
+        'illuminated-blue',
+        /* 'illuminated-green',
+        'illuminated-yellow',
+        'illuminated-purple',
+        'illuminated-cyan', */
+    ];
+
+    public borderClasses: string[] = [
+        'illuminated-border',
+        'illuminated-border-red',
+        /* 'illuminated-border-blue',
+        'illuminated-border-green',
+        'illuminated-border-yellow',
+        'illuminated-border-purple',
+        'illuminated-border-cyan', */
+    ];
     public pageLayoutConfig?: PageLayoutConfig;
     
     // #endregion public properties
@@ -102,6 +136,38 @@ export class ShowcaseComponent {
     ngOnInit() {
 
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
+
+        this.borderClasses.forEach((borderClass, borderIndex) => {
+            this.charClasses.forEach((charClass, index) => {
+                const text = this.lorem.generateParagraphs(1);
+                const newElements: IComponentConfig[] = [];
+
+                const newElement: IComponentConfig = {
+                    elementType: ElementType.TEXT_BLOCK, 
+                    content: text,
+                    illuminated: index % 2 === 0,
+                    illuminatedColor: charClass,
+                    illuminatedBorder: borderClass,
+                    id: `text-block-${index + borderIndex * 7}`,
+                };
+
+                newElements.push(newElement);
+
+                if(!newElement.illuminated) {
+                    newElements.push({
+                        elementType: ElementType.IMAGE,
+                        src: 'app/assets/images/wulfgard-ermine-alpha.png',
+                        style: {
+                            width: '150px',
+                            float: 'right',
+                        },
+                        id: `image-${index + borderIndex * 7}`,
+                    });
+                }
+
+                this.elements.push(...newElements);
+            });
+        });
     }
     
     // #endregion constructor and lifecycle hooks

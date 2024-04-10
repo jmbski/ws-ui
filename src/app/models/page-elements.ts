@@ -1,6 +1,7 @@
+import { CONFIG_PARSER, DefaultConfigParser } from '../common/constants';
 import { WeakObject } from './general';
 import { CssStyleObject } from './style-types';
-import { Type } from '@angular/core';
+import { Component, Inject, Input, Type } from '@angular/core';
 
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.
@@ -97,55 +98,60 @@ export interface IComponentConfig {
 /**
  * Represents an element to render on a page
  */
+@Component({
+    selector: 'ws-component-class-base',
+    template: ''
+})
 export class ComponentClassBase implements IComponentConfig {
 
     /**
      * The type of element to render
      */
-    public elementType: ElementType = ElementType.COMPONENT; // @todo: add type/enum later
+    @Input() elementType: ElementType = ElementType.COMPONENT; // @todo: add type/enum later
 
     /**
      * The id of the element
      */
-    public id: string = '';
+    @Input() id: string = '';
 
     /**
      * The content to render in the element
      */
-    public content?: unknown;
+    @Input() content?: unknown;
 
     /**
      * The style to apply to the element
      */
-    public style?: string | CssStyleObject;
+    @Input() style?: string | CssStyleObject;
     
     /**
      * The style class to apply to the element
      */
-    public styleClass?: string;
+    @Input() styleClass?: string;
 
     /**
      * The options to apply to the element
      */
-    public options?: WeakObject;
+    @Input() options?: WeakObject;
 
     /**
      * The children of the element
      */
-    public children?: IComponentConfig[];
+    @Input() children?: IComponentConfig[];
 
     /**
      * Styleclasses to use for the layout of the element
      */
-    public layoutClass?: string;
+    @Input() layoutClass?: string;
 
     /**
      * Style to use for the layout of the element
      */
-    public layoutStyle?: string;
+    @Input() layoutStyle?: string;
 
     // config?: ComponentConfig;
-    private _config?: IComponentConfig;
+    /* private _config?: IComponentConfig;
+    @Input()
     get config() {
         return this._config;
     }
@@ -154,33 +160,21 @@ export class ComponentClassBase implements IComponentConfig {
         if(input && this.parseConfig) {
             this.parseConfig(input);
         }
-    }
+    } */
 
     [key: string]: unknown;
 
-    constructor(parser?: ConfigParser) {
+    /* constructor(@Inject(CONFIG_PARSER)parser?: ConfigParser) {
         this.parseConfig = parser?.bind(this) ?? DefaultConfigParser.bind(this);
-        
-    }
+    } */
 
-    parseConfig?: (config: IComponentConfig) => void;
+    /* parseConfig: (config: IComponentConfig) => void = DefaultConfigParser.bind(this); */
 }
 
 export type ConfigParser = (this: ComponentClassBase, config: IComponentConfig) => void;
 
-export function DefaultConfigParser(this: ComponentClassBase, config: IComponentConfig): void {
-    Object.keys(config).forEach((key) => {
-        try {
-            this[key] = config[key];
-        }
-        catch(error: unknown) {
-            if(!(error instanceof TypeError)) {
-                console.error(error);
-            }
-        }
-    });
-}
 export interface ElementModel {
     classType?: Type<unknown>;
     config?: IComponentConfig;
+    elementId: string;
 }

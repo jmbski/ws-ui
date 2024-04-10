@@ -12,8 +12,8 @@ import { nanoid } from 'nanoid';
 
 
 @LoggableComponent({
-    localLogLevel: LogLevels.Debug,
-    LOCAL_ID: 'MenudBarComponent_' + nanoid(),
+    localLogLevel: LogLevels.Error,
+    LOCAL_ID: 'MenuBarComponent_' + nanoid(),
     canLog: true,
     autoAddLogs: true,
 })

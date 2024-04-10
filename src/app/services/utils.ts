@@ -27,7 +27,7 @@ export interface XMLCollectionDef {
     LOCAL_ID: 'Utils',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 export class Utils  {
     

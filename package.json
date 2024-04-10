@@ -1,12 +1,16 @@
 {
   "name": "warskald-ui",
-  "version": "0.0.63",
+  "version": "0.0.64",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 4201",
     "build": "ng build",
     "build-lib": "ng build warskald-ui",
-    "build-exports": "python3.11 build_exports.py",
+    "build-exports": "python3.11 src/tools/python/main.py build_exports",
+    "setlogs-error": "python3.11 src/tools/python/main.py set_log_levels Error",
+    "setlogs-info": "python3.11 src/tools/python/main.py set_log_levels Info",
+    "setlogs-debug": "python3.11 src/tools/python/main.py set_log_levels Debug",
+    "setlogs-all": "python3.11 src/tools/python/main.py set_log_levels All",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
