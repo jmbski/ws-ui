@@ -31,7 +31,7 @@ export interface BaseComponentConfig {
     /**
      * Styles and classes to apply to the element
      */
-    styles?: StyleGroup;
+    baseStyles?: StyleGroup;
 
     /**
      * The options to apply to the element
@@ -71,7 +71,6 @@ export interface ContainerConfig extends BaseComponentConfig {
 export interface WsImageConfig extends BaseComponentConfig {
     elementType: ElementType.IMAGE;
     src?: string;
-    imageStyles?: StyleGroup;
 }
 
 /**

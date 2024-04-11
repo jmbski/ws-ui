@@ -26,9 +26,9 @@ export class ImageComponent implements WsImageConfig {
     
     // #region public properties
 
-    public defaultStyleClass = '';
+    public defaultBaseStyleClass = '';
 
-    public styleClasses: string[] = [this.defaultStyleClass];
+    public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
     [key: string]: unknown;
     
@@ -52,7 +52,7 @@ export class ImageComponent implements WsImageConfig {
     
     @Input() src?: string;
 
-    @Input() styles?: StyleGroup = {};
+    @Input() baseStyles?: StyleGroup = {};
     
     // #endregion standard inputs
     

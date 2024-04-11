@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoremIpsum } from 'lorem-ipsum';
+import { nanoid } from 'nanoid';
 import { ToastModule } from 'primeng/toast';
 import { 
     BlockableUiComponent, 
@@ -21,6 +22,7 @@ import {
 import { ElementType, BaseComponentConfig, PageLayoutConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
+const { TEXT_BLOCK } = ElementType;
 
 @LoggableComponent({
     LOCAL_ID: 'ShowcaseComponent',
@@ -137,7 +139,55 @@ export class ShowcaseComponent {
 
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
 
-        this.borderClasses.forEach((borderClass, borderIndex) => {
+        this.elements = [
+            {
+                elementType: TEXT_BLOCK,
+                id: nanoid(),
+                content: 'Welcome to the home of La Compagnie du Griffon Doré!',
+                layoutStyles: {
+                    baseClass: 'w-full'
+                },
+                baseStyles: {
+                    style: {
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }
+                },
+                bodyStyles: {
+                    style: {
+                        fontSize: '3em',
+                        textAlign: 'center',
+                        width: '100%',
+                        fontWeight: 'bold',
+
+                    },
+                    baseClass: 'black-castle '
+                }
+            },
+            {
+                elementType: TEXT_BLOCK,
+                id: nanoid(),
+                content: 'Ferrum Omnia Regit - Iron rules Everything',
+                layoutStyles: {
+                    baseClass: 'w-full'
+                },
+                baseStyles: {
+                    style: {
+                        display: 'flex',
+                        justifyContent: 'center',
+                    }
+                },
+                bodyStyles: {
+                    style: {
+                        fontSize: '1.5em',
+                        textAlign: 'center',
+                        width: '100%',
+                    },
+                    baseClass: 'black-castle '
+                }
+            },
+        ];
+        /* this.borderClasses.forEach((borderClass, borderIndex) => {
             this.charClasses.forEach((charClass, index) => {
                 const text = this.lorem.generateParagraphs(1);
                 const newElements: BaseComponentConfig[] = [];
@@ -157,7 +207,7 @@ export class ShowcaseComponent {
                     newElements.push({
                         elementType: ElementType.IMAGE,
                         src: 'app/assets/images/wulfgard-ermine-alpha.png',
-                        styles: {
+                        baseStyles: {
                             style: {
                                 width: '150px',
                                 float: 'right',
@@ -169,7 +219,7 @@ export class ShowcaseComponent {
 
                 this.elements.push(...newElements);
             });
-        });
+        }); */
     }
     
     // #endregion constructor and lifecycle hooks

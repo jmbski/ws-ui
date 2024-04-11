@@ -266,26 +266,28 @@ export class Utils  {
         return lorem.generateParagraphs(1);
     }
 
-    public static SplitClasses(classes: string): string[] {
-        return classes.split(/[\s|,]/).filter((value: string) => value !== '');
+    public static SplitClasses(classes: string | string[]): string[] {
+
+        if(isString(classes)) {
+            return classes.split(/[\s|,]/).filter((value: string) => value !== '');
+        }
+        return classes.map(classStr => Utils.SplitClasses(classStr)).flat().filter((value: string) => value !== '');
     }
 
     public static MergeStyleGroupClasses(styleGroup?: StyleGroup, defaultClass?: string | string[]): string[] {
         const classes: string[] = [];
         const { optionalClass, baseClass } = styleGroup ?? {};
         defaultClass ??= [];
-        if(isString(defaultClass)) {
-            defaultClass = Utils.SplitClasses(defaultClass);
-        }
+        defaultClass = Utils.SplitClasses(defaultClass);
 
         classes.push(...defaultClass);
 
         if (baseClass) {
-            classes.push(baseClass);
+            classes.push(...Utils.SplitClasses(baseClass));
         }
         
         if (optionalClass) {
-            classes.push(optionalClass);
+            classes.push(...Utils.SplitClasses(optionalClass));
         }
 
         return classes;

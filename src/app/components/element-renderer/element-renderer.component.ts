@@ -38,11 +38,11 @@ export class ElementRendererComponent implements BaseComponentConfig {
     /** @todo convert to using ComponentDef so templates can be passed in */
     public model$: BehaviorSubject<ElementModel[]> = new BehaviorSubject<ElementModel[]>([]);
 
-    public defaultStyleClass = '';
+    public defaultBaseStyleClass = '';
 
     public defaultLayoutClass = 'grid grid-nogutter';
 
-    public styleClasses: string[] = [this.defaultStyleClass];
+    public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
     public layoutClasses: string[] = [this.defaultLayoutClass];
 
@@ -68,7 +68,7 @@ export class ElementRendererComponent implements BaseComponentConfig {
 
     @Input() content?: unknown;
     
-    @Input() styles?: StyleGroup = {};
+    @Input() baseStyles?: StyleGroup = {};
     
     @Input() styleClass?: string | undefined;
     

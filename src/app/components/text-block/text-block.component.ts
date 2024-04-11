@@ -29,11 +29,11 @@ export class TextBlockComponent implements TextBlockConfig {
 
     // #region public properties
 
-    public defaultStyleClass = 'text-block w-full';
+    public defaultBaseStyleClass = 'text-block w-full';
 
     public defaultBodyStyleClass = '';
 
-    public styleClasses: string[] = [this.defaultStyleClass];
+    public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
     public bodyStyleClasses: string[] = [this.defaultBodyStyleClass];
 
@@ -69,9 +69,11 @@ export class TextBlockComponent implements TextBlockConfig {
 
     @Input() illuminatedBorder?: string = 'illuminated-border';
 
-    @Input() styles?: StyleGroup = {};
+    @Input() baseStyles?: StyleGroup = {};
 
     @Input() bodyStyles?: StyleGroup = {};
+
+    @Input() layoutStyles?: StyleGroup | undefined;
     
     
     // #endregion standard inputs
