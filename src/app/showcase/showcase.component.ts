@@ -19,7 +19,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 const { TEXT_BLOCK } = ElementType;
@@ -70,7 +70,7 @@ export class ShowcaseComponent {
         }
     });
 
-    public elements: BaseComponentConfig[] = [];
+    public elements: ComponentConfig[] = [];
 
     public charClasses: string[] = [
         'illuminated',
@@ -167,6 +167,7 @@ export class ShowcaseComponent {
             {
                 elementType: TEXT_BLOCK,
                 id: nanoid(),
+                escapeHTML: true,
                 content: 'Ferrum Omnia Regit - Iron rules Everything',
                 layoutStyles: {
                     baseClass: 'w-full'

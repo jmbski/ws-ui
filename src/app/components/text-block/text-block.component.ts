@@ -1,12 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { 
     ElementType,
     StyleGroup,
     TextBlockConfig, 
 } from 'warskald-ui/models';
-import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, NgLogService, initStyleGroups } from 'warskald-ui/services';
 
 
 @LoggableComponent({
@@ -54,6 +54,8 @@ export class TextBlockComponent implements TextBlockConfig {
     
     // #region standard inputs
     @Input() id: string = nanoid();
+
+    @Input() escapeHTML: boolean = true;
     
     @Input() elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
 
@@ -90,6 +92,8 @@ export class TextBlockComponent implements TextBlockConfig {
     
     
     // #region viewchildren and contentchildren
+
+    @ViewChild('body') bodyRef?: ElementRef;
     
     // #endregion viewchildren and contentchildren
     
@@ -97,6 +101,7 @@ export class TextBlockComponent implements TextBlockConfig {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
+        public el: ElementRef,
     ) {
         
     }
@@ -110,6 +115,11 @@ export class TextBlockComponent implements TextBlockConfig {
         }
         else {
             this.body = this.content;
+        }
+        if(this.bodyRef) {
+            if(this.escapeHTML) {
+                (<HTMLElement>this.bodyRef.nativeElement).innerHTML = this.body;
+            }
         }
         this.cd.detectChanges();
     }

@@ -60,6 +60,7 @@ export interface TextBlockConfig extends BaseComponentConfig {
     illuminated?: boolean;
     illuminatedColor?: string;
     illuminatedBorder?: string;
+    escapeHTML?: boolean;
     bodyStyles?: StyleGroup;
 }
 
