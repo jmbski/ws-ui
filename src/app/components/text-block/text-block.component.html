@@ -9,7 +9,9 @@
     }
     
     <span #body [class]="bodyStyleClasses" [style]="bodyStyles?.style">
-        
+        @if(!escapeHTML) {
+            {{body}}
+        }
     </span>
     
 </div>
