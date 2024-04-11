@@ -31,7 +31,7 @@ export class TextBlockComponent implements TextBlockConfig {
 
     public defaultStyleClass = 'text-block w-full';
 
-    public defaultBodyStyleClass = 'black-castle text-2xl';
+    public defaultBodyStyleClass = '';
 
     public styleClasses: string[] = [this.defaultStyleClass];
 
