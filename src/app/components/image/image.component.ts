@@ -53,6 +53,8 @@ export class ImageComponent implements WsImageConfig {
     @Input() src?: string;
 
     @Input() baseStyles?: StyleGroup = {};
+
+    @Input() layoutStyles?: StyleGroup | undefined;
     
     // #endregion standard inputs
     
