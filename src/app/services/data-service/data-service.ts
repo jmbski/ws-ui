@@ -100,8 +100,13 @@ export class DataService {
     
     
     // #region public methods
-    public static initialize() {
-        NgLogService.customKeyListeners['4'] = () => {
+    public static initialize(defaultSrcNames: string[] = [], key: string = '|') {
+
+        defaultSrcNames.forEach(sourceName => {
+            DataService.registerDataSource({id: sourceName});
+        });
+        
+        NgLogService.customKeyListeners[key] = () => {
             DataService.debugSources();
         };
     }
