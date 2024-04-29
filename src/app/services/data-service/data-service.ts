@@ -23,7 +23,7 @@ export const DEFAULT_SRC_NAMES = new InjectionToken<string[]>('DEFAULT_SRC_NAMES
     canLog: true,
     localLogLevel: LogLevels.Debug
 }) */
-@Injectable({providedIn: 'root'})
+//@Injectable({providedIn: 'root'})
 @LoggableClass({
     LOCAL_ID: 'DataService',
     autoAddLogs: true,

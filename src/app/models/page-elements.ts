@@ -1,3 +1,4 @@
+import { FormControl, FormGroup } from '@angular/forms';
 import { WeakObject } from './general';
 import { CssStyleObject, StyleGroup } from './style-types';
 import { Type } from '@angular/core';
@@ -12,6 +13,10 @@ export interface BaseComponentConfig {
     canLog?: boolean;
 
     localLogLevel?: number;
+
+    label?: string;
+
+    actionID?: string;
 
     /**
      * The type of element to render
@@ -51,6 +56,12 @@ export interface BaseComponentConfig {
     [key: string]: unknown;
 }
 
+export interface FormElementConfig extends BaseComponentConfig {
+    hasForm: true;
+    value: unknown;
+    form?: FormControl | FormGroup;
+}
+
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.
  */
@@ -74,24 +85,56 @@ export interface WsImageConfig extends BaseComponentConfig {
     src?: string;
 }
 
+export enum ButtonAction {
+    SUBMIT = 'submit',
+    CANCEL = 'cancel',
+    RESET = 'reset',
+    CUSTOM = 'custom',
+}
+
+export interface ButtonConfig {
+    id: string,
+    label?: string;
+    action?: ButtonAction;
+    icon?: string;
+    iconPosition?: string;
+    iconStyles?: StyleGroup;
+    styles?: StyleGroup;
+    disabled?: boolean;
+
+    [key: string]: unknown;
+}
+
+export interface ButtonGroupConfig extends BaseComponentConfig {
+    elementType: ElementType.BUTTON_GROUP;
+    buttons: ButtonConfig[];
+    buttonStyles?: StyleGroup;
+}
+
 /**
  * Union type of all possible element configs
  */
-export type ComponentConfig = TextBlockConfig | ContainerConfig | WsImageConfig;
+export type ComponentConfig = TextBlockConfig | ContainerConfig | WsImageConfig | ButtonGroupConfig | FormElementConfig | BaseComponentConfig;
 
 
 export enum ElementType {
-    TEXT_BLOCK = 'text-block',
+    BUTTON_GROUP = 'button-group',
+    CHECKBOX = 'checkbox',
+    COMPONENT = 'component',
     CONTAINER = 'container',
     IMAGE = 'image',
-    COMPONENT = 'component'
+    NUMBER_INPUT = 'number-input',
+    SELECT = 'select',
+    TEXT_BLOCK = 'text-block',
+    TEXT_INPUT = 'text-input',
 }
 
 export type ElementComponentMap = Record<string, Type<unknown>>;
 
 
 export interface ElementModel {
-    classType?: Type<unknown>;
-    config?: BaseComponentConfig;
-    elementId?: string;
+    classType: Type<unknown>;
+    config: BaseComponentConfig;
+    elementId: string;
+    actionID?: string;
 }

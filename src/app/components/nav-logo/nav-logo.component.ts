@@ -6,7 +6,7 @@ import { StyleGroup } from 'warskald-ui/models';
 import { LogLevels, Utils, LoggableComponent } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'NavLogoComponent_' + nanoid(),
+    LOCAL_ID: 'NavLogoComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

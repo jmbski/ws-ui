@@ -30,6 +30,7 @@ import { isLogLevel, isConsoleKey, isConsoleFunction } from './log-service-typeg
 import { ConsoleFunctName, ConsoleFunctLevelMap, LogAccessMode, LocalLogSettings, ConsoleDirOptions, LogLevelOrFunct } from './log-service-types';
 import { consoleFunctDefMap } from './log-service-utils';
 import { isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
+import { nanoid } from 'nanoid';
 
 
 export let DefaultLogFunct: ConsoleFunctName = ConsoleFuncts.Info;
@@ -392,16 +393,22 @@ export class NgLogService {
      * @param caller - the object that is updating its log settings
      * @param settings - the new log settings
      */
-    public static updateLocalLogSettings(caller: any, settings: LocalLogSettings) {
+    public static updateLocalLogSettings(caller: any, settings?: LocalLogSettings) {
         
         // update canLog and localLogLevel first so that they can be used in the debug logs
-        const { canLog, localLogLevel } = settings;
+        const { canLog, localLogLevel } = settings ?? {};
         caller.canLog = canLog ?? caller.canLog;
         caller.localLogLevel = localLogLevel ?? caller.localLogLevel;
 
         NgLogService.debug(caller, 'entering', settings, 'fn:updateLocalLogSettings');
 
-        Object.assign(caller, settings);
+        if(settings) {
+            settings.LOCAL_ID = settings.appendNanoId ? `${settings.LOCAL_ID}_${nanoid()}` : settings.LOCAL_ID;
+            Object.assign(caller, settings);
+        }
+        else if(caller.appendNanoId && isString(caller.LOCAL_ID)) {
+            caller.LOCAL_ID = `${caller.LOCAL_ID}_${nanoid()}`;
+        }
 
         NgLogService.debug(caller, 'exiting', caller, 'fn:updateLocalLogSettings');
         

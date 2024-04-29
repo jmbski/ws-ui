@@ -19,10 +19,12 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig } from 'warskald-ui/models';
-import { LayoutService, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, ButtonAction, FunctionMap } from 'warskald-ui/models';
+import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService } from 'warskald-ui/services';
+import { TextInputComponent } from '../components/text-input/text-input.component';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
-const { TEXT_BLOCK } = ElementType;
+const { BUTTON_GROUP: BUTTONS, CONTAINER, TEXT_BLOCK, TEXT_INPUT } = ElementType;
 
 @LoggableComponent({
     LOCAL_ID: 'ShowcaseComponent',
@@ -43,10 +45,12 @@ const { TEXT_BLOCK } = ElementType;
         NavLogoComponent,
         PageLayoutComponent,
         PullToRefreshComponent,
+        ReactiveFormsModule,
         RouterOutlet,
         SvgComponent,
         TabbedResponseTableComponent,
         TextBlockComponent,
+        TextInputComponent,
         ToastModule,
         TopNavComponent,
         WsTableComponent,
@@ -92,6 +96,116 @@ export class ShowcaseComponent {
         'illuminated-border-cyan', */
     ];
     public pageLayoutConfig?: PageLayoutConfig;
+
+    public textValue: string = 'test';
+
+    public formGroup: FormGroup = new FormGroup({});
+
+    public testObj: WeakObject = {
+        test: 5,
+        test2: 'test2',
+        test3: 'test3',
+        test4: {
+            test5: 'test5',
+            test6: 'test6'
+        }
+    };
+
+    public actionMap: FunctionMap = {
+        submit: () => {
+            console.log('submit');
+        },
+        cancel: () => {
+            console.log('cancel');
+        }
+    };
+
+    public formComponents: ComponentConfig[] = [
+
+        {
+            elementType: TEXT_INPUT,
+            id: 'text_1',
+            hasForm: true,
+            value: 'test1',
+            label: 'Test Input 1',
+            layoutStyles: {
+                baseClass: 'col-6'
+            }
+        },
+        {
+            elementType: TEXT_INPUT,
+            id: 'text_2',
+            hasForm: true,
+            value: 'test2',
+            label: 'Test Input 2',
+            layoutStyles: {
+                baseClass: 'col-6'
+            }
+        },
+        {
+            elementType: TEXT_INPUT,
+            id: 'text_3',
+            hasForm: true,
+            value: 'test3',
+            layoutStyles: {
+                baseClass: 'col-12'
+            }
+        },
+        {
+            elementType: CONTAINER,
+            id: 'container_1',
+            hasForm: true,
+            label: 'Container',
+            layoutStyles: {
+                baseClass: 'col-12'
+            },
+            elements: [
+                {
+                    elementType: TEXT_INPUT,
+                    id: 'text_4',
+                    hasForm: true,
+                    value: 'test4',
+                    layoutStyles: {
+                        baseClass: 'col'
+                    }
+                },
+                {
+                    elementType: TEXT_INPUT,
+                    id: 'text_5',
+                    hasForm: true,
+                    value: 'test5',
+                    layoutStyles: {
+                        baseClass: 'col'
+                    }
+                },
+                {
+                    elementType: TEXT_INPUT,
+                    id: 'text_6',
+                    hasForm: true,
+                    value: 'test6',
+                    layoutStyles: {
+                        baseClass: 'col'
+                    }
+                },
+            ]
+        },
+        {
+            elementType: BUTTONS,
+            id: 'buttons_1',
+            buttons: [
+                {
+                    id: 'submit',
+                    label: 'Submit',
+                    action: ButtonAction.SUBMIT,
+                },
+                {
+                    id: 'cancel',
+                    label: 'Cancel',
+                    action: ButtonAction.CANCEL,
+                },
+            ],
+        }
+    ];
     
     // #endregion public properties
     
@@ -124,6 +238,7 @@ export class ShowcaseComponent {
     // #region viewchildren and contentchildren
 
     @ViewChild('pageLayout') pageLayout?: PageLayoutComponent;
+    @ViewChild('formComponent') formComponent?: ElementRendererComponent;
     
     // #endregion viewchildren and contentchildren
     
@@ -136,7 +251,17 @@ export class ShowcaseComponent {
     }
 
     ngOnInit() {
+        NgLogService.customKeyListeners['5'] = () => {
+            console.log(this.formGroup.value);
+        };
 
+        //this.formComponents = FormService.objToElements(this.testObj);
+        this.formGroup.valueChanges.subscribe(changes => {
+            FormService.patchValues(changes, this.testObj);
+            console.log(this.testObj);
+        });
+
+        this.cd.detectChanges();
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
 
         this.elements = [

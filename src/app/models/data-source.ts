@@ -189,7 +189,7 @@ export class DataSource {
      * 
      * @param message - The message to set the value.
      */
-    public setValue(message: DataSourceMessage) {
+    public setValue(message: Partial<DataSourceMessage>) {
 
         const {
             value, senderID, targetID, emit 

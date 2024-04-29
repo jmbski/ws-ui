@@ -12,4 +12,5 @@ export interface StyleGroup {
     baseClass?: string;
     optionalClass?: string;
     style?: NgStyleValues;
+    overrideDefault?: boolean;
 }

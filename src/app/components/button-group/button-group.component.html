@@ -1,0 +1,15 @@
+<div [class]="baseStyleClasses" [style]="baseStyles?.style">
+    @if(buttons.length > 0) {
+        @for(button of buttons; track button.id) {
+            <button
+                [id]="button.id"
+                [class]="button.baseStyleClasses ?? buttonStyleClasses"
+                [type]="button.type"
+                [disabled]="button.disabled"
+                (click)="handleButtonClick(button)"
+            >
+                {{button.label}}
+            </button>
+        }
+    }
+</div>

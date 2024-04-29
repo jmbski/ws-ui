@@ -3,7 +3,7 @@ import { LayoutChangeObserver$, UseMobile } from 'warskald-ui/common';
 import { ElementSelector, StyleGroup, WeakObject } from 'warskald-ui/models'; 
 import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BehaviorSubject } from 'rxjs';
-import { SvgComponent } from '../svg/_index';
+import { SvgComponent } from '../svg/svg.component';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
@@ -13,7 +13,7 @@ import { nanoid } from 'nanoid';
 
 @LoggableComponent({
     localLogLevel: LogLevels.Error,
-    LOCAL_ID: 'MenuBarComponent_' + nanoid(),
+    LOCAL_ID: 'MenuBarComponent',
     canLog: true,
     autoAddLogs: true,
 })

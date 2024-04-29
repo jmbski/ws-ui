@@ -6,7 +6,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
 import { ElementType, StyleGroup, WsImageConfig } from 'warskald-ui/models';
 
 @LoggableComponent({
-    LOCAL_ID: 'ImageComponent_' + nanoid(),
+    LOCAL_ID: 'ImageComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

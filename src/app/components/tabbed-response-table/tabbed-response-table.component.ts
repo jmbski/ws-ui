@@ -22,7 +22,7 @@ export interface TabbedResponseTableConfig {
 }
 
 @LoggableComponent({
-    LOCAL_ID: 'TabbedResponseTableComponent_' + nanoid(),
+    LOCAL_ID: 'TabbedResponseTableComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

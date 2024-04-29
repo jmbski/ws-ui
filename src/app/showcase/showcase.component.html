@@ -1,5 +1,12 @@
 <ws-page-layout #pageLayout [config]="pageLayoutConfig">
-    @if(elements.length > 0) {
+    <form [formGroup]="formGroup">
+        <ws-element-renderer #formComponent 
+            [form]="formGroup" 
+            [elements]="formComponents"
+            [actionMap]="actionMap">
+        </ws-element-renderer>
+    </form>
+    <!-- @if(elements.length > 0) {
         <ws-element-renderer [elements]="elements"></ws-element-renderer>
-    }
+    } -->
 </ws-page-layout>

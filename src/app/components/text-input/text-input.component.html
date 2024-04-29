@@ -1,0 +1,12 @@
+<!-- @if(label) {
+    <label [for]="id">{{label}}</label>
+} -->
+<input 
+    pInputText
+    [id]="id"
+    [value]="value"
+    [class]="baseStyleClasses"
+    [style]="baseStyles?.style"
+    [formControl]="innerControl"
+    type="text"
+/>

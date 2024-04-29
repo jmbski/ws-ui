@@ -4,7 +4,7 @@ import { BlockableUI } from 'primeng/api';
 import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'BlockableUiComponent_' + nanoid(),
+    LOCAL_ID: 'BlockableUiComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

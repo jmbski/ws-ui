@@ -3,7 +3,7 @@ import { nanoid } from 'nanoid';
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'SvgComponent_' + nanoid(),
+    LOCAL_ID: 'SvgComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

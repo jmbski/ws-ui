@@ -1,16 +1,16 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@angular/core';
-import { NavLogoComponent } from '../nav-logo/_index';
+import { NavLogoComponent } from '../nav-logo/nav-logo.component';
 import { MenubarModule } from 'primeng/menubar';
-import { MenuBarComponent } from '../menu-bar/_index';
+import { MenuBarComponent } from '../menu-bar/menu-bar.component';
 import { ComponentDef, StyleGroup, TopNavConfig } from 'warskald-ui/models';
-import { DynamicComponent } from '../dynamic/_index';
+import { DynamicComponent } from '../dynamic/dynamic.component';
 import { nanoid } from 'nanoid';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
 import { isComponentDef, objIsType, OptionalStringProp, OptionalStyleGroupProp, TypeMapping } from 'warskald-ui/type-guards';
 
 @LoggableComponent({
-    LOCAL_ID: 'TopNavComponent_' + nanoid(),
+    LOCAL_ID: 'TopNavComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

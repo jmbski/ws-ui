@@ -235,7 +235,6 @@ export function buildProperty(value: unknown): PropertyDescriptor {
  * - LOCAL_ID: string - **Required** The local ID for the class, used to provide context for log statements
  * - autoAddLogs: boolean (optional) - Automatically add logging to all class methods
  * - canLog: boolean (optional) - Whether or not the class can log
- * - className: string (optional) - The name of the class, used for black/white listing
  * - localLogLevel: {@link LogLevels} (optional) - The default log level for the class
  * 
  * @param config - Logging options for the component class

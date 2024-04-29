@@ -2,12 +2,14 @@ import {
     BaseComponentClass,
     capitalizeFirst,
     StyleGroup,
+    WeakObject,
 } from 'warskald-ui/models';
 import { LoremIpsum } from 'lorem-ipsum';
 import { isString, isStringArray, isStyleGroup, isWeakObject } from 'warskald-ui/type-guards';
 import { LogLevels, NgLogService, LoggableClass } from './log-service/_index';
 import { WSMenuItem } from './menu-service/_index';
 import { ChangeDetectorRef } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface XMLPropertyDef {
     name: string;
@@ -280,7 +282,6 @@ export class Utils  {
         defaultClass ??= [];
         defaultClass = Utils.SplitClasses(defaultClass);
 
-        classes.push(...defaultClass);
 
         if (baseClass) {
             classes.push(...Utils.SplitClasses(baseClass));
@@ -288,6 +289,10 @@ export class Utils  {
         
         if (optionalClass) {
             classes.push(...Utils.SplitClasses(optionalClass));
+        }
+
+        if(!styleGroup?.overrideDefault) {
+            classes.push(...defaultClass);
         }
 
         return classes;
@@ -308,12 +313,12 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
         return;
     }
 
-    NgLogService.debug(this, 'entering', 'onlyStylePropNames:', onlyStylePropNames);
+    NgLogService.debug(this, 'entering', 'fn:initStyleGroups', 'onlyStylePropNames:', onlyStylePropNames);
 
     for(const propName in this) {
         if(propName.endsWith('Styles') || !onlyStylePropNames) {
             const property = this[propName];
-            NgLogService.debug(this, 'property:', propName, property);
+            NgLogService.debug(this, 'fn:for propName in this','property:', propName, property);
 
             if(isStyleGroup(property)) {
                 const strippedPropName: string = propName.replace('Styles', '');
@@ -325,6 +330,7 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
                 const defaultClassProp = this[defaultClassPropName];
 
                 NgLogService.debug(this, 
+                    'fn:isStyleGroup(property)',
                     'strippedPropName:', strippedPropName, 
                     'formattedPropName:', formattedPropName, 
                     'defaultClassPropName:', defaultClassPropName, 
@@ -339,9 +345,14 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
 
                 this.cd.detectChanges();
                 
-                NgLogService.debug(this, `exiting, this[${classPropName}]:`, this[classPropName]);
+                NgLogService.debug(this, 'fn:initStyleGroups',`exiting, this[${classPropName}]:`, this[classPropName]);
             }
         }
     }
     this.cd.detectChanges();
+}
+
+export function formToObject(form: FormControl | FormGroup): WeakObject {
+    console.log('formToObject', form.value);
+    return {};
 }

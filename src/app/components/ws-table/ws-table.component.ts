@@ -12,7 +12,7 @@ import { MultiSelectModule } from 'primeng/multiselect';
 import { LogLevels, LoggableComponent } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'WsTableComponent_' + nanoid(),
+    LOCAL_ID: 'WsTableComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

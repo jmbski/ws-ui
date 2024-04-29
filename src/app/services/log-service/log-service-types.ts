@@ -8,6 +8,7 @@ export interface LoggableObject extends WeakObject {
     localLogLevel?: number;
     canLog?: boolean;
     autoAddLogs?: boolean;
+    appendNanoId?: boolean;
 }
 
 export interface ConsoleDirOptions {

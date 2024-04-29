@@ -10,7 +10,7 @@ import { LogLevels, LoggableComponent, NgLogService, initStyleGroups } from 'war
 
 
 @LoggableComponent({
-    LOCAL_ID: 'TextBlockComponent_' + nanoid(),
+    LOCAL_ID: 'TextBlockComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Debug

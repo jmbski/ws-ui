@@ -6,6 +6,7 @@ export const logServiceConfig: LogServiceConfig = {
     useLocalLogLevel: true,
     useStrictLocalLogLevel: true,
     showConsoleFunctArgs: true,
+    logGetters: false,
     customConsoleFunctDefs: {
         timeStamp: {
             logLevel: LogLevels.Debug,

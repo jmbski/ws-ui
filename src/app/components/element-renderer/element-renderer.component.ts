@@ -1,20 +1,33 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { BaseComponentConfig, ElementModel, ElementType, ElementComponentMap, WeakObject, StyleGroup } from 'warskald-ui/models';
+import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, ElementComponentMap, FormElementConfig, ComponentConfig, FunctionMap, LocalObject } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ImageComponent } from '../image/_index';
-import { TextBlockComponent } from '../text-block/_index';
-import { isString } from 'warskald-ui/type-guards';
-import { DynamicComponent } from '../dynamic/_index';
-import { LogLevels, NgLogService, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
+import { isCast, isString } from 'warskald-ui/type-guards';
+import { LogLevels, NgLogService, LoggableComponent, initStyleGroups, DataService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ImageComponent } from '../image/image.component';
+import { TextBlockComponent } from '../text-block/text-block.component';
+import { TextInputComponent } from '../text-input/text-input.component';
+import { NumberInputComponent } from '../number-input/number-input.component';
+import { ButtonGroupComponent } from '../button-group/button-group.component';
 
-const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
+const { 
+    BUTTON_GROUP,
+    CHECKBOX,
+    COMPONENT, 
+    CONTAINER, 
+    IMAGE, 
+    NUMBER_INPUT,
+    SELECT,
+    TEXT_BLOCK, 
+    TEXT_INPUT 
+} = ElementType;
 
 
 @LoggableComponent({
-    LOCAL_ID: 'ElementRendererComponent_' + nanoid(),
+    LOCAL_ID: 'ElementRendererComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Debug
@@ -24,23 +37,24 @@ const { COMPONENT, CONTAINER, IMAGE, TEXT_BLOCK } = ElementType;
     standalone: true,
     imports: [
         CommonModule,
-        DynamicComponent,
+        ReactiveFormsModule,
         ViewContainerRefDirective,
     ],
     templateUrl: './element-renderer.component.html',
     styleUrl: './element-renderer.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElementRendererComponent implements BaseComponentConfig {
+export class ElementRendererComponent implements BaseComponentConfig, FormElementConfig {
 
     // #region public properties
+
 
     /** @todo convert to using ComponentDef so templates can be passed in */
     public model$: BehaviorSubject<ElementModel[]> = new BehaviorSubject<ElementModel[]>([]);
 
-    public defaultBaseStyleClass = '';
+    public defaultBaseStyleClass = 'grid grid-nogutter';
 
-    public defaultLayoutClass = 'grid grid-nogutter';
+    public defaultLayoutClass = 'col';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
@@ -61,6 +75,11 @@ export class ElementRendererComponent implements BaseComponentConfig {
     
     
     // #region standard inputs
+    @Input() value: unknown;
+
+    @Input() hasForm = true as const;
+
+    @Input() form?: FormGroup;
 
     @Input() elementType: ElementType = COMPONENT;
 
@@ -74,9 +93,15 @@ export class ElementRendererComponent implements BaseComponentConfig {
     
     @Input() options?: WeakObject | undefined;
     
-    @Input() children?: BaseComponentConfig[] | undefined;
+    @Input() children?: ComponentConfig[] | undefined;
     
     @Input() layoutStyles?: StyleGroup = {};
+
+    @Input() label?: string = '';
+
+    @Input() actionMap?: FunctionMap;
+
+    @Input() actionID?: string;
 
     
     
@@ -85,28 +110,19 @@ export class ElementRendererComponent implements BaseComponentConfig {
     
     // #region get/set inputs
 
-    private _elements: BaseComponentConfig[] = [];
+    private _elements: ComponentConfig[] = [];
     @Input()
     get elements() {
         return this._elements;
     }
-    set elements(input: BaseComponentConfig[]) {
+    set elements(input: ComponentConfig[]) {
 
         this._elements = input;
-        this.model$.next(this.toModels(input));
+        //this.model$.next(this.toModels(input));
 
     //        LogService.debug(this, 'exiting', `model$: ${this.model$.value}`);
     }
     
-    private _elementConfig?: BaseComponentConfig;
-    @Input()
-    get elementConfig() {
-        return this._elementConfig;
-    }
-    set elementConfig(input: BaseComponentConfig | undefined) {
-        this._elementConfig = input;
-        this.config = input;
-    }
 
     // #endregion get/set inputs
     
@@ -125,31 +141,70 @@ export class ElementRendererComponent implements BaseComponentConfig {
     
     // #region constructor and lifecycle hooks
     constructor(
-        public cd: ChangeDetectorRef,
+        public cd: ChangeDetectorRef
     ) {
+        
+    }
+
+    ngOnInit() {
+        if(this.actionMap) {
+            NgLogService.updateLocalLogSettings(this, {LOCAL_ID: `ElementRendererComponent_${this.id}`});
+
+            this.actionID = `${this.id}_Actions`;
+            DataService.registerDataSource({
+                id: this.actionID,
+                emitFirstValue: false,
+                value: '',
+            });
+
+            if(isCast<LocalObject>(this)) {
+                DataService.subscribeToDataSource(this.actionID, this, (message: unknown) => {
+                    const action = message as string;
+                    if(this.actionMap?.[action]) {
+                        this.actionMap[action]();
+                    }
+                });
+            }
+        }
     }
 
     ngAfterViewInit() {
         initStyleGroups.bind(this)();
+        this.model$.next(this.toModels(this.elements));
         this.cd.detectChanges();
+        
     }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
 
-    public toModels(elements: BaseComponentConfig[]): ElementModel[] {
-
-        const elementModels = elements.map((element: BaseComponentConfig) => {
+    public toModels(elements: ComponentConfig[]): ElementModel[] {
+        
+        const elementModels = elements.map((element: ComponentConfig) => {
             const { elementType } = element;
             if(isString(elementType)) {
                 NgLogService.debug(this, 'fn:toModels', `type: ${elementType}`);
                 const classType = ElementComponentsMap[elementType];
+                element.actionID = this.actionID;
                 const model: ElementModel = {
                     classType,
                     elementId: element.id ?? nanoid(),
-                    config: element,
+                    config: element
                 };
+
+                if(element.hasForm && this.form) {
+                    if(classType === ElementRendererComponent) {
+                        const subGroup = new FormGroup({});
+                        this.form.addControl(model.elementId, subGroup);
+                        model.config.form = subGroup;
+                    }
+                    else {
+                        const newControl = new FormControl(element.value);
+                        this.form.addControl(model.elementId, newControl);
+                        model.config.form = newControl;
+                    }
+                }
                 return model;
             }
             return {} as ElementModel;
@@ -173,9 +228,13 @@ export class ElementRendererComponent implements BaseComponentConfig {
     
 }
 
+
 export const ElementComponentsMap: ElementComponentMap = {
+    [BUTTON_GROUP]: ButtonGroupComponent,
     [COMPONENT]: ElementRendererComponent,
     [CONTAINER]: ElementRendererComponent,
     [IMAGE]: ImageComponent,
+    [NUMBER_INPUT]: NumberInputComponent,
     [TEXT_BLOCK]: TextBlockComponent,
+    [TEXT_INPUT]: TextInputComponent,
 };

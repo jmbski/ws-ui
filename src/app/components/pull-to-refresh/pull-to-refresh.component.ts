@@ -4,7 +4,7 @@ import { nanoid } from 'nanoid';
 import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'PullToRefreshComponent_' + nanoid(),
+    LOCAL_ID: 'PullToRefreshComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

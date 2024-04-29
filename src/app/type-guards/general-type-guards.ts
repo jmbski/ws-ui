@@ -9,7 +9,7 @@ import { isEmpty } from 'lodash';
      * @returns true if the input is a string indexed object, false otherwise
      */
 export function isWeakObject(input: unknown): input is WeakObject {
-    return /* typeof input === 'object' &&  */input != null && !Array.isArray(input) && Object.keys(input).every(key => typeof key === 'string');
+    return typeof input === 'object' && input != null && !Array.isArray(input) && Object.keys(input).every(key => typeof key === 'string');
 }
 
 /**
@@ -284,6 +284,7 @@ export const StyleGroupTypeMap: TypeMapping<StyleGroup> = {
     baseClass: OptionalStringProp,
     optionalClass: OptionalStringProp,
     style: OptionalStyleProp,
+    overrideDefault: OptionalBooleanProp,
 };
 
 export function isStyleGroup(obj: unknown): obj is StyleGroup {
@@ -296,4 +297,12 @@ export function isStyleGroupArray(obj: unknown): obj is StyleGroup[] {
 
 export function isFunctionRecord(obj: unknown): obj is Record<string, GenericFunction<unknown>> {
     return isTypedRecord(obj, isFunction);
+}
+
+export function isCast<T>(value: unknown): value is T {
+    return true;
+}
+
+export function castAs<T>(value: unknown): T {
+    return value as T;
 }

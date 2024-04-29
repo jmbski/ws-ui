@@ -1,14 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateRef } from '@angular/core';
-import { TopNavComponent } from '../top-nav/_index';
-import { DynamicComponent } from '../dynamic/_index';
+import { TopNavComponent } from '../top-nav/top-nav.component';
+import { DynamicComponent } from '../dynamic/dynamic.component';
 import { CommonModule } from '@angular/common';
 import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
-import { nanoid } from 'nanoid';
 import { ComponentDef, PageLayoutConfig, StyleGroup, TopNavConfig } from 'warskald-ui/models';
 
 
 @LoggableComponent({
-    LOCAL_ID: 'PageLayoutComponent_' + nanoid(),
+    LOCAL_ID: 'PageLayoutComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error

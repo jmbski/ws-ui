@@ -6,7 +6,7 @@ import { LogLevels, LoggableComponent } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 @LoggableComponent({
-    LOCAL_ID: 'DynamicComponent' + nanoid(),
+    LOCAL_ID: 'DynamicComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
