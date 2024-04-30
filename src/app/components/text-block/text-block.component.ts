@@ -76,6 +76,8 @@ export class TextBlockComponent implements TextBlockConfig {
     @Input() bodyStyles?: StyleGroup = {};
 
     @Input() layoutStyles?: StyleGroup | undefined;
+
+    @Input() actionID?: string;
     
     
     // #endregion standard inputs

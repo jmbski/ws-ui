@@ -126,6 +126,8 @@ export class MenuBarComponent implements WeakObject {
     /** @todo Eventually replace with a configurable object */
     @Input() usePennant?: boolean = true;
 
+    @Input() actionID?: string;
+
     // #endregion standard inputs
     
     // #region get/set inputs
