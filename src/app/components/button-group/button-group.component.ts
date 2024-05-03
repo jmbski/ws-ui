@@ -2,8 +2,9 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { BaseComponentConfig, ButtonConfig, ButtonGroupConfig, ComponentConfig, DataSource, ElementType, StyleGroup, WeakObject } from 'warskald-ui/models';
-import { DataService, initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { DataService, initStyleGroups, LoggableComponent, LogLevels, RegisterClassType } from 'warskald-ui/services';
 
+@RegisterClassType(ElementType.BUTTON_GROUP)
 @LoggableComponent({
     LOCAL_ID: 'ButtonGroupComponent',
     autoAddLogs: true,

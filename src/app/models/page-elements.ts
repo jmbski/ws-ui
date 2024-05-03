@@ -122,6 +122,7 @@ export enum ElementType {
     CHECKBOX = 'checkbox',
     COMPONENT = 'component',
     CONTAINER = 'container',
+    GENERAL = 'general',
     IMAGE = 'image',
     NUMBER_INPUT = 'number-input',
     SELECT = 'select',
@@ -138,3 +139,14 @@ export interface ElementModel {
     elementId: string;
     actionID?: string;
 }
+
+export const registeredClasses: Record<string, Type<unknown>> = {};
+
+/* export function RegisterClassType<T>(...classNames: string[]) {
+    return function _RegisterClassType(klass: Type<T>) {
+        for(const className of classNames) {
+            registeredClasses[className] = klass;
+        }
+        return klass;
+    };
+} */

@@ -616,9 +616,10 @@ export class NgLogService {
      * @param messages - additional messages to log
      */
     public static assert(caller: unknown, condition: boolean, ...messages: unknown[]) {
-
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Assert, callingFunct, condition, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        if(!condition) {
+            NgLogService.writeLog(caller, ConsoleFuncts.Assert, <string>callingFunct, ...msgs);
+        }
     }
 
     /**
@@ -628,7 +629,7 @@ export class NgLogService {
      * Clears the console.
      */
     public static clear(caller: unknown, callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Clear, callingFunct);
     }
 
@@ -643,7 +644,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static count(caller: unknown, label?: string, callingFunct?: string,) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Count, callingFunct, label);
     }
 
@@ -658,7 +659,7 @@ export class NgLogService {
      * @param label - the label to reset
      */
     public static countReset(caller: unknown, label?: string, callingFunct?: string,) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.CountReset, callingFunct, label);
     }
     
@@ -674,9 +675,8 @@ export class NgLogService {
      * @param messages - the messages to log
      */
     public static debug(caller: unknown, ...messages: unknown[]) {
-        
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Debug, callingFunct, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Debug, <string>callingFunct, ...msgs);
     }
 
     /**
@@ -693,7 +693,7 @@ export class NgLogService {
      * @param callingFunct - the name of the function that is logging the message
      */
     public static dir(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions, callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Dir, callingFunct, obj, options);
     }
 
@@ -709,7 +709,7 @@ export class NgLogService {
      * @param callingFunct - the name of the function that is logging the message
      */
     public static dirxml(caller: unknown, obj: WeakObject, options?: ConsoleDirOptions, callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Dirxml, callingFunct, obj, options);
     }
     
@@ -725,8 +725,8 @@ export class NgLogService {
      * @param messages - the messages to log
      */
     public static error(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Error, callingFunct, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Error, <string>callingFunct, ...msgs);
     }
 
     /**
@@ -739,7 +739,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static group(caller: unknown, label?: string, callingFunct?: string,) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Group, callingFunct, label);
     }
 
@@ -754,7 +754,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static groupCollapsed(caller: unknown, label?: string, callingFunct?: string,) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.GroupCollapsed, callingFunct, label);
     }
 
@@ -765,7 +765,7 @@ export class NgLogService {
      * Exits the current inline group in the console.
      */
     public static groupEnd(caller: unknown, label?: string, callingFunct?: string,) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.GroupEnd, callingFunct, label);
     }
     
@@ -781,8 +781,8 @@ export class NgLogService {
      * @param messages - the messages to log
      */
     public static info(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Info, callingFunct, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Info, <string>callingFunct, ...msgs);
     }
     
     /**
@@ -797,8 +797,8 @@ export class NgLogService {
      * @param messages - the messages to log
      */
     public static log(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Log, callingFunct, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Log, <string>callingFunct, ...msgs);
     }
 
     /**
@@ -813,7 +813,7 @@ export class NgLogService {
      * @param columns - an array of strings to use as the column headers
      */
     public static table(caller: unknown, data: unknown, columns?: string[], callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Table, callingFunct, data, columns);
     }
 
@@ -827,7 +827,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static time(caller: unknown, label?: string, callingFunct?: string,) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.Time, callingFunct, label);
     }
 
@@ -841,7 +841,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static timeEnd(caller: unknown, label?: string, callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.TimeEnd, callingFunct, label);
     }
 
@@ -855,7 +855,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static timeLog(caller: unknown, label?: string, callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.TimeLog, callingFunct, label);
     }
 
@@ -869,7 +869,7 @@ export class NgLogService {
      * @param label - the label to log
      */
     public static timeStamp(caller: unknown, label?: string, callingFunct?: string) {
-        callingFunct ??= NgLogService._getCallerFunctionName();
+        callingFunct ??= NgLogService._getCallerFunctionName()[0] as string;
         NgLogService.writeLog(caller, ConsoleFuncts.TimeStamp, callingFunct, label);
     }
     
@@ -885,8 +885,8 @@ export class NgLogService {
      * @param messages - the messages to log
      */
     public static trace(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Trace, callingFunct, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Trace, <string>callingFunct, ...msgs);
     }
     
     /**
@@ -901,8 +901,8 @@ export class NgLogService {
      * @param messages - the messages to log
      */
     public static warn(caller: unknown, ...messages: unknown[]) {
-        const callingFunct = NgLogService._getCallerFunctionName(messages);
-        NgLogService.writeLog(caller, ConsoleFuncts.Warn, callingFunct, ...messages);
+        const [callingFunct, ...msgs ] = NgLogService._getCallerFunctionName(messages);
+        NgLogService.writeLog(caller, ConsoleFuncts.Warn, <string>callingFunct, ...msgs);
     }
 
     /**
@@ -966,13 +966,13 @@ export class NgLogService {
      * 
      * @returns the name of the function that called the logging function
      */
-    private static _getCallerFunctionName(messages: unknown[] = [], functIndex: number = 3): string {
+    private static _getCallerFunctionName(messages: unknown[] = [], functIndex: number = 3) {
         let functName: string = 'unknown';
         if(messages.length > 0) {
             const functNameIndex = messages.findIndex(item => isString(item) && item.startsWith('fn:'));
             if(functNameIndex > -1) {
                 functName = (<string>messages[functNameIndex]).slice(3);
-                messages = messages.filter((item, index) => index !== functNameIndex);
+                messages = messages.filter((item, index) => index !== functNameIndex).slice();
             }
         }
         else {
@@ -985,7 +985,7 @@ export class NgLogService {
             functName = results ? results[1] : 'unknown'; 
         }
         
-        return functName;
+        return [functName, ...messages];
     }
 
     /**

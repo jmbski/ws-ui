@@ -10,7 +10,7 @@ import { TabMenuModule } from 'primeng/tabmenu';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { nanoid } from 'nanoid';
-import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent, RegisterClassType } from 'warskald-ui/services';
 
 export interface TabbedResponseData {
     tabName: string,
@@ -21,6 +21,7 @@ export interface TabbedResponseTableConfig {
     xmlCollectionTags: string[];
 }
 
+@RegisterClassType('TabbedResponseTableComponent')
 @LoggableComponent({
     LOCAL_ID: 'TabbedResponseTableComponent',
     autoAddLogs: true,

@@ -3,9 +3,10 @@ import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { ElementType, FormElementConfig, GenericFunction, StyleGroup } from 'warskald-ui/models';
-import { initStyleGroups, LoggableComponent, LogLevels, NgLogService } from 'warskald-ui/services';
+import { initStyleGroups, LoggableComponent, LogLevels, NgLogService, RegisterClassType } from 'warskald-ui/services';
 import { pipe, debounceTime } from 'rxjs';
 
+@RegisterClassType(ElementType.TEXT_INPUT)
 @Component({
     selector: 'ws-text-input',
     standalone: true,

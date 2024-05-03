@@ -1,4 +1,5 @@
 export * from './data-service/_index';
+export * from './class-registry';
 export * from './form-service';
 export * from './layout-service';
 export * from './log-service/_index';

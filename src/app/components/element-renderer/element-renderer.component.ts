@@ -1,31 +1,16 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, ElementComponentMap, FormElementConfig, ComponentConfig, FunctionMap, LocalObject } from 'warskald-ui/models';
+import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, ElementComponentMap, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, registeredClasses } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { isCast, isString } from 'warskald-ui/type-guards';
 import { LogLevels, NgLogService, LoggableComponent, initStyleGroups, DataService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ImageComponent } from '../image/image.component';
-import { TextBlockComponent } from '../text-block/text-block.component';
-import { TextInputComponent } from '../text-input/text-input.component';
-import { NumberInputComponent } from '../number-input/number-input.component';
-import { ButtonGroupComponent } from '../button-group/button-group.component';
+import { ClassRegistry, RegisterClassType } from 'warskald-ui/services';
+import { GeneralComponent } from '../general/general.component';
 
-const { 
-    BUTTON_GROUP,
-    CHECKBOX,
-    COMPONENT, 
-    CONTAINER, 
-    IMAGE, 
-    NUMBER_INPUT,
-    SELECT,
-    TEXT_BLOCK, 
-    TEXT_INPUT 
-} = ElementType;
-
-
+@RegisterClassType(ElementType.COMPONENT, ElementType.CONTAINER)
 @LoggableComponent({
     LOCAL_ID: 'ElementRendererComponent',
     autoAddLogs: true,
@@ -81,7 +66,7 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
 
     @Input() form?: FormGroup;
 
-    @Input() elementType: ElementType = COMPONENT;
+    @Input() elementType = ElementType.COMPONENT as const;
 
     @Input() id: string = nanoid();
 
@@ -185,7 +170,9 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
             const { elementType } = element;
             if(isString(elementType)) {
                 NgLogService.debug(this, 'fn:toModels', `type: ${elementType}`);
-                const classType = ElementComponentsMap[elementType];
+                // const classType = ElementComponentsMap[elementType];
+                // const classType = registeredClasses[elementType];
+                const classType = ClassRegistry.getComponent(elementType) ?? GeneralComponent;
                 element.actionID = this.actionID;
                 const model: ElementModel = {
                     classType,
@@ -227,14 +214,3 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     
     
 }
-
-
-export const ElementComponentsMap: ElementComponentMap = {
-    [BUTTON_GROUP]: ButtonGroupComponent,
-    [COMPONENT]: ElementRendererComponent,
-    [CONTAINER]: ElementRendererComponent,
-    [IMAGE]: ImageComponent,
-    [NUMBER_INPUT]: NumberInputComponent,
-    [TEXT_BLOCK]: TextBlockComponent,
-    [TEXT_INPUT]: TextInputComponent,
-};

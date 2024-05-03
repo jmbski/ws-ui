@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, ElementRef } from '@angular/core';
 import { nanoid } from 'nanoid';
 import { BlockableUI } from 'primeng/api';
-import { LogLevels, NgLogService, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent, RegisterClassType } from 'warskald-ui/services';
 
+@RegisterClassType('BlockableUiComponent')
 @LoggableComponent({
     LOCAL_ID: 'BlockableUiComponent',
     autoAddLogs: true,

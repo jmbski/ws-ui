@@ -2,8 +2,9 @@ import { ApplicationConfig } from '@angular/core';
 import { provideRouter, Routes } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { DataService, DEFAULT_SRC_NAMES } from './services/data-service/data-service';
-import { NgLogService } from 'warskald-ui/services';
+import { ClassRegistry, NgLogService } from 'warskald-ui/services';
 import { logServiceConfig } from 'environment';
+import { WsComponentMap } from 'warskald-ui/components';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'showcase', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
 
 NgLogService.initialize(logServiceConfig);
 DataService.initialize();
+ClassRegistry.initialize(WsComponentMap);
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(routes),

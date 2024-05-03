@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { LoggableComponent, LogLevels, RegisterClassType } from 'warskald-ui/services';
 
+@RegisterClassType('SvgComponent')
 @LoggableComponent({
     LOCAL_ID: 'SvgComponent',
     autoAddLogs: true,

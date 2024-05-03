@@ -9,14 +9,14 @@ import { FormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
 import { InputTextModule } from 'primeng/inputtext';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { LogLevels, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, RegisterClassType } from 'warskald-ui/services';
 
+@RegisterClassType('WsTableComponent')
 @LoggableComponent({
     LOCAL_ID: 'WsTableComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
-
 })
 @Component({
     selector: 'ws-table',

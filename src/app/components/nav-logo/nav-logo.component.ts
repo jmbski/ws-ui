@@ -3,8 +3,9 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { RouterModule } from '@angular/router';
 import { nanoid } from 'nanoid';
 import { StyleGroup } from 'warskald-ui/models';
-import { LogLevels, Utils, LoggableComponent } from 'warskald-ui/services';
+import { LogLevels, Utils, LoggableComponent, RegisterClassType } from 'warskald-ui/services';
 
+@RegisterClassType('NavLogoComponent')
 @LoggableComponent({
     LOCAL_ID: 'NavLogoComponent',
     autoAddLogs: true,

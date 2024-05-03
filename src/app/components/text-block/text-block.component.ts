@@ -6,9 +6,10 @@ import {
     StyleGroup,
     TextBlockConfig, 
 } from 'warskald-ui/models';
-import { LogLevels, LoggableComponent, NgLogService, initStyleGroups } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, NgLogService, RegisterClassType, initStyleGroups } from 'warskald-ui/services';
 
 
+@RegisterClassType(ElementType.TEXT_BLOCK)
 @LoggableComponent({
     LOCAL_ID: 'TextBlockComponent',
     autoAddLogs: true,

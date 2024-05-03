@@ -1,30 +1,26 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
-import { ImageModule } from 'primeng/image';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { initStyleGroups, LoggableComponent, LogLevels, RegisterClassType } from 'warskald-ui/services';
-import { ElementType, StyleGroup, WsImageConfig } from 'warskald-ui/models';
+import { ViewContainerRefDirective } from 'warskald-ui/directives';
+import { ElementType, StyleGroup } from 'warskald-ui/models';
+import { initStyleGroups, LoggableComponent, LogLevels, NgLogService, RegisterClassType } from 'warskald-ui/services';
 
-@RegisterClassType(ElementType.IMAGE)
+@RegisterClassType(ElementType.GENERAL)
 @LoggableComponent({
-    LOCAL_ID: 'ImageComponent',
+    LOCAL_ID: 'GeneralComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
-
 })
 @Component({
-    selector: 'ws-image',
+    selector: 'ws-general',
     standalone: true,
     imports: [
-        CommonModule,
-        ImageModule,
+        ViewContainerRefDirective,
     ],
-    templateUrl: './image.component.html',
-    styleUrl: './image.component.scss'
+    templateUrl: './general.component.html',
+    styleUrl: './general.component.scss'
 })
-export class ImageComponent implements WsImageConfig {
-    
+export class GeneralComponent {
     // #region public properties
 
     public defaultBaseStyleClass = '';
@@ -47,7 +43,8 @@ export class ImageComponent implements WsImageConfig {
     
     
     // #region standard inputs
-    @Input() elementType: ElementType.IMAGE = ElementType.IMAGE;
+    
+    @Input() elementType = ElementType.GENERAL as const;
 
     @Input() id: string = nanoid();
     
@@ -55,9 +52,11 @@ export class ImageComponent implements WsImageConfig {
 
     @Input() baseStyles?: StyleGroup = {};
 
-    @Input() layoutStyles?: StyleGroup | undefined;
+    @Input() layoutStyles?: StyleGroup;
 
     @Input() actionID?: string;
+
+    @Input() content?: string;
     
     // #endregion standard inputs
     
@@ -73,6 +72,8 @@ export class ImageComponent implements WsImageConfig {
     
     
     // #region viewchildren and contentchildren
+
+    @ViewChild(ViewContainerRefDirective) viewContainerRef!: ViewContainerRefDirective;
     
     // #endregion viewchildren and contentchildren
     
@@ -80,11 +81,16 @@ export class ImageComponent implements WsImageConfig {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
+        public el: ElementRef,
     ) {
+        
     }
 
     ngOnInit() {
         initStyleGroups.bind(this)();
+        if(this.el.nativeElement) {
+            console.log('this.el.nativeElement', this.el.nativeElement);
+        }
     }
     // #endregion constructor and lifecycle hooks
     

@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, TemplateR
 import { TopNavComponent } from '../top-nav/top-nav.component';
 import { DynamicComponent } from '../dynamic/dynamic.component';
 import { CommonModule } from '@angular/common';
-import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, RegisterClassType, initStyleGroups } from 'warskald-ui/services';
 import { ComponentDef, PageLayoutConfig, StyleGroup, TopNavConfig } from 'warskald-ui/models';
 
 
+@RegisterClassType('PageLayoutComponent')
 @LoggableComponent({
     LOCAL_ID: 'PageLayoutComponent',
     autoAddLogs: true,

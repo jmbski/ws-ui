@@ -6,9 +6,10 @@ import { MenuBarComponent } from '../menu-bar/menu-bar.component';
 import { ComponentDef, StyleGroup, TopNavConfig } from 'warskald-ui/models';
 import { DynamicComponent } from '../dynamic/dynamic.component';
 import { nanoid } from 'nanoid';
-import { LogLevels, LoggableComponent, initStyleGroups } from 'warskald-ui/services';
+import { LogLevels, LoggableComponent, RegisterClassType, initStyleGroups } from 'warskald-ui/services';
 import { isComponentDef, objIsType, OptionalStringProp, OptionalStyleGroupProp, TypeMapping } from 'warskald-ui/type-guards';
 
+@RegisterClassType('TopNavComponent')
 @LoggableComponent({
     LOCAL_ID: 'TopNavComponent',
     autoAddLogs: true,

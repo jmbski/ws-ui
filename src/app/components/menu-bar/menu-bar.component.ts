@@ -7,10 +7,11 @@ import { SvgComponent } from '../svg/svg.component';
 import { MenubarModule } from 'primeng/menubar';
 import { MenuItem } from 'primeng/api';
 import { CommonModule } from '@angular/common';
-import { NgLogService, LogLevels, WSMenuItem, NavigationService, LayoutService, LoggableComponent, initStyleGroups, WSMenuItemEvent } from 'warskald-ui/services';
+import { NgLogService, LogLevels, WSMenuItem, NavigationService, LayoutService, LoggableComponent, initStyleGroups, WSMenuItemEvent, RegisterClassType } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 
 
+@RegisterClassType('MenuBarComponent')
 @LoggableComponent({
     localLogLevel: LogLevels.Error,
     LOCAL_ID: 'MenuBarComponent',

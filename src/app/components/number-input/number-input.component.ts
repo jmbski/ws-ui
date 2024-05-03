@@ -5,9 +5,9 @@ import { nanoid } from 'nanoid';
 import { InputNumber, InputNumberInputEvent, InputNumberModule } from 'primeng/inputnumber';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { BaseComponentConfig, ElementType, FormElementConfig, ObjectOf, StyleGroup } from 'warskald-ui/models';
-import { LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { LoggableComponent, LogLevels, RegisterClassType } from 'warskald-ui/services';
 
-
+@RegisterClassType(ElementType.NUMBER_INPUT)
 @LoggableComponent({
     LOCAL_ID: 'NumberInputComponent',
     autoAddLogs: true,
