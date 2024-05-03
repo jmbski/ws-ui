@@ -139,14 +139,3 @@ export interface ElementModel {
     elementId: string;
     actionID?: string;
 }
-
-export const registeredClasses: Record<string, Type<unknown>> = {};
-
-/* export function RegisterClassType<T>(...classNames: string[]) {
-    return function _RegisterClassType(klass: Type<T>) {
-        for(const className of classNames) {
-            registeredClasses[className] = klass;
-        }
-        return klass;
-    };
-} */

@@ -1,9 +1,4 @@
-import { inject, Inject, Injector, Type } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { isString } from 'lodash';
-import { nanoid } from 'nanoid';
-import { ComponentConfig, ElementModel, registeredClasses } from 'warskald-ui/models';
-import { ElementRendererComponent } from '../components/element-renderer/element-renderer.component';
+import { Type } from '@angular/core';
 
 
 export function RegisterClassType<T>(...classTypes: string[]) {

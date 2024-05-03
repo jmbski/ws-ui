@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, ElementComponentMap, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, registeredClasses } from 'warskald-ui/models';
+import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { isCast, isString } from 'warskald-ui/type-guards';
@@ -175,7 +175,7 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
                 const classType = ClassRegistry.getComponent(elementType) ?? GeneralComponent;
                 element.actionID = this.actionID;
                 const model: ElementModel = {
-                    classType,
+                    classType, 
                     elementId: element.id ?? nanoid(),
                     config: element
                 };

@@ -17,7 +17,7 @@ import { TextBlockComponent } from './text-block/text-block.component';
 import { TextInputComponent } from './text-input/text-input.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 import { WsTableComponent } from './ws-table/_index';
-import { ElementType } from '../models/page-elements';
+import { ElementType } from 'warskald-ui/models';
 
 
 export * from './blockable-ui/blockable-ui.component';
