@@ -9,7 +9,7 @@ import { DataService, initStyleGroups, LoggableComponent, LogLevels, RegisterCla
     LOCAL_ID: 'ButtonGroupComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 
 })
 @Component({
@@ -58,7 +58,7 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
     @Input() label?: string | undefined;
     @Input() elementType = ElementType.BUTTON_GROUP as const;
     @Input() id: string = '';
-    @Input() content?: unknown;
+    @Input() value?: unknown;
     @Input() baseStyles?: StyleGroup = {};
     @Input() options?: WeakObject = {};
     @Input() layoutStyles?: StyleGroup = {};
@@ -91,8 +91,7 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        
-    }
+    } 
 
     ngOnInit() {
         initStyleGroups.bind(this)();

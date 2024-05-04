@@ -30,7 +30,7 @@ import { pipe, debounceTime } from 'rxjs';
     autoAddLogs: true,
     appendNanoId: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug,
+    localLogLevel: LogLevels.Error,
 })
 export class TextInputComponent implements ControlValueAccessor, FormElementConfig {
 

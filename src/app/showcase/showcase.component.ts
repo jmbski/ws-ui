@@ -8,6 +8,7 @@ import {
     BlockableUiComponent, 
     DynamicComponent, 
     ElementRendererComponent,
+    HtmlEditorComponent,
     ImageComponent,
     MenuBarComponent,
     NavLogoComponent,
@@ -20,7 +21,7 @@ import {
     WsTableComponent
 } from 'warskald-ui/components';
 import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, ButtonAction, FunctionMap } from 'warskald-ui/models';
-import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService } from 'warskald-ui/services';
+import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { TextInputComponent } from '../components/text-input/text-input.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -40,6 +41,7 @@ const { BUTTON_GROUP: BUTTONS, CONTAINER, TEXT_BLOCK, TEXT_INPUT } = ElementType
         CommonModule,
         DynamicComponent,
         ElementRendererComponent,
+        HtmlEditorComponent,
         ImageComponent,
         MenuBarComponent,
         NavLogoComponent,
@@ -113,7 +115,7 @@ export class ShowcaseComponent {
 
     public actionMap: FunctionMap = {
         submit: () => {
-            console.log('submit');
+            console.log('submit', this.formGroup.value);
         },
         cancel: () => {
             console.log('cancel');
@@ -131,6 +133,16 @@ export class ShowcaseComponent {
             layoutStyles: {
                 baseClass: 'col-6'
             }
+        },
+        {
+            elementType: ElementType.HTML_EDITOR,
+            id: 'general_1',
+            label: 'General',
+            layoutStyles: {
+                baseClass: 'col-6'
+            },
+            hasForm: true,
+            value: '<h1><span class="ql-font-monospace">Companions Griffon-Dore</span></h1><p><br></p><p>this is a test</p>',
         },
         {
             elementType: TEXT_INPUT,
@@ -261,6 +273,8 @@ export class ShowcaseComponent {
             console.log(this.testObj);
         });
 
+        ThemeService.switchTheme('viva-dark');
+
         this.cd.detectChanges();
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
 
@@ -268,7 +282,7 @@ export class ShowcaseComponent {
             {
                 elementType: TEXT_BLOCK,
                 id: nanoid(),
-                content: 'Welcome to the home of La Compagnie du Griffon Doré!',
+                value: 'Welcome to the home of La Compagnie du Griffon Doré!',
                 layoutStyles: {
                     baseClass: 'w-full'
                 },
@@ -293,7 +307,7 @@ export class ShowcaseComponent {
                 elementType: TEXT_BLOCK,
                 id: nanoid(),
                 escapeHTML: true,
-                content: 'Ferrum Omnia Regit - Iron rules Everything',
+                value: 'Ferrum Omnia Regit - Iron rules Everything',
                 layoutStyles: {
                     baseClass: 'w-full'
                 },

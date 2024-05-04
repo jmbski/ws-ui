@@ -14,7 +14,7 @@ import { LogLevels, LoggableComponent, NgLogService, RegisterClassType, initStyl
     LOCAL_ID: 'TextBlockComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Component({
     selector: 'ws-text-block',
@@ -66,7 +66,7 @@ export class TextBlockComponent implements TextBlockConfig {
 
     @Input() illuminated: boolean = false;
 
-    @Input() content: string = '';
+    @Input() value: string = '';
 
     @Input() illuminatedColor?: string = 'illuminated';
 
@@ -112,12 +112,12 @@ export class TextBlockComponent implements TextBlockConfig {
     ngOnInit() {
         initStyleGroups.bind(this)();
 
-        if(this.illuminated && this.content?.length > 0) {
-            this.illuminatedChar = this.content.charAt(0);
-            this.body = this.content.substring(1);
+        if(this.illuminated && this.value?.length > 0) {
+            this.illuminatedChar = this.value.charAt(0);
+            this.body = this.value.substring(1);
         }
         else {
-            this.body = this.content;
+            this.body = this.value;
         }
         if(this.bodyRef) {
             if(this.escapeHTML) {

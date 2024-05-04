@@ -1,0 +1,8 @@
+<div [class]="baseStyleClasses" [style]="baseStyles?.style">
+    <p-editor 
+        [formControl]="editorControl"
+        (onTextChange)="onTextChange($event)"
+        (onInit)="editorInit($event)"
+    >
+    </p-editor>
+</div>

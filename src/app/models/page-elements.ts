@@ -31,7 +31,7 @@ export interface BaseComponentConfig {
     /**
      * The content to render in the element
      */
-    content?: unknown;
+    value?: unknown;
 
     /**
      * Styles and classes to apply to the element
@@ -67,7 +67,7 @@ export interface FormElementConfig extends BaseComponentConfig {
  */
 export interface TextBlockConfig extends BaseComponentConfig {
     elementType: ElementType.TEXT_BLOCK;
-    content: string;
+    value: string;
     illuminated?: boolean;
     illuminatedColor?: string;
     illuminatedBorder?: string;
@@ -111,6 +111,11 @@ export interface ButtonGroupConfig extends BaseComponentConfig {
     buttonStyles?: StyleGroup;
 }
 
+export interface HtmlEditorConfig extends FormElementConfig {
+    elementType: ElementType.HTML_EDITOR;
+    value: string;
+}
+
 /**
  * Union type of all possible element configs
  */
@@ -123,6 +128,7 @@ export enum ElementType {
     COMPONENT = 'component',
     CONTAINER = 'container',
     GENERAL = 'general',
+    HTML_EDITOR = 'html-editor',
     IMAGE = 'image',
     NUMBER_INPUT = 'number-input',
     SELECT = 'select',

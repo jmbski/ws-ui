@@ -15,7 +15,7 @@ import { GeneralComponent } from '../general/general.component';
     LOCAL_ID: 'ElementRendererComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Component({
     selector: 'ws-element-renderer',
@@ -69,8 +69,6 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     @Input() elementType = ElementType.COMPONENT as const;
 
     @Input() id: string = nanoid();
-
-    @Input() content?: unknown;
     
     @Input() baseStyles?: StyleGroup = {};
     

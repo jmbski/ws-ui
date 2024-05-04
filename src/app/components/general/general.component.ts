@@ -3,6 +3,7 @@ import { nanoid } from 'nanoid';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { ElementType, StyleGroup } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels, NgLogService, RegisterClassType } from 'warskald-ui/services';
+import { isString } from 'warskald-ui/type-guards';
 
 @RegisterClassType(ElementType.GENERAL)
 @LoggableComponent({
@@ -57,6 +58,8 @@ export class GeneralComponent {
     @Input() actionID?: string;
 
     @Input() content?: string;
+
+    @Input() label?: string;
     
     // #endregion standard inputs
     
@@ -88,8 +91,12 @@ export class GeneralComponent {
 
     ngOnInit() {
         initStyleGroups.bind(this)();
-        if(this.el.nativeElement) {
-            console.log('this.el.nativeElement', this.el.nativeElement);
+        const element: HTMLElement = this.el.nativeElement;
+        if(element) {
+            const newElement: HTMLElement = document.createElement('div');
+            newElement.id = this.id + nanoid();
+            newElement.innerHTML = this.content || '';
+            element.appendChild(newElement);
         }
     }
     // #endregion constructor and lifecycle hooks

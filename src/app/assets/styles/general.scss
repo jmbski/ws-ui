@@ -31,6 +31,9 @@ $theme: mat.define-light-theme((
 //@import './_index.scss';
 @import 'primeflex/primeflex.scss';
 @import 'variables.scss';
+@import 'quill/dist/quill.snow.css';
+@import 'quill/dist/quill.bubble.css';
+@import 'quill/dist/quill.core.css';
 
 body {
     height: 100%;
@@ -41,7 +44,7 @@ body {
     padding: 0;
     z-index: 0;
     
-    background-image: url('../images/parchment2.png');
+    // background-image: url('../images/parchment2.png');
     background-size: cover;
     background-repeat: repeat;
     cursor: url(../../assets/images/icons/sword-icon.png), auto;

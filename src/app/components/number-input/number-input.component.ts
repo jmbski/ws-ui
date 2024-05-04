@@ -64,8 +64,6 @@ export class NumberInputComponent implements FormElementConfig {
     
     @Input() id: string = nanoid();
     
-    @Input() content?: unknown;
-    
     @Input() baseStyles?: StyleGroup;
     
     @Input() options?: ObjectOf<InputNumber>;

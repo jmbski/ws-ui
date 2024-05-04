@@ -18,6 +18,7 @@ import { TextInputComponent } from './text-input/text-input.component';
 import { TopNavComponent } from './top-nav/top-nav.component';
 import { WsTableComponent } from './ws-table/_index';
 import { ElementType } from 'warskald-ui/models';
+import { HtmlEditorComponent } from './html-editor/html-editor.component';
 
 
 export * from './blockable-ui/blockable-ui.component';
@@ -25,6 +26,7 @@ export * from './button-group/button-group.component';
 export * from './dynamic/dynamic.component';
 export * from './element-renderer/element-renderer.component';
 export * from './general/general.component';
+export * from './html-editor/html-editor.component';
 export * from './image/image.component';
 export * from './menu-bar/menu-bar.component';
 export * from './nav-logo/nav-logo.component';
@@ -48,6 +50,8 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.CONTAINER]: ElementRendererComponent,
     [ElementType.GENERAL]: GeneralComponent,
     GeneralComponent,
+    [ElementType.HTML_EDITOR]: HtmlEditorComponent,
+    HtmlEditorComponent,
     [ElementType.IMAGE]: ImageComponent,
     ImageComponent,
     MenuBarComponent,
