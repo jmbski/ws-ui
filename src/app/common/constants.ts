@@ -60,3 +60,5 @@ export const COMMON_PRIME_MODULES = [
 export const GlobalResizeObserver: BehaviorSubject<ResizeObserver | undefined> = new BehaviorSubject<ResizeObserver | undefined>(undefined);
 
 export const LayoutChangeObserver$: Subject<void> = new Subject<void>();
+
+export const ComponentLogLevels: Record<string, number> = {};

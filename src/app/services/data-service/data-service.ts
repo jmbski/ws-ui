@@ -8,6 +8,7 @@ import {
 } from 'warskald-ui/models';
 import { Subscription } from 'rxjs';
 import { LogLevels, NgLogService, LoggableClass } from '../log-service/_index';
+import { ComponentLogLevels } from 'warskald-ui/common';
 
 /**
  * A token for the default data sources to be registered with the data service.
@@ -28,7 +29,7 @@ export const DEFAULT_SRC_NAMES = new InjectionToken<string[]>('DEFAULT_SRC_NAMES
     LOCAL_ID: 'DataService',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Error
+    localLogLevel: ComponentLogLevels['DataService'] ?? LogLevels.Error
 })
 export class DataService {
     
