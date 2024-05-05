@@ -199,6 +199,17 @@
   --primary-900:#3f455c;
 }
 
+body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+    inset: 0;
+    margin: 0;
+    padding: 0;
+    z-index: 0;
+    background: var(--surface-0) !important;
+}
+
 .p-editor-container .p-editor-toolbar {
   background: #161d21;
   border-top-right-radius: 6px;

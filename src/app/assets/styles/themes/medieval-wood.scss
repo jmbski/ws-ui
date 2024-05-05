@@ -177,6 +177,13 @@
     --primary-900:#3f455c;
 }
 
+body {
+
+    background-image: url('../../images/parchment2.png');
+    background-size: cover;
+    background-repeat: repeat;
+    cursor: url(../../images/icons/sword-icon.png), auto;
+}
 .app-top-nav {
 
     background-color: var(--surface-50);

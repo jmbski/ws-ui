@@ -273,7 +273,7 @@ export class ShowcaseComponent {
             console.log(this.testObj);
         });
 
-        ThemeService.switchTheme('viva-dark');
+        ThemeService.switchTheme('viva-dark', 'secondary-theme');
 
         this.cd.detectChanges();
         this.pageLayoutConfig = LayoutService.getLayout('showcase');

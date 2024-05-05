@@ -25,7 +25,7 @@ export const SecondaryTheme: BehaviorSubject<ThemeName> = new BehaviorSubject<Th
 })
 export class ThemeService {
 
-    public static linkElementMap: {[key: string]: HTMLLinkElement} = {};
+    public static linkElementMap: Record<string, HTMLLinkElement> = {};
 
     public static initialize() {
         const linkElements: HTMLLinkElement[] = Array.from(document.getElementsByTagName('link'));
@@ -38,7 +38,7 @@ export class ThemeService {
 
     public static switchTheme(theme: ThemeName, linkId: string = 'base-theme') {
 
-        let themeLink: HTMLLinkElement | undefined = ThemeService.linkElementMap[linkId];
+        let themeLink: HTMLLinkElement | undefined = <HTMLLinkElement>document.getElementById(linkId);// ThemeService.linkElementMap[linkId];
         /* <link id="secondary-theme" rel="stylesheet" type="text/css" href="/blank.css" /> */
         if(themeLink == undefined) {
             themeLink = document.createElement('link');
