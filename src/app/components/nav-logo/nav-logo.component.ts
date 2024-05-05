@@ -110,6 +110,7 @@ export class NavLogoComponent {
 
     ngAfterViewInit() {
         initStyleGroups.bind(this)();
+        this.cd.detectChanges();
     }
     // #endregion constructor and lifecycle hooks
     
