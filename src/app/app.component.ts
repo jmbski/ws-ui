@@ -193,7 +193,7 @@ export class AppComponent {
                             linkUrl: '/',
                             logoImage: '/app/assets/images/lions-east.webp',
                             logoAltText: 'Iron Lions United',
-                            imgStyle: {
+                            imgStyles: {
                                 optionalClass: 'p-2'
                             }
                         }

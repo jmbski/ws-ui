@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from '@a
 import { RouterModule } from '@angular/router';
 import { nanoid } from 'nanoid';
 import { StyleGroup } from 'warskald-ui/models';
-import { LogLevels, Utils, LoggableComponent, RegisterClassType } from 'warskald-ui/services';
+import { LogLevels, Utils, LoggableComponent, RegisterClassType, initStyleGroups } from 'warskald-ui/services';
 
 @RegisterClassType('NavLogoComponent')
 @LoggableComponent({
@@ -63,33 +63,17 @@ export class NavLogoComponent {
     @Input() isLink?: boolean = true;
 
     @Input() linkUrl?: string = '/';
+
+    @Input() imgStyles?: StyleGroup;
+
+    @Input() wrapperStyles?: StyleGroup;
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
 
-    private _imgStyle?: StyleGroup;
-    @Input()
-    get imgStyle() {
-        return this._imgStyle;
-    }
-    set imgStyle(input: StyleGroup | undefined) {
-
-        this._imgStyle = input;
-        this.imgStyleClasses = Utils.MergeStyleGroupClasses(this.imgStyle, this.defaultImgStyleClass);
-    }
-
-    private _wrapperStyle?: StyleGroup;
-    @Input()
-    get wrapperStyle() {
-        return this._wrapperStyle;
-    }
-    set wrapperStyle(input: StyleGroup | undefined) {
-
-        this._wrapperStyle = input;
-        this.wrapperStyleClasses = Utils.MergeStyleGroupClasses(this.wrapperStyle, this.defaultWrapperStyleClass);
-    }
+    
     
     private _config?: Partial<NavLogoComponent>;
     @Input()
@@ -122,6 +106,10 @@ export class NavLogoComponent {
         public cd: ChangeDetectorRef,
     ) {
         
+    }
+
+    ngAfterViewInit() {
+        initStyleGroups.bind(this)();
     }
     // #endregion constructor and lifecycle hooks
     

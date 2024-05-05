@@ -277,6 +277,7 @@ export class ShowcaseComponent {
 
         this.cd.detectChanges();
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
+        
 
         this.elements = [
             {
