@@ -1,3 +1,4 @@
+export * from './default-settings';
 export * from './log-service-config';
 export * from './log-service-constants';
 export * from './log-service-typeguards';
