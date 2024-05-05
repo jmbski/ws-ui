@@ -6665,12 +6665,10 @@ $header-font-size: calc(1.5 * #{$base-font-size});
         &-logo {
             display: flex;
             align-items: center;
-            filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.8));
             height: $base-logo-height;
         }
 
         &-menu-wrapper {
-            background-color: var(--surface-200);
             width: 100%;
             height: 2rem;
             z-index: calc($bz-top-nav-content + 1);

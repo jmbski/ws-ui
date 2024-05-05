@@ -184,9 +184,22 @@ body {
     background-repeat: repeat;
     cursor: url(../../images/icons/sword-icon.png), auto;
 }
-.app-top-nav {
 
-    background-color: var(--surface-50);
+.app {
+    &-top-nav {
+        background-color: var(--surface-50);
+
+        &-logo {
+
+            filter: drop-shadow(0 0 0.5rem rgba(0, 0, 0, 0.8));
+        }
+        
+        &-menu-wrapper {
+            background-color: var(--surface-200);
+        }
+    }
+
+
 }
 
 .ws {
