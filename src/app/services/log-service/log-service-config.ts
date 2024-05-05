@@ -141,6 +141,11 @@ export interface ILogServiceConfig extends WeakObject {
     toggleState: LogServiceConfig;
 
     /**
+     * If true, the LogService will add event listeners to the document that listen for the keys
+     */
+    enableCustomKeyListeners: boolean;
+
+    /**
      * The name of the default state for the LogService.
      */
     defaultStateName: string;

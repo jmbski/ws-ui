@@ -167,6 +167,11 @@ export class NgLogService {
     public static enableToggleListener: boolean = false;
 
     /**
+     * Flag to enable custom key listeners
+     */
+    public static enableCustomKeyListeners: boolean = false;
+
+    /**
      * Additional listeners to add to the LogService. The key in each record is the key to listen for.
      * The value is the function to call when the key is pressed.
      */
@@ -199,11 +204,11 @@ export class NgLogService {
      * Default state of the service
      */
     private static _defaultState: ILogServiceConfig = {
-        logLevel: LogLevels.Trace,
+        logLevel: LogLevels.Error,
         useLocalLogLevel: true,
         useCanLog: true,
-        useStrictLocalLogLevel: false,
-        logGetters: true,
+        useStrictLocalLogLevel: true,
+        logGetters: false,
         logSetters: true,
         additionalServiceStates: {},
         customConsoleFunctDefs: {},
@@ -232,7 +237,8 @@ export class NgLogService {
         reportKey: '~',
         enableReportListener: true,
         toggleKey: '`',
-        enableToggleListener: true,
+        enableToggleListener: false,
+        enableCustomKeyListeners: false,
         customKeyListeners: {},
         persistCurrentState: true,
         additonalServiceStates: {},
@@ -437,35 +443,13 @@ export class NgLogService {
      * 
      * @param stateName - the name of the state to save
      */
-    public static saveState(stateName?: string, state?: LogServiceConfig) {
-        stateName ??= 'latestState';
-        state ??= {
-            logLevel: NgLogService.logLevel,
-            useLocalLogLevel: NgLogService.useLocalLogLevel,
-            useCanLog: NgLogService.useCanLog,
-            useStrictLocalLogLevel: NgLogService.useStrictLocalLogLevel,
-            callerWhiteList: NgLogService.callerWhiteList,
-            callerBlackList: NgLogService.callerBlackList,
-            callerAccessMode: NgLogService.callerAccessMode,
-            functionWhiteList: NgLogService.functionWhiteList,
-            functionBlackList: NgLogService.functionBlackList,
-            functionAccessMode: NgLogService.functionAccessMode,
-            logLevelWhiteList: NgLogService.logLevelWhiteList,
-            logLevelBlackList: NgLogService.logLevelBlackList,
-            logLevelAccessMode: NgLogService.logLevelAccessMode,
-            reportKey: NgLogService.reportKey,
-            enableReportListener: NgLogService.enableReportListener,
-            toggleKey: NgLogService.toggleKey,
-            enableToggleListener: NgLogService.enableToggleListener,
-            customKeyListeners: NgLogService.customKeyListeners,
-        };
-
+    public static saveState(stateName: string, state: LogServiceConfig) {
+        
         state = Object.assign({}, NgLogService._defaultState, state);
 
 
         if(stateName !== 'defaultState') {
             NgLogService._serviceStates[stateName] = state;
-            NgLogService._updateLocalStorage();
         }
     }
 
@@ -491,7 +475,7 @@ export class NgLogService {
             NgLogService.currentStateName = stateName;
             console.log(`Switching to state: ${stateName}`);
 
-            NgLogService._updateLocalStorage(true);
+            NgLogService._updateLocalStorage();
 
             NgLogService.updateLogServiceSettings(state);
 
@@ -523,7 +507,9 @@ export class NgLogService {
         else {
             // remove the listener first in case it is already active
             window.removeEventListener('keyup', NgLogService._keyListenHandler);
-            window.addEventListener('keyup', NgLogService._keyListenHandler);
+            if(NgLogService.enableCustomKeyListeners || NgLogService.enableReportListener || NgLogService.enableToggleListener) {
+                window.addEventListener('keyup', NgLogService._keyListenHandler);
+            }
         }
     }
 
@@ -569,8 +555,8 @@ export class NgLogService {
      */
     public static initialize(settings?: LogServiceConfig, stateName?: string) {
 
+        stateName ??= settings?.defaultStateName ?? 'primaryState';
         settings ??= NgLogService._defaultState;
-        stateName ??= 'primaryState';
 
         NgLogService.updateLogServiceSettings(settings);
 
@@ -578,12 +564,12 @@ export class NgLogService {
             NgLogService.updateConsoleFunctDefMap(settings.customConsoleFunctDefs);
         }
 
-
         if(settings.toggleState) {
             NgLogService.saveState('toggleState', settings.toggleState);
         }
 
         NgLogService.saveState(stateName, settings);
+        NgLogService.currentStateName = stateName;
         
         if(NgLogService.persistCurrentState) {
             const currentState = localStorage.getItem('currentStateName');
@@ -592,9 +578,6 @@ export class NgLogService {
 
                 NgLogService.loadState(currentState);
             }
-        }
-        else {
-            NgLogService.currentStateName = stateName;
         }
         
         NgLogService.toggleKeyListener(true);
@@ -1014,7 +997,7 @@ export class NgLogService {
                     NgLogService.loadState('defaultState');
             }
         }
-        else {
+        if(NgLogService.enableCustomKeyListeners) {
             for(const key in NgLogService.customKeyListeners) {
                 if(event.key === key) {
                     NgLogService.customKeyListeners[key](event);
@@ -1029,13 +1012,8 @@ export class NgLogService {
      * 
      * @param saveStateName - whether or not to save the state name to local storage
      */
-    private static _updateLocalStorage(saveStateName: boolean = false): void {
-        if(NgLogService.persistCurrentState) {
-            localStorage.setItem('logServiceStates', JSON.stringify(NgLogService._serviceStates));
-            if(saveStateName) {
-                localStorage.setItem('currentStateName', NgLogService.currentStateName);
-            }
-        }
+    private static _updateLocalStorage(): void {
+        localStorage.setItem('currentStateName', NgLogService.currentStateName);
     }
     
     // #endregion private methods

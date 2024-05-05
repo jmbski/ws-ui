@@ -1,6 +1,7 @@
+import { DefaultLogSettingsPreferLocal } from 'src/app/services/log-service/default-settings';
 import { getConsoleStringArg, LogLevels, NgLogService, LogServiceConfig } from 'warskald-ui/services';
 
-export const logServiceConfig: LogServiceConfig = {
+/* export const logSettings: LogServiceConfig = {
     logLevel: LogLevels.All,
     defaultStateName: 'primaryState',
     useLocalLogLevel: true,
@@ -34,9 +35,9 @@ export const logServiceConfig: LogServiceConfig = {
             NgLogService.loadState('logEverything');
         }
     }
-};
+}; */
 
 export const environment: Record<string, unknown> = {
     production: false,
-    logServiceConfig
+    logSettings: DefaultLogSettingsPreferLocal
 };
