@@ -58,7 +58,7 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
     @Input() label?: string | undefined;
     @Input() elementType = ElementType.BUTTON_GROUP as const;
     @Input() id: string = '';
-    @Input() value?: unknown;
+    @Input() value?: unknown = '';
     @Input() baseStyles?: StyleGroup = {};
     @Input() options?: WeakObject = {};
     @Input() layoutStyles?: StyleGroup = {};
