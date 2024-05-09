@@ -165,13 +165,15 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     public toModels(elements: ComponentConfig[]): ElementModel[] {
         
         const elementModels = elements.map((element: ComponentConfig) => {
+            
             const { elementType } = element;
+
             if(isString(elementType)) {
                 NgLogService.debug(this, 'fn:toModels', `type: ${elementType}`);
-                // const classType = ElementComponentsMap[elementType];
-                // const classType = registeredClasses[elementType];
+                
                 const classType = ClassRegistry.getComponent(elementType) ?? GeneralComponent;
                 element.actionID = this.actionID;
+
                 const model: ElementModel = {
                     classType, 
                     elementId: element.id ?? nanoid(),

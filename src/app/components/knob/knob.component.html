@@ -1,0 +1,22 @@
+<p-knob #knobRef
+    [formControl]="innerControl"
+    [styleClass]="options.styleClass"
+    [style]="options.style"
+    [ariaLabel]="options.ariaLabel"
+    [ariaLabelledBy]="options.ariaLabelledBy"
+    [tabindex]="options.tabindex ?? 0"
+    [valueColor]="options.valueColor ?? 'var(--primary-color, Black)'"
+    [rangeColor]="options.rangeColor ?? 'var(--surface-border, LightGray)'"
+    [textColor]="options.textColor ?? 'var(--text-color-secondary, Black)'"
+    [valueTemplate]="options.valueTemplate ?? '{value}'"
+    [name]="options.name"
+    [size]="options.size ?? 100"
+    [step]="options.step ?? 1"
+    [min]="options.min ?? 0"
+    [max]="options.max ?? 100"
+    [strokeWidth]="options.strokeWidth ?? 14"
+    [disabled]="options.disabled ?? false"
+    [showValue]="options.showValue ?? true"
+    [readonly]="options.readonly ?? false"
+    (onChange)="onChangeHandler($event)">
+</p-knob>

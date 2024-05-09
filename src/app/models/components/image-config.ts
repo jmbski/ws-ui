@@ -1,4 +1,5 @@
-import { ElementType } from '../page-elements';
+import { ElementType } from '../element-types';
+
 
 export interface _WsImageConfig {
     LOCAL_ID: string;

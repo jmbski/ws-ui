@@ -1,0 +1,19 @@
+<p-selectButton #selectButtonRef
+    [formControl]="innerControl"
+    [options]="options.options"
+    [optionLabel]="options.optionLabel"
+    [optionValue]="options.optionValue"
+    [optionDisabled]="options.optionDisabled"
+    [unselectable]="options.unselectable ?? false"
+    [tabindex]="options.tabindex ?? 0"
+    [multiple]="options.multiple"
+    [allowEmpty]="options.allowEmpty ?? true"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [ariaLabelledBy]="options.ariaLabelledBy"
+    [disabled]="options.disabled ?? false"
+    [dataKey]="options.dataKey"
+    [autofocus]="options.autofocus"
+    (onOptionClick)="onOptionClickHandler($event)"
+    (onChange)="onChangeHandler($event)">
+</p-selectButton>

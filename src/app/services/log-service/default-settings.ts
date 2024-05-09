@@ -79,7 +79,7 @@ const logSettings: Record<string, LogServiceConfig> = {
             '`': cycleState
         },
         useCanLog: true,
-        logGetters: false,
+        logGetters: true,
         logSetters: true,
         persistCurrentState: true,
         defaultStateName: 'preferLocal'

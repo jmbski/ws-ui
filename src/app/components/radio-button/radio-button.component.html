@@ -1,0 +1,19 @@
+<p-radioButton #radioButtonRef
+    [value]="options.value"
+    [formControl]="innerControl"
+    [name]="options.name"
+    [disabled]="options.disabled ?? false"
+    [label]="options.label"
+    [variant]="options.variant ?? 'outlined'"
+    [tabindex]="options.tabindex"
+    [inputId]="options.inputId"
+    [ariaLabelledBy]="options.ariaLabelledBy"
+    [ariaLabel]="options.ariaLabel"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [labelStyleClass]="options.labelStyleClass"
+    [autofocus]="options.autofocus"
+    (onClick)="onClickHandler($event)"
+    (onFocus)="onFocusHandler($event)"
+    (onBlur)="onBlurHandler($event)">
+</p-radioButton>

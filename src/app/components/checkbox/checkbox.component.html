@@ -1,0 +1,7 @@
+<p-checkbox #checkbox
+    [formControl]="innerControl" 
+    [binary]="true" 
+    (onChange)="onChangeHandler($event)"
+    (onFocus)="onFocusHandler($event)"
+    (onBlur)="onBlurHandler($event)">
+</p-checkbox>

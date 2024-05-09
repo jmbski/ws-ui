@@ -1,0 +1,19 @@
+<p-colorPicker #colorPickerRef
+    [formControl]="innerControl"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [inline]="options.inline"
+    [format]="options.format ?? 'hex'"
+    [appendTo]="options.appendTo"
+    [disabled]="options.disabled ?? false"
+    [tabindex]="options.tabindex"
+    [inputId]="options.inputId"
+    [autoZIndex]="options.autoZIndex ?? true"
+    [baseZIndex]="options.baseZIndex ?? 0"
+    [showTransitionOptions]="options.showTransitionOptions ?? '.12s cubic-bezier(0, 0, 0.2, 1)'"
+    [hideTransitionOptions]="options.hideTransitionOptions ?? '.1s linear'"
+    [autofocus]="options.autofocus"
+    (onChange)="onChangeHandler($event)"
+    (onShow)="onShowHandler($event)"
+    (onHide)="onHideHandler($event)">
+</p-colorPicker>

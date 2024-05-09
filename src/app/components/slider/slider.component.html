@@ -1,0 +1,18 @@
+<p-slider #sliderRef
+    [formControl]="innerControl"
+    [animate]="options.animate"
+    [disabled]="options.disabled ?? false"
+    [min]="options.min ?? 0"
+    [max]="options.max ?? 100"
+    [orientation]="options.orientation ?? 'horizontal'"
+    [step]="options.step"
+    [range]="options.range"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [ariaLabel]="options.ariaLabel"
+    [ariaLabelledBy]="options.ariaLabelledBy"
+    [tabindex]="options.tabindex ?? 0"
+    [autofocus]="options.autofocus"
+    (onChange)="onChangeHandler($event)"
+    (onSlideEnd)="onSlideEndHandler($event)">
+</p-slider>

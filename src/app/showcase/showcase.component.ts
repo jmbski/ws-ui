@@ -20,12 +20,29 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, ButtonAction, FunctionMap } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, ButtonAction, FunctionMap, PMultiSelectConfig } from 'warskald-ui/models';
 import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
-import { TextInputComponent } from '../components/text-input/text-input.component';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { SelectItem } from 'primeng/api';
 
-const { BUTTON_GROUP: BUTTONS, CONTAINER, TEXT_BLOCK, TEXT_INPUT } = ElementType;
+const { 
+    BUTTON_GROUP,
+    CHECKBOX,
+    CONTAINER, 
+    TEXT_BLOCK, 
+    INPUT_TEXT 
+} = ElementType;
+
+export interface MegaMenuConfig {
+    style?: { [klass: string]: unknown } | null | undefined;
+    styleClass?: string | undefined;
+    orientation?: 'horizontal' | 'vertical' | string;
+    id?: string | undefined;
+    ariaLabel?: string | undefined;
+    ariaLabelledBy?: string | undefined;
+    disabled?: boolean;
+    tabindex?: number;
+}
 
 @LoggableComponent({
     LOCAL_ID: 'ShowcaseComponent',
@@ -52,7 +69,6 @@ const { BUTTON_GROUP: BUTTONS, CONTAINER, TEXT_BLOCK, TEXT_INPUT } = ElementType
         SvgComponent,
         TabbedResponseTableComponent,
         TextBlockComponent,
-        TextInputComponent,
         ToastModule,
         TopNavComponent,
         WsTableComponent,
@@ -125,13 +141,133 @@ export class ShowcaseComponent {
     public formComponents: ComponentConfig[] = [
 
         {
-            elementType: TEXT_INPUT,
-            id: 'text_1',
+            elementType: ElementType.MULTI_SELECT,
+            value: [],
+            id: 'cb1',
             hasForm: true,
-            value: 'test1',
+            optionValues: [
+                { label: 'Test 1', value: 'test1' },
+                { label: 'Test 2', value: 'test2' },
+                { label: 'Test 3', value: 'test3' },
+                { label: 'Test 4', value: 'test4' },
+                { label: 'Test 5', value: 'test5' },
+            ],
             label: 'Test Input 1',
             layoutStyles: {
                 baseClass: 'col-6'
+            },
+            options: <PMultiSelectConfig>{
+                tooltip: 'This is a tooltip'
+            }
+        },
+        {
+            elementType: ElementType.COLOR_PICKER,
+            id: 'color_1',
+            hasForm: true,
+            value: '#ff0000',
+            label: 'Color Picker',
+            layoutStyles: {
+                baseClass: 'col-3'
+            },
+            options: {
+                appendTo: 'body',
+                inline: false,
+            }
+        },
+        {
+            elementType: ElementType.KNOB,
+            hasForm: true,
+            id: 'knob_1',
+            value: 50,
+            label: 'Knob',
+            layoutStyles: {
+                baseClass: 'col-3'
+            },
+            options: {
+                rangeColors: ['#ff0000', '#00ff00', '#0000ff']
+            }
+        },
+        {
+            elementType: ElementType.CALENDAR,
+            id: 'calendar_1',
+            hasForm: true,
+            value: new Date(),
+            label: 'Calendar',
+            layoutStyles: {
+                baseClass: 'col-3'
+            },
+            options: {
+                appendTo: 'body',
+                inline: false,
+                timeOnly: true,
+                showSeconds: true,
+            }
+        },
+        {
+            elementType: ElementType.SLIDER,
+            id: 'slider_1',
+            hasForm: true,
+            value: 50,
+            label: 'Slider',
+            layoutStyles: {
+                baseClass: 'col-3'
+            },
+            options: {
+                animate: true,
+            }
+        },
+        {
+            elementType: ElementType.TOGGLE_BUTTON,
+            id: 'toggle_1',
+            hasForm: true,
+            value: false,
+            label: 'Toggle Button',
+            layoutStyles: {
+                baseClass: 'col-3'
+            },
+            options: {
+                onLabel: 'On',
+                offLabel: 'Off',
+            }
+        },
+        {
+            elementType: ElementType.SPLIT_BUTTON,
+            id: 'split_1',
+            hasForm: true,
+            label: 'Split Button',
+            layoutStyles: {
+                baseClass: 'col-3'
+            },
+            options: {
+                model: [
+                    { label: 'Option 1', command: () => console.log('Option 1') },
+                    { label: 'Option 2', command: () => console.log('Option 2') },
+                    { label: 'Option 3', command: () => console.log('Option 3') },
+                ],
+                icon: 'pi pi-plus',
+                iconPos: 'right',
+                style: { width: '100%' },
+                dropdownIcon: 'pi pi-chevron-down',
+                label: 'Test Split Button',
+            },
+            onClickHandler: (event: MouseEvent) => {
+                console.log('Split Button Clicked');
+            }
+        },
+        {
+            elementType: ElementType.TEXT_AREA,
+            id: 'text_area_1',
+            hasForm: true,
+            value: 'test',
+            label: 'Test Text Area',
+            layoutStyles: {
+                baseClass: 'col-6'
+            },
+            options: {
+                autoResize: true,
+                rows: 5,
+                cols: 30,
+
             }
         },
         {
@@ -145,7 +281,7 @@ export class ShowcaseComponent {
             value: '<h1><span class="ql-font-monospace">Companions Griffon-Dore</span></h1><p><br></p><p>this is a test</p>',
         },
         {
-            elementType: TEXT_INPUT,
+            elementType: INPUT_TEXT,
             id: 'text_2',
             hasForm: true,
             value: 'test2',
@@ -155,7 +291,7 @@ export class ShowcaseComponent {
             }
         },
         {
-            elementType: TEXT_INPUT,
+            elementType: INPUT_TEXT,
             id: 'text_3',
             hasForm: true,
             value: 'test3',
@@ -173,7 +309,7 @@ export class ShowcaseComponent {
             },
             elements: [
                 {
-                    elementType: TEXT_INPUT,
+                    elementType: INPUT_TEXT,
                     id: 'text_4',
                     hasForm: true,
                     value: 'test4',
@@ -182,7 +318,7 @@ export class ShowcaseComponent {
                     }
                 },
                 {
-                    elementType: TEXT_INPUT,
+                    elementType: INPUT_TEXT,
                     id: 'text_5',
                     hasForm: true,
                     value: 'test5',
@@ -191,7 +327,7 @@ export class ShowcaseComponent {
                     }
                 },
                 {
-                    elementType: TEXT_INPUT,
+                    elementType: INPUT_TEXT,
                     id: 'text_6',
                     hasForm: true,
                     value: 'test6',
@@ -202,7 +338,7 @@ export class ShowcaseComponent {
             ]
         },
         {
-            elementType: BUTTONS,
+            elementType: BUTTON_GROUP,
             id: 'buttons_1',
             buttons: [
                 {
@@ -270,7 +406,7 @@ export class ShowcaseComponent {
         //this.formComponents = FormService.objToElements(this.testObj);
         this.formGroup.valueChanges.subscribe(changes => {
             FormService.patchValues(changes, this.testObj);
-            console.log(this.testObj);
+            //console.log(this.testObj);
         });
 
         ThemeService.switchTheme('viva-dark', 'secondary-theme');

@@ -1,0 +1,17 @@
+<p-toggleButton #toggleButtonRef
+    [formControl]="innerControl"
+    [onLabel]="options.onLabel"
+    [offLabel]="options.offLabel"
+    [onIcon]="options.onIcon"
+    [offIcon]="options.offIcon"
+    [ariaLabel]="options.ariaLabel"
+    [ariaLabelledBy]="options.ariaLabelledBy"
+    [disabled]="options.disabled ?? false"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [inputId]="options.inputId"
+    [tabindex]="options.tabindex ?? 0"
+    [iconPos]="options.iconPos ?? 'left'"
+    [autofocus]="options.autofocus"
+    (onChange)="onChangeHandler($event)">
+</p-toggleButton>

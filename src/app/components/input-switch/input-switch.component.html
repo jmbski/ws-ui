@@ -1,0 +1,16 @@
+<p-inputSwitch #inputSwitchRef
+    [formControl]="innerControl"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [tabindex]="options.tabindex"
+    [inputId]="options.inputId"
+    [name]="options.name"
+    [disabled]="options.disabled ?? false"
+    [readonly]="options.readonly"
+    [trueValue]="options.trueValue ?? true"
+    [falseValue]="options.falseValue ?? false"
+    [ariaLabel]="options.ariaLabel"
+    [ariaLabelledBy]="options.ariaLabelledBy"
+    [autofocus]="options.autofocus"
+    (onChange)="onChangeHandler($event)">
+</p-inputSwitch>

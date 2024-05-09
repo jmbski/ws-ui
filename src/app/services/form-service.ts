@@ -26,10 +26,10 @@ export class FormService {
     public static getElementType(value: unknown): ElementType | undefined {
         if(exists(value)) {
             if (isString(value)) {
-                return ElementType.TEXT_INPUT;
+                return ElementType.INPUT_TEXT;
             }
             else if (isNumber(value)) {
-                return ElementType.NUMBER_INPUT;
+                return ElementType.INPUT_NUMBER;
             }
             else if (isBoolean(value)) {
                 return ElementType.CHECKBOX;
@@ -57,7 +57,7 @@ export class FormService {
             if(elementType === ElementType.CONTAINER) {
                 element.elements = FormService.objToElements(propValue as WeakObject);
             }
-            if(elementType === ElementType.NUMBER_INPUT) {
+            if(elementType === ElementType.INPUT_NUMBER) {
                 /** @todo remove testcode after testing */
                 element.value = isNumber(propValue) ? propValue : 0;
                 element.options = <ObjectOf<InputNumber>>{

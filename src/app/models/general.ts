@@ -17,6 +17,10 @@ export function stringLiterals<T extends string>(...args: T[]): T[] {
     return args;
 }
 
+export function literalTypeUnion(...args: unknown[]): unknown[] {
+    return args;
+}
+
 /**
  * Union type built from a list of string literals.
  */

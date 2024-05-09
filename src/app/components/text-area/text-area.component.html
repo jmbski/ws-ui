@@ -1,0 +1,12 @@
+<textarea #textArea
+    [id]="id"
+    pInputTextarea
+    [class]="baseStyleClasses"
+    [style]="baseStyles?.style"
+    [formControl]="innerControl"
+    [rows]="options.rows"
+    [cols]="options.cols"
+    [autoResize]="options.autoResize ?? false"
+    [value]="value"
+    >
+</textarea>
