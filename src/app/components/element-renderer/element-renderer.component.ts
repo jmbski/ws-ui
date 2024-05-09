@@ -3,7 +3,7 @@ import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { isCast, isString } from 'warskald-ui/type-guards';
+import { IsButtonAction, isCast, isString } from 'warskald-ui/type-guards';
 import { LogLevels, NgLogService, LoggableComponent, initStyleGroups, DataService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
@@ -86,6 +86,7 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
 
     @Input() actionID?: string;
 
+    @Input() elements: ComponentConfig[] = [];
     
     
     // #endregion standard inputs
@@ -93,18 +94,6 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     
     // #region get/set inputs
 
-    private _elements: ComponentConfig[] = [];
-    @Input()
-    get elements() {
-        return this._elements;
-    }
-    set elements(input: ComponentConfig[]) {
-
-        this._elements = input;
-        //this.model$.next(this.toModels(input));
-
-    //        LogService.debug(this, 'exiting', `model$: ${this.model$.value}`);
-    }
     
 
     // #endregion get/set inputs
@@ -142,9 +131,12 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
 
             if(isCast<LocalObject>(this)) {
                 DataService.subscribeToDataSource(this.actionID, this, (message: unknown) => {
-                    const action = message as string;
-                    if(this.actionMap?.[action]) {
-                        this.actionMap[action]();
+                    if(IsButtonAction(message)) {
+                        NgLogService.debug(this, 'fn:ngOnInit', `action: ${message.name}`);
+                        const funct = this.actionMap?.[message.name];
+                        if(funct) {
+                            funct(message.data);
+                        }
                     }
                 });
             }
@@ -165,7 +157,7 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     public toModels(elements: ComponentConfig[]): ElementModel[] {
         
         const elementModels = elements.map((element: ComponentConfig) => {
-            
+
             const { elementType } = element;
 
             if(isString(elementType)) {

@@ -77,3 +77,9 @@ export interface ElementModel {
     elementId: string;
     actionID?: string;
 }
+
+export interface ButtonAction {
+    name: string;
+    data?: WeakObject;
+}
+

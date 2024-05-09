@@ -118,7 +118,10 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
             this.actionDataSource.setValue({
                 senderID: this.id,
                 targetID: this.actionTarget,
-                value: button.action,
+                value: {
+                    name: button.action?.name,
+                    data: button
+                },
                 emit: true,
             });
         }

@@ -20,10 +20,12 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, ButtonAction, FunctionMap, PMultiSelectConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig } from 'warskald-ui/models';
 import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
+import { isString } from 'lodash';
+import { IsButtonAction } from '../type-guards/page-type-guards';
 
 const { 
     BUTTON_GROUP,
@@ -130,8 +132,12 @@ export class ShowcaseComponent {
     };
 
     public actionMap: FunctionMap = {
-        submit: () => {
-            console.log('submit', this.formGroup.value);
+        submit: (data?: WeakObject) => {
+            const { action } = data ?? {};
+            if(IsButtonAction(action)) {
+                console.log('submit', this.formGroup.get(<string>action.data?.id)?.value);
+            }
+            console.log('submit', this.formGroup.value, data);
         },
         cancel: () => {
             console.log('cancel');
@@ -344,12 +350,17 @@ export class ShowcaseComponent {
                 {
                     id: 'submit',
                     label: 'Submit',
-                    action: ButtonAction.SUBMIT,
+                    action: {
+                        name: 'submit',
+                        data: { id: 'text_2' }
+                    },
                 },
                 {
                     id: 'cancel',
                     label: 'Cancel',
-                    action: ButtonAction.CANCEL,
+                    action: {
+                        name: 'cancel',
+                    },
                 },
             ],
         }

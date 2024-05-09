@@ -1,6 +1,6 @@
 import { SelectItem } from 'primeng/api';
 import { ElementType } from './element-types';
-import { BaseComponentConfig, FormElementConfig } from './page-elements';
+import { BaseComponentConfig, ButtonAction, FormElementConfig } from './page-elements';
 import { StyleGroup } from './style-types';
 import * as PrimeConfigs from './prime_configs/_index';
 import { InputNumberInputEvent } from 'primeng/inputnumber';
@@ -35,13 +35,6 @@ export interface ContainerConfig extends BaseComponentConfig {
 export interface WsImageConfig extends BaseComponentConfig {
     elementType: ElementType.IMAGE;
     src?: string;
-}
-
-export enum ButtonAction {
-    SUBMIT = 'submit',
-    CANCEL = 'cancel',
-    RESET = 'reset',
-    CUSTOM = 'custom',
 }
 
 export interface ButtonConfig {

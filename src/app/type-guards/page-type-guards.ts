@@ -5,7 +5,8 @@ import {
     ElementType, 
     BaseComponentConfig, 
     TextBlockConfig, 
-    WsImageConfig
+    WsImageConfig,
+    ButtonAction
 } from 'warskald-ui/models';
 
 import { 
@@ -142,4 +143,13 @@ export function IsComponent(value: unknown): value is BaseComponentConfig {
 
 export function IsComponentArray(value: unknown): value is BaseComponentConfig[] {
     return isArray(value) && value.every(IsComponent);
+}
+
+const ButtonActionTypeMap: TypeMapping<ButtonAction> = {
+    name: StringProp,
+    data: OptionalWeakObjectProp,
+};
+
+export function IsButtonAction(value: unknown): value is ButtonAction {
+    return objIsType(value, ButtonActionTypeMap);
 }
