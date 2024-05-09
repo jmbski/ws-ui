@@ -20,7 +20,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction } from 'warskald-ui/models';
 import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
@@ -133,11 +133,8 @@ export class ShowcaseComponent {
 
     public actionMap: FunctionMap = {
         submit: (data?: WeakObject) => {
-            const { action } = data ?? {};
-            if(IsButtonAction(action)) {
-                console.log('submit', this.formGroup.get(<string>action.data?.id)?.value);
-            }
-            console.log('submit', this.formGroup.value, data);
+            
+            console.log('submit', this.formGroup.get(<string>data?.id)?.value, data);
         },
         cancel: () => {
             console.log('cancel');

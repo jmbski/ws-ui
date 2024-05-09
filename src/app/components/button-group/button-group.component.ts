@@ -120,7 +120,7 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
                 targetID: this.actionTarget,
                 value: {
                     name: button.action?.name,
-                    data: button
+                    data: button.action.data
                 },
                 emit: true,
             });
