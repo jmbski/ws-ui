@@ -85,8 +85,6 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     @Input() actionMap?: FunctionMap;
 
     @Input() actionID?: string;
-
-    @Input() elements: ComponentConfig[] = [];
     
     
     // #endregion standard inputs
@@ -94,6 +92,17 @@ export class ElementRendererComponent implements BaseComponentConfig, FormElemen
     
     // #region get/set inputs
 
+
+    private _elements: ComponentConfig[] = [];
+    @Input()
+    get elements(): ComponentConfig[] {
+        return this._elements;
+    }
+    set elements(value: ComponentConfig[]) {
+        this._elements = value;
+        this.model$.next(this.toModels(value));
+        this.cd.detectChanges();
+    }
     
 
     // #endregion get/set inputs

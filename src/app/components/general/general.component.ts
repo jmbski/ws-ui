@@ -62,6 +62,7 @@ export class GeneralComponent {
     @Input() label?: string;
     
     @Input() value?: unknown;
+    
     // #endregion standard inputs
     
     
