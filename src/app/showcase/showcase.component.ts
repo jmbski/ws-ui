@@ -307,6 +307,7 @@ export class ShowcaseComponent {
             id: 'container_1',
             hasForm: true,
             label: 'Container',
+            value: '',
             layoutStyles: {
                 baseClass: 'col-12'
             },

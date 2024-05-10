@@ -91,9 +91,9 @@ export interface TextBlockConfig extends BaseComponentConfig {
     bodyStyles?: StyleGroup;
 }
 
-export interface ContainerConfig extends BaseComponentConfig {
-    elementType: ElementType.CONTAINER;
-    elements?: BaseComponentConfig[];
+export interface ContainerConfig extends FormElementConfig {
+    elementType: ElementType.CONTAINER | ElementType.COMPONENT;
+    elements: ComponentConfig[];
 }
 
 export interface WsImageConfig extends BaseComponentConfig {

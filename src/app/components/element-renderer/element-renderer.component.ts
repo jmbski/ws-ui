@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject } from 'warskald-ui/models';
+import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { IsButtonAction, isCast, isString } from 'warskald-ui/type-guards';
@@ -29,7 +29,7 @@ import { GeneralComponent } from '../general/general.component';
     styleUrl: './element-renderer.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ElementRendererComponent implements BaseComponentConfig, FormElementConfig {
+export class ElementRendererComponent implements ContainerConfig {
 
     // #region public properties
 
