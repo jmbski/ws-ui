@@ -10,13 +10,13 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ClassRegistry, RegisterClassType } from 'warskald-ui/services';
 import { GeneralComponent } from '../general/general.component';
 
-@RegisterClassType(ElementType.COMPONENT, ElementType.CONTAINER)
+/* @RegisterClassType(ElementType.COMPONENT, ElementType.CONTAINER)
 @LoggableComponent({
     LOCAL_ID: 'ElementRendererComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
-})
+}) */
 @Component({
     selector: 'ws-element-renderer',
     standalone: true,

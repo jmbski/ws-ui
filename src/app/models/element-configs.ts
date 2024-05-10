@@ -74,7 +74,7 @@ export interface BaseComponentConfig {
 
 export interface FormElementConfig extends BaseComponentConfig {
     hasForm: true;
-    value: unknown;
+    //value: unknown;
     form?: FormControl | FormGroup;
 }
 
@@ -275,6 +275,7 @@ export interface CalendarConfig extends FormElementConfig {
 export interface ButtonConfig extends BaseComponentConfig {
     elementType: ElementType.BUTTON;
     options?: PrimeConfigs.PButtonConfig;
+    action?: ButtonAction;
 
     onClickHandler?: (event: MouseEvent) => void;
     onFocusHandler?: (event: FocusEvent) => void;

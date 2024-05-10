@@ -112,6 +112,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     WsTableComponent,
     [ElementType.ACCORDION]: AccordionComponent,
     [ElementType.AUTO_COMPLETE]: AutoCompleteComponent,
+    [ElementType.BUTTON]: ButtonComponent,
     [ElementType.BUTTON_GROUP]: ButtonGroupComponent,
     [ElementType.CALENDAR]: CalendarComponent,
     [ElementType.CHECKBOX]: CheckboxComponent,

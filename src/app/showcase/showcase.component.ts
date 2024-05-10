@@ -164,6 +164,19 @@ export class ShowcaseComponent {
             }
         },
         {
+            elementType: ElementType.BUTTON,
+            id: 'button__1',
+            /* action: {
+                name: 'submitWord',
+            }, */
+            options: {
+                label: 'Test'
+            },
+            onClickHandler: (event: MouseEvent) => {
+                console.log('Button Clicked');
+            }
+        },
+        {
             elementType: ElementType.COLOR_PICKER,
             id: 'color_1',
             hasForm: true,
@@ -340,27 +353,6 @@ export class ShowcaseComponent {
                     }
                 },
             ]
-        },
-        {
-            elementType: BUTTON_GROUP,
-            id: 'buttons_1',
-            buttons: [
-                {
-                    id: 'submit',
-                    label: 'Submit',
-                    action: {
-                        name: 'submit',
-                        data: { id: 'text_2' }
-                    },
-                },
-                {
-                    id: 'cancel',
-                    label: 'Cancel',
-                    action: {
-                        name: 'cancel',
-                    },
-                },
-            ],
         }
     ];
     

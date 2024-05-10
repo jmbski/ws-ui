@@ -201,7 +201,7 @@ export function Loggable(levelOrFunct?: LogLevelOrFunct, ...logArgs: unknown[]):
                     returnVal = originalMethod.apply(this, args);
                 }
                 catch(error: unknown) {
-                    NgLogService.writeLog(this, ConsoleFuncts.Error, propertyKey, 'error:', error, ...logArgs);
+                    NgLogService.writeLog(this, ConsoleFuncts.Trace, propertyKey, 'error:', error, ...logArgs);
                 }
             
                 NgLogService.writeLog(this, levelOrFunct!, propertyKey, 'exiting;', 'returnVal:', returnVal, ...logArgs);
