@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { ColorPicker, ColorPickerChangeEvent, ColorPickerModule } from 'primeng/colorpicker';
-import { BaseComponentConfig, ColorPickerConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PColorPickerConfig } from 'warskald-ui/models';
+import { ComponentConfig, ColorPickerConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PColorPickerConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class ColorPickerComponent implements ColorPickerConfig, ControlValueAcce
     
     @Input() options: PColorPickerConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

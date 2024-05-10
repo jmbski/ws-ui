@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { KnobModule } from 'primeng/knob';
-import { BaseComponentConfig, KnobConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PKnobConfig } from 'warskald-ui/models';
+import { ComponentConfig, KnobConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PKnobConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class KnobComponent implements KnobConfig, ControlValueAccessor {
     
     @Input() options: PKnobConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

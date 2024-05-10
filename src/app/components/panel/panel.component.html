@@ -1,0 +1,21 @@
+<p-panel #panelRef
+    [toggleable]="options.toggleable"
+    [header]="options.header"
+    [collapsed]="options.collapsed"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [iconPos]="options.iconPos ?? 'end'"
+    [expandIcon]="options.expandIcon"
+    [collapseIcon]="options.collapseIcon"
+    [showHeader]="options.showHeader ?? true"
+    [toggler]="options.toggler ?? 'icon'"
+    [transitionOptions]="options.transitionOptions ?? '400ms cubic-bezier(0.86, 0, 0.07, 1)'"
+    (collapsedChange)="collapsedChangeHandler($event)"
+    (onBeforeToggle)="onBeforeToggleHandler($event)"
+    (onAfterToggle)="onAfterToggleHandler($event)">
+    @if(!options.header) {
+        <ng-template pTemplate="header">
+            
+        </ng-template>
+    }
+</p-panel>

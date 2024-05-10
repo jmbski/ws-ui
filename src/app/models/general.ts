@@ -69,3 +69,11 @@ export type KeyOf<T> = Extract<keyof T, string>;
 export type ValueOf<T> = T[keyof T];
 
 export type ObjectOf<T> = Partial<Record<KeyOf<T>, ValueOf<T>>>;
+
+export type ButtonIconPosition = 'left' | 'right' | 'top' | 'bottom';
+
+export interface ButtonAction {
+    name: string;
+    data?: WeakObject;
+}
+

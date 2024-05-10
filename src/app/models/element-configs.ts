@@ -1,18 +1,82 @@
+import { FormControl, FormGroup } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
-import { ElementType } from './element-types';
-import { BaseComponentConfig, ButtonAction, FormElementConfig } from './page-elements';
-import { StyleGroup } from './style-types';
-import * as PrimeConfigs from './prime_configs/_index';
+import { CalendarMonthChangeEvent, CalendarYearChangeEvent } from 'primeng/calendar';
+import { ColorPickerChangeEvent } from 'primeng/colorpicker';
 import { InputNumberInputEvent } from 'primeng/inputnumber';
 import { InputSwitchChangeEvent } from 'primeng/inputswitch';
-import { MultiSelectChangeEvent, MultiSelectFilterEvent, MultiSelectFocusEvent, MultiSelectBlurEvent, MultiSelectLazyLoadEvent, MultiSelectRemoveEvent, MultiSelectSelectAllChangeEvent } from 'primeng/multiselect';
+import { MultiSelectBlurEvent, MultiSelectChangeEvent, MultiSelectFilterEvent, MultiSelectFocusEvent, MultiSelectLazyLoadEvent, MultiSelectRemoveEvent, MultiSelectSelectAllChangeEvent } from 'primeng/multiselect';
+import { PanelAfterToggleEvent, PanelBeforeToggleEvent } from 'primeng/panel';
 import { RadioButtonClickEvent } from 'primeng/radiobutton';
-import { SelectButtonOptionClickEvent, SelectButtonChangeEvent } from 'primeng/selectbutton';
+import { SelectButtonChangeEvent, SelectButtonOptionClickEvent } from 'primeng/selectbutton';
 import { SliderChangeEvent, SliderSlideEndEvent } from 'primeng/slider';
 import { ToggleButtonChangeEvent } from 'primeng/togglebutton';
-import { ColorPickerChangeEvent } from 'primeng/colorpicker';
-import { CalendarMonthChangeEvent, CalendarYearChangeEvent } from 'primeng/calendar';
+import { ElementType } from './element-types';
+import { ButtonAction, WeakObject } from './general';
+import * as PrimeConfigs from './prime_configs/_index';
+import { StyleGroup } from './style-types';
+import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
+import { TreeSelectNodeExpandEvent, TreeSelectNodeCollapseEvent } from 'primeng/treeselect';
+import { AccordionTabCloseEvent, AccordionTabOpenEvent } from 'primeng/accordion';
+import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent, AutoCompleteUnselectEvent, AutoCompleteDropdownClickEvent, AutoCompleteLazyLoadEvent } from 'primeng/autocomplete';
 
+/**
+ * Represents an element to render on a page
+ */
+export interface BaseComponentConfig {
+
+    LOCAL_ID?: string;
+
+    canLog?: boolean;
+
+    localLogLevel?: number;
+
+    label?: string;
+
+    actionID?: string;
+
+    /**
+     * The type of element to render
+     */
+    elementType: ElementType; // @todo: add type/enum later
+
+    /**
+     * The id of the element
+     */
+    id: string;
+
+    /**
+     * The content to render in the element
+     */
+    value?: unknown;
+
+    /**
+     * Styles and classes to apply to the element
+     */
+    baseStyles?: StyleGroup;
+
+    /**
+     * The options to apply to the element
+     */
+    options?: WeakObject;
+
+    /**
+     * The children of the element
+     */
+    children?: ComponentConfig[];
+
+    /**
+     * Styles and classes to use for the layout of the element
+     */
+    layoutStyles?: StyleGroup;
+
+    [key: string]: unknown;
+}
+
+export interface FormElementConfig extends BaseComponentConfig {
+    hasForm: true;
+    value: unknown;
+    form?: FormControl | FormGroup;
+}
 
 /**
  * Represents a block of text meant to be rendered as an illuminated text block.
@@ -37,7 +101,7 @@ export interface WsImageConfig extends BaseComponentConfig {
     src?: string;
 }
 
-export interface ButtonConfig {
+export interface ButtonTemplate {
     id: string,
     label?: string;
     action?: ButtonAction;
@@ -52,7 +116,7 @@ export interface ButtonConfig {
 
 export interface ButtonGroupConfig extends BaseComponentConfig {
     elementType: ElementType.BUTTON_GROUP;
-    buttons: ButtonConfig[];
+    buttons: ButtonTemplate[];
     buttonStyles?: StyleGroup;
 }
 
@@ -207,23 +271,88 @@ export interface CalendarConfig extends FormElementConfig {
     onYearChangeHandler?: (event: CalendarYearChangeEvent) => void;
     onClickOutsideHandler?: (event: unknown) => void;
     onShowHandler?: (event: unknown) => void;}
+
+export interface ButtonConfig extends BaseComponentConfig {
+    elementType: ElementType.BUTTON;
+    options?: PrimeConfigs.PButtonConfig;
+
+    onClickHandler?: (event: MouseEvent) => void;
+    onFocusHandler?: (event: FocusEvent) => void;
+    onBlurHandler?: (event: FocusEvent) => void;
+}
+
+
+export interface PanelConfig extends BaseComponentConfig {
+    elementType: ElementType.PANEL;
+    options?: PrimeConfigs.PPanelConfig;
+
+    collapsedChangeHandler?: (event: boolean) => void;
+    onBeforeToggleHandler?: (event: PanelBeforeToggleEvent) => void;
+    onAfterToggleHandler?: (event: PanelAfterToggleEvent) => void;
+}
+
+
+export interface TreeSelectConfig extends FormElementConfig {
+    elementType: ElementType.TREE_SELECT;
+    options?: PrimeConfigs.PTreeSelectConfig;
+
+    onNodeExpandHandler?: (event: TreeSelectNodeExpandEvent) => void;
+    onNodeCollapseHandler?: (event: TreeSelectNodeCollapseEvent) => void;
+    onShowHandler?: (event: Event) => void;
+    onHideHandler?: (event: Event) => void;
+    onClearHandler?: (event: unknown) => void;
+    onFilterHandler?: (event: TreeFilterEvent) => void;
+    onNodeUnselectHandler?: (event: TreeNodeUnSelectEvent) => void;
+    onNodeSelectHandler?: (event: TreeNodeSelectEvent) => void;
+}
+
+
+export interface AccordionConfig extends BaseComponentConfig {
+    elementType: ElementType.ACCORDION;
+    options?: PrimeConfigs.PAccordionConfig;
+
+    onCloseHandler?: (event: AccordionTabCloseEvent) => void;
+    onOpenHandler?: (event: AccordionTabOpenEvent) => void;
+}
+
+
+export interface AutoCompleteConfig extends FormElementConfig {
+    elementType: ElementType.AUTO_COMPLETE;
+    options?: PrimeConfigs.PAutoCompleteConfig;
+
+    completeMethodHandler?: (event: AutoCompleteCompleteEvent) => void;
+    onSelectHandler?: (event: AutoCompleteSelectEvent) => void;
+    onUnselectHandler?: (event: AutoCompleteUnselectEvent) => void;
+    onFocusHandler?: (event: Event) => void;
+    onBlurHandler?: (event: Event) => void;
+    onDropdownClickHandler?: (event: AutoCompleteDropdownClickEvent) => void;
+    onKeyUpHandler?: (event: KeyboardEvent) => void;
+    onShowHandler?: (event: Event) => void;
+    onHideHandler?: (event: Event) => void;
+    onLazyLoadHandler?: (event: AutoCompleteLazyLoadEvent) => void;
+}
+
 /**
  * Union type of all possible element configs
  */
 export type ComponentConfig = 
+    AccordionConfig |
     AutoCompleteConfig |
+    ButtonConfig |
     ButtonGroupConfig |
     CalendarConfig |
     CheckboxConfig |
     ColorPickerConfig |
     ContainerConfig |
     DropdownConfig |
+    FormElementConfig |
     HtmlEditorConfig |
     InputNumberConfig |
     InputSwitchConfig |
     InputTextConfig |
     KnobConfig |
     MultiSelectConfig |
+    PanelConfig |
     RadioButtonConfig |
     SelectButtonConfig |
     SliderConfig |
@@ -231,4 +360,5 @@ export type ComponentConfig =
     TextAreaConfig |
     TextBlockConfig |
     ToggleButtonConfig |
+    TreeSelectConfig |
     WsImageConfig;

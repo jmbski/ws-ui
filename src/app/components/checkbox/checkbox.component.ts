@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
-import { BaseComponentConfig, CheckboxConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
+import { ComponentConfig, CheckboxConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -71,7 +71,7 @@ export class CheckboxComponent implements CheckboxConfig, ControlValueAccessor {
     
     @Input() options?: WeakObject;
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup;
 

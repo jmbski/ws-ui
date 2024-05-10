@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Calendar, CalendarModule, CalendarMonthChangeEvent, CalendarYearChangeEvent } from 'primeng/calendar';
-import { BaseComponentConfig, CalendarConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PCalendarConfig } from 'warskald-ui/models';
+import { ComponentConfig, CalendarConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PCalendarConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class CalendarComponent implements CalendarConfig, ControlValueAccessor {
     
     @Input() options: PCalendarConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

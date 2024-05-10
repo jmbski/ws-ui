@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SliderChangeEvent, SliderModule, SliderSlideEndEvent } from 'primeng/slider';
-import { BaseComponentConfig, SliderConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSliderConfig } from 'warskald-ui/models';
+import { ComponentConfig, SliderConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSliderConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class SliderComponent implements SliderConfig, ControlValueAccessor {
     
     @Input() options: PSliderConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

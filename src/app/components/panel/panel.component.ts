@@ -1,40 +1,40 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { SplitButton, SplitButtonModule } from 'primeng/splitbutton';
-import { ComponentConfig, SplitButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSplitButtonConfig } from 'warskald-ui/models';
+import { Panel, PanelAfterToggleEvent, PanelBeforeToggleEvent, PanelModule } from 'primeng/panel';
+import { ComponentConfig, PanelConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PPanelConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'SplitButtonComponent',
+    LOCAL_ID: 'PanelComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
 })
 @Component({
-    selector: 'ws-split-button',
+    selector: 'ws-panel',
     standalone: true,
     imports: [
-        SplitButtonModule,
+        PanelModule,
         CommonModule,
         ReactiveFormsModule,
     ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => SplitButtonComponent),
+            useExisting: forwardRef(() => PanelComponent),
             multi: true
         }
     ],
-    templateUrl: './split-button.component.html',
-    styleUrl: './split-button.component.scss'
+    templateUrl: './panel.component.html',
+    styleUrl: './panel.component.scss'
 })
-export class SplitButtonComponent implements SplitButtonConfig, ControlValueAccessor {
+export class PanelComponent implements PanelConfig, ControlValueAccessor {
 
     // #region public properties
 
 
-    public defaultBaseStyleClass: string = 'app-split-button';
+    public defaultBaseStyleClass: string = 'app-panel';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
@@ -57,7 +57,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
 
     // #region standard inputs
-    @Input() elementType = ElementType.SPLIT_BUTTON as const;
+    @Input() elementType = ElementType.PANEL as const;
 
     @Input() value: unknown = undefined;
 
@@ -73,7 +73,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     @Input() baseStyles?: StyleGroup = {};
     
-    @Input() options: PSplitButtonConfig = {};
+    @Input() options: PPanelConfig = {};
 
     @Input() children?: ComponentConfig[];
 
@@ -83,9 +83,12 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     @Input() onTouched: GenericFunction<void> = () => {};
 
-    @Input() onClickHandler(event: MouseEvent): void {}
+    @Input() collapsedChangeHandler(event: boolean): void {}
 
-    @Input() onDropdownClickHandler(event: MouseEvent): void {}
+    @Input() onBeforeToggleHandler(event: PanelBeforeToggleEvent): void {}
+
+    @Input() onAfterToggleHandler(event: PanelAfterToggleEvent): void {}
+
 
     // #endregion standard inputs
 
@@ -102,7 +105,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     // #region viewchildren and contentchildren
     
-    @ViewChild('splitButtonRef') splitButtonRef?: SplitButton;
+    @ViewChild('panelRef') panelRef?: Panel;
 
     // #endregion viewchildren and contentchildren
 

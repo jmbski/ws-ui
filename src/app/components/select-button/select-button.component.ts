@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SelectButtonChangeEvent, SelectButtonModule, SelectButtonOptionClickEvent } from 'primeng/selectbutton';
-import { BaseComponentConfig, SelectButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSelectButtonConfig } from 'warskald-ui/models';
+import { ComponentConfig, SelectButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSelectButtonConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class SelectButtonComponent implements SelectButtonConfig, ControlValueAc
     
     @Input() options: PSelectButtonConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

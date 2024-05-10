@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
-import { BaseComponentConfig, ButtonConfig, ButtonGroupConfig, ComponentConfig, DataSource, ElementType, StyleGroup, WeakObject } from 'warskald-ui/models';
+import { ButtonGroupConfig, ButtonTemplate, DataSource, ElementType, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { DataService, initStyleGroups, LoggableComponent, LogLevels, RegisterClassType } from 'warskald-ui/services';
 
 @RegisterClassType(ElementType.BUTTON_GROUP)
@@ -65,7 +65,7 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
 
     @Input() buttonStyles?: StyleGroup = {};
 
-    @Input() buttons: ButtonConfig[] = [];
+    @Input() buttons: ButtonTemplate[] = [];
 
     @Input() actionID?: string;
 
@@ -113,7 +113,7 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
     
     // #region public methods
 
-    public handleButtonClick(button: ButtonConfig) {
+    public handleButtonClick(button: ButtonTemplate) {
         if(this.actionDataSource && this.actionTarget && button.action) {
             this.actionDataSource.setValue({
                 senderID: this.id,

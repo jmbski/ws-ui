@@ -1,0 +1,10 @@
+<p-accordion #accordionRef
+    [multiple]="options.multiple ?? false"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [expandIcon]="options.expandIcon"
+    [collapseIcon]="options.collapseIcon"
+    [selectOnFocus]="options.selectOnFocus ?? false"
+    (onClose)="onCloseHandler($event)"
+    (onOpen)="onOpenHandler($event)">
+</p-accordion>

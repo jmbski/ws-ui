@@ -1,43 +1,44 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { SplitButton, SplitButtonModule } from 'primeng/splitbutton';
-import { ComponentConfig, SplitButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSplitButtonConfig } from 'warskald-ui/models';
+import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
+import { TreeSelect, TreeSelectModule, TreeSelectNodeCollapseEvent, TreeSelectNodeExpandEvent } from 'primeng/treeselect';
+import { BaseComponentConfig, TreeSelectConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PTreeSelectConfig, ComponentConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'SplitButtonComponent',
+    LOCAL_ID: 'TreeSelectComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
 })
 @Component({
-    selector: 'ws-split-button',
+    selector: 'ws-tree-select',
     standalone: true,
     imports: [
-        SplitButtonModule,
+        TreeSelectModule,
         CommonModule,
         ReactiveFormsModule,
     ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => SplitButtonComponent),
+            useExisting: forwardRef(() => TreeSelectComponent),
             multi: true
         }
     ],
-    templateUrl: './split-button.component.html',
-    styleUrl: './split-button.component.scss'
+    templateUrl: './tree-select.component.html',
+    styleUrl: './tree-select.component.scss'
 })
-export class SplitButtonComponent implements SplitButtonConfig, ControlValueAccessor {
+export class TreeSelectComponent implements TreeSelectConfig, ControlValueAccessor {
 
     // #region public properties
 
 
-    public defaultBaseStyleClass: string = 'app-split-button';
+    public defaultBaseStyleClass: string = 'app-tree-select';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
+    
     public innerControl: FormControl = new FormControl(undefined);
 
 
@@ -57,7 +58,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
 
     // #region standard inputs
-    @Input() elementType = ElementType.SPLIT_BUTTON as const;
+    @Input() elementType = ElementType.TREE_SELECT as const;
 
     @Input() value: unknown = undefined;
 
@@ -73,7 +74,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     @Input() baseStyles?: StyleGroup = {};
     
-    @Input() options: PSplitButtonConfig = {};
+    @Input() options: PTreeSelectConfig = {};
 
     @Input() children?: ComponentConfig[];
 
@@ -83,9 +84,22 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     @Input() onTouched: GenericFunction<void> = () => {};
 
-    @Input() onClickHandler(event: MouseEvent): void {}
+    @Input() onNodeExpandHandler(event: TreeSelectNodeExpandEvent): void {}
 
-    @Input() onDropdownClickHandler(event: MouseEvent): void {}
+    @Input() onNodeCollapseHandler(event: TreeSelectNodeCollapseEvent): void {}
+
+    @Input() onShowHandler(event: Event): void {}
+
+    @Input() onHideHandler(event: Event): void {}
+
+    @Input() onClearHandler(event: unknown): void {}
+
+    @Input() onFilterHandler(event: TreeFilterEvent): void {}
+
+    @Input() onNodeUnselectHandler(event: TreeNodeUnSelectEvent): void {}
+
+    @Input() onNodeSelectHandler(event: TreeNodeSelectEvent): void {}
+
 
     // #endregion standard inputs
 
@@ -102,7 +116,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     // #region viewchildren and contentchildren
     
-    @ViewChild('splitButtonRef') splitButtonRef?: SplitButton;
+    @ViewChild('treeSelectRef') treeSelectRef?: TreeSelect;
 
     // #endregion viewchildren and contentchildren
 

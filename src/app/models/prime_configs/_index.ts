@@ -1,4 +1,6 @@
+export * from './p-accordion';
 export * from './p-auto-complete';
+export * from './p-button';
 export * from './p-calendar';
 export * from './p-color-picker';
 export * from './p-input-number';
@@ -7,8 +9,10 @@ export * from './p-input-text';
 export * from './p-input-text-area';
 export * from './p-knob';
 export * from './p-multi-select-config';
+export * from './p-panel';
 export * from './p-radio-button';
 export * from './p-select-button';
 export * from './p-slider';
 export * from './p-split-button';
 export * from './p-toggle-button';
+export * from './p-tree-select';

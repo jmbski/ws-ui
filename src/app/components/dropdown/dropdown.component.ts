@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { DropdownChangeEvent, DropdownFilterEvent, DropdownLazyLoadEvent, DropdownModule } from 'primeng/dropdown';
-import { BaseComponentConfig, DropdownConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
+import { ComponentConfig, DropdownConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -76,7 +76,7 @@ export class DropdownComponent implements DropdownConfig, ControlValueAccessor {
     
     @Input() options?: WeakObject;
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { ToggleButton, ToggleButtonChangeEvent, ToggleButtonModule } from 'primeng/togglebutton';
-import { BaseComponentConfig, ToggleButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PToggleButtonConfig } from 'warskald-ui/models';
+import { ComponentConfig, ToggleButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PToggleButtonConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class ToggleButtonComponent implements ToggleButtonConfig, ControlValueAc
     
     @Input() options: PToggleButtonConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

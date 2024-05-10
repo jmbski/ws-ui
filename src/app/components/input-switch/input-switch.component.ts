@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { InputSwitch, InputSwitchChangeEvent, InputSwitchModule } from 'primeng/inputswitch';
-import { BaseComponentConfig, InputSwitchConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PInputSwitchConfig } from 'warskald-ui/models';
+import { ComponentConfig, InputSwitchConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PInputSwitchConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class InputSwitchComponent implements InputSwitchConfig, ControlValueAcce
     
     @Input() options: PInputSwitchConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

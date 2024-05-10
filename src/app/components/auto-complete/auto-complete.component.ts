@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteLazyLoadEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent } from 'primeng/autocomplete';
-import { BaseComponentConfig, AutoCompleteConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PAutoCompleteConfig } from 'warskald-ui/models';
+import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteLazyLoadEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent } from 'primeng/autocomplete';
+import { ComponentConfig, AutoCompleteConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PAutoCompleteConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -37,7 +37,7 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     public defaultBaseStyleClass: string = 'app-auto-complete';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
+    
     public innerControl: FormControl = new FormControl(undefined);
 
 
@@ -59,7 +59,7 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     // #region standard inputs
     @Input() elementType = ElementType.AUTO_COMPLETE as const;
 
-    @Input() value: string = '';
+    @Input() value: unknown = undefined;
 
     @Input() hasForm = true as const;
 
@@ -75,7 +75,7 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     
     @Input() options: PAutoCompleteConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 
@@ -103,6 +103,7 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
 
     @Input() onLazyLoadHandler(event: AutoCompleteLazyLoadEvent): void {}
 
+
     // #endregion standard inputs
 
 
@@ -117,6 +118,8 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
 
 
     // #region viewchildren and contentchildren
+    
+    @ViewChild('autoCompleteRef') autoCompleteRef?: AutoComplete;
 
     // #endregion viewchildren and contentchildren
 
@@ -145,7 +148,7 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
 
     // #region public methods
 
-    public writeValue(obj: string): void {
+    public writeValue(obj: unknown): void {
         this.value = obj;
         this.form?.patchValue(this.value);
     }

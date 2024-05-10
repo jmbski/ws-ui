@@ -1,44 +1,35 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { SplitButton, SplitButtonModule } from 'primeng/splitbutton';
-import { ComponentConfig, SplitButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSplitButtonConfig } from 'warskald-ui/models';
+import { Button, ButtonModule } from 'primeng/button';
+import { ComponentConfig, ButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PButtonConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
-    LOCAL_ID: 'SplitButtonComponent',
+    LOCAL_ID: 'ButtonComponent',
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
 })
 @Component({
-    selector: 'ws-split-button',
+    selector: 'ws-button',
     standalone: true,
     imports: [
-        SplitButtonModule,
+        ButtonModule,
         CommonModule,
         ReactiveFormsModule,
     ],
-    providers: [
-        {
-            provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => SplitButtonComponent),
-            multi: true
-        }
-    ],
-    templateUrl: './split-button.component.html',
-    styleUrl: './split-button.component.scss'
+    templateUrl: './button.component.html',
+    styleUrl: './button.component.scss'
 })
-export class SplitButtonComponent implements SplitButtonConfig, ControlValueAccessor {
+export class ButtonComponent implements ButtonConfig {
 
     // #region public properties
 
 
-    public defaultBaseStyleClass: string = 'app-split-button';
+    public defaultBaseStyleClass: string = 'app-button';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(undefined);
 
 
     [key: string]: unknown;
@@ -57,7 +48,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
 
     // #region standard inputs
-    @Input() elementType = ElementType.SPLIT_BUTTON as const;
+    @Input() elementType = ElementType.BUTTON as const;
 
     @Input() value: unknown = undefined;
 
@@ -73,7 +64,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     @Input() baseStyles?: StyleGroup = {};
     
-    @Input() options: PSplitButtonConfig = {};
+    @Input() options: PButtonConfig = {};
 
     @Input() children?: ComponentConfig[];
 
@@ -85,7 +76,10 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     @Input() onClickHandler(event: MouseEvent): void {}
 
-    @Input() onDropdownClickHandler(event: MouseEvent): void {}
+    @Input() onFocusHandler(event: FocusEvent): void {}
+
+    @Input() onBlurHandler(event: FocusEvent): void {}
+
 
     // #endregion standard inputs
 
@@ -102,7 +96,7 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
 
     // #region viewchildren and contentchildren
     
-    @ViewChild('splitButtonRef') splitButtonRef?: SplitButton;
+    @ViewChild('buttonRef') buttonRef?: Button;
 
     // #endregion viewchildren and contentchildren
 
@@ -119,34 +113,12 @@ export class SplitButtonComponent implements SplitButtonConfig, ControlValueAcce
         this.cd.detectChanges();
 
         this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: unknown): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

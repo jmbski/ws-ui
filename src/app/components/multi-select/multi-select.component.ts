@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { MultiSelect, MultiSelectBlurEvent, MultiSelectChangeEvent, MultiSelectFilterEvent, MultiSelectFocusEvent, MultiSelectLazyLoadEvent, MultiSelectModule, MultiSelectRemoveEvent, MultiSelectSelectAllChangeEvent } from 'primeng/multiselect';
-import { BaseComponentConfig, MultiSelectConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PMultiSelectConfig } from 'warskald-ui/models';
+import { ComponentConfig, MultiSelectConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PMultiSelectConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { isWeakObject } from 'warskald-ui/type-guards';
 
@@ -76,7 +76,7 @@ export class MultiSelectComponent implements MultiSelectConfig, ControlValueAcce
     
     @Input() options: Partial<MultiSelect> = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

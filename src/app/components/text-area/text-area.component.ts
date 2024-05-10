@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { InputTextareaModule } from 'primeng/inputtextarea';
-import { BaseComponentConfig, TextAreaConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PInputTextAreaConfig } from 'warskald-ui/models';
+import { ComponentConfig, TextAreaConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PInputTextAreaConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class TextAreaComponent implements TextAreaConfig, ControlValueAccessor {
     
     @Input() options: PInputTextAreaConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

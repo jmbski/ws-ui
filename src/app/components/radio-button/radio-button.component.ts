@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { RadioButtonClickEvent, RadioButtonModule } from 'primeng/radiobutton';
-import { BaseComponentConfig, RadioButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PRadioButtonConfig } from 'warskald-ui/models';
+import { ComponentConfig, RadioButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PRadioButtonConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
 @LoggableComponent({
@@ -75,7 +75,7 @@ export class RadioButtonComponent implements RadioButtonConfig, ControlValueAcce
     
     @Input() options: PRadioButtonConfig = {};
 
-    @Input() children?: BaseComponentConfig[];
+    @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 

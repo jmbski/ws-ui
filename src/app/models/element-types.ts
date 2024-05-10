@@ -1,5 +1,7 @@
 export enum ElementType {
+    ACCORDION = 'accordion',
     AUTO_COMPLETE = 'auto-complete',
+    BUTTON = 'button',
     BUTTON_GROUP = 'button-group',
     CALENDAR = 'calendar',
     CHECKBOX = 'checkbox',
@@ -15,6 +17,7 @@ export enum ElementType {
     INPUT_TEXT = 'input-text',
     KNOB = 'knob',
     MULTI_SELECT = 'multi-select',
+    PANEL = 'panel',
     RADIO_BUTTON = 'radio-button',
     SELECT = 'select',
     SELECT_BUTTON = 'select-button',
@@ -23,4 +26,5 @@ export enum ElementType {
     TEXT_AREA = 'text-area',
     TEXT_BLOCK = 'text-block',
     TOGGLE_BUTTON = 'toggle-button',
+    TREE_SELECT = 'tree-select',
 }
