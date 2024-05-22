@@ -26,6 +26,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { isString } from 'lodash';
 import { IsButtonAction } from '../type-guards/page-type-guards';
+import { IpaKeyboardComponent } from '../components/ipa-keyboard/ipa-keyboard.component';
 
 const { 
     BUTTON_GROUP,
@@ -62,6 +63,7 @@ export interface MegaMenuConfig {
         ElementRendererComponent,
         HtmlEditorComponent,
         ImageComponent,
+        IpaKeyboardComponent,
         MenuBarComponent,
         NavLogoComponent,
         PageLayoutComponent,

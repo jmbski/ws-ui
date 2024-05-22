@@ -10,7 +10,6 @@ import { DataService, initStyleGroups, LoggableComponent, LogLevels, RegisterCla
     autoAddLogs: true,
     canLog: true,
     localLogLevel: LogLevels.Error
-
 })
 @Component({
     selector: 'ws-button-group',

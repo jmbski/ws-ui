@@ -51,6 +51,8 @@ export type ElementSelector = string | TemplateRef<unknown> | HTMLElement;
 
 export type ComponentType = Type<unknown> | TemplateRef<unknown>;
 
+export type DialogComponentType = ComponentType | string;
+
 export interface ComponentDef<T> {
     component: ComponentType;
     config?: Partial<T>;
