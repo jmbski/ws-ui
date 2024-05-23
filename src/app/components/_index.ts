@@ -36,6 +36,7 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { Type } from '@angular/core';
 import { WsTableComponent } from './ws-table/_index';
+import { IpaKeyboardComponent } from './ipa-keyboard/ipa-keyboard.component';
 
 export * from './accordion/accordion.component';
 export * from './auto-complete/auto-complete.component';
@@ -91,6 +92,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     InputNumberComponent,
     InputSwitchComponent,
     InputTextComponent,
+    IpaKeyboardComponent,
     KnobComponent,
     MenuBarComponent,
     MultiSelectComponent,
@@ -126,6 +128,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.INPUT_NUMBER]: InputNumberComponent,
     [ElementType.INPUT_SWITCH]: InputSwitchComponent,
     [ElementType.INPUT_TEXT]: InputTextComponent,
+    [ElementType.IPA_KEYBOARD]: IpaKeyboardComponent,
     [ElementType.KNOB]: KnobComponent,
     [ElementType.MULTI_SELECT]: MultiSelectComponent,
     [ElementType.PANEL]: PanelComponent,

@@ -1,10 +1,10 @@
 <ws-page-layout #pageLayout [config]="pageLayoutConfig">
-    <ws-ipa-keyboard></ws-ipa-keyboard>
+    
     <form [formGroup]="formGroup">
         <ws-element-renderer #formComponent 
+            [actionMap]="actionMap"
             [form]="formGroup" 
-            [elements]="formComponents"
-            [actionMap]="actionMap">
+            [elements]="formComponents">
         </ws-element-renderer>
     </form>
     <!-- @if(elements.length > 0) {

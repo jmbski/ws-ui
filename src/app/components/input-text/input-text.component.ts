@@ -118,6 +118,12 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
             this.onTouched(value);
             this.writeValue(value);
         });
+
+        this.form?.valueChanges.subscribe((value) => {
+            if(value !== this.value) {
+                this.writeValue(value);
+            }
+        });
     }
 
     // #endregion constructor and lifecycle hooks

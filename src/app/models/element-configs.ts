@@ -11,7 +11,7 @@ import { SelectButtonChangeEvent, SelectButtonOptionClickEvent } from 'primeng/s
 import { SliderChangeEvent, SliderSlideEndEvent } from 'primeng/slider';
 import { ToggleButtonChangeEvent } from 'primeng/togglebutton';
 import { ElementType } from './element-types';
-import { ButtonAction, WeakObject } from './general';
+import { ButtonAction, FunctionMap, GenericFunction, WeakObject } from './general';
 import * as PrimeConfigs from './prime_configs/_index';
 import { StyleGroup } from './style-types';
 import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
@@ -76,6 +76,8 @@ export interface FormElementConfig extends BaseComponentConfig {
     hasForm: true;
     //value: unknown;
     form?: FormControl | FormGroup;
+    onChanged?: GenericFunction<void>;
+    onTouched?: GenericFunction<void>;
 }
 
 /**
@@ -94,6 +96,7 @@ export interface TextBlockConfig extends BaseComponentConfig {
 export interface ContainerConfig extends FormElementConfig {
     elementType: ElementType.CONTAINER | ElementType.COMPONENT;
     elements: ComponentConfig[];
+    actionMap?: FunctionMap;
 }
 
 export interface WsImageConfig extends BaseComponentConfig {
@@ -332,6 +335,16 @@ export interface AutoCompleteConfig extends FormElementConfig {
     onLazyLoadHandler?: (event: AutoCompleteLazyLoadEvent) => void;
 }
 
+export interface IpaKeyboardConfig extends FormElementConfig {
+    elementType: ElementType.IPA_KEYBOARD;
+    attachTo?: string;
+}
+
+export interface IpaAction {
+    target: string;
+    char: string;
+}
+
 /**
  * Union type of all possible element configs
  */
@@ -350,6 +363,7 @@ export type ComponentConfig =
     InputNumberConfig |
     InputSwitchConfig |
     InputTextConfig |
+    IpaKeyboardConfig |
     KnobConfig |
     MultiSelectConfig |
     PanelConfig |

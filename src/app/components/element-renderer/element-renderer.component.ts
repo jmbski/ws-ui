@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
@@ -85,6 +85,8 @@ export class ElementRendererComponent implements ContainerConfig {
     @Input() actionMap?: FunctionMap;
 
     @Input() actionID?: string;
+
+    @Input() elementMap: Map<string, unknown> = new Map();
     
     
     // #endregion standard inputs
@@ -93,7 +95,7 @@ export class ElementRendererComponent implements ContainerConfig {
     // #region get/set inputs
 
 
-    private _elements: ComponentConfig[] = [];
+    /* private _elements: ComponentConfig[] = [];
     @Input()
     get elements(): ComponentConfig[] {
         return this._elements;
@@ -102,8 +104,8 @@ export class ElementRendererComponent implements ContainerConfig {
         this._elements = value;
         this.model$.next(this.toModels(value));
         this.cd.detectChanges();
-    }
-    
+    } */
+    @Input() elements: ComponentConfig[] = [];
 
     // #endregion get/set inputs
     
@@ -186,6 +188,7 @@ export class ElementRendererComponent implements ContainerConfig {
                         const subGroup = new FormGroup({});
                         this.form.addControl(model.elementId, subGroup);
                         model.config.form = subGroup;
+                        model.config.actionMap = this.actionMap;
                     }
                     else {
                         const newControl = new FormControl(element.value);

@@ -1,12 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { ComponentConfig, ElementType, FormElementConfig, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
-import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { ComponentConfig, DataSource, ElementType, FormElementConfig, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
+import { DataService, initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { IpaData, IpaMapping } from './ipa-map';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { RippleModule } from 'primeng/ripple';
 
 @LoggableComponent({
     LOCAL_ID: 'IpaKeyboardComponent',
@@ -22,6 +24,8 @@ import { TooltipModule } from 'primeng/tooltip';
         DialogModule,
         CommonModule,
         ReactiveFormsModule,
+        RippleModule,
+        OverlayPanelModule,
         TooltipModule,
     ],
     providers: [
@@ -47,6 +51,10 @@ export class IpaKeyboardComponent implements FormElementConfig {
     public ipaMap: IpaData[] = IpaMapping;
 
     public visible: boolean = true;
+
+    public actionDataSource?: DataSource;
+
+    public actionTarget?: string;
 
 
     [key: string]: unknown;
@@ -92,6 +100,8 @@ export class IpaKeyboardComponent implements FormElementConfig {
 
     @Input() onTouched: GenericFunction<void> = () => {};
 
+    @Input() attachTo?: string;
+
     
     // #endregion standard inputs
     
@@ -128,6 +138,14 @@ export class IpaKeyboardComponent implements FormElementConfig {
             this.onTouched(value);
             this.writeValue(value);
         });
+        if(this.actionID) {
+            const endIndex = this.actionID.indexOf('_Actions');
+            if(endIndex > 0) {
+                const rootID = this.actionID.substring(0, endIndex);
+                this.actionTarget = `ElementRendererComponent_${rootID}`;
+            }
+            this.actionDataSource = DataService.getDataSource(this.actionID);
+        }
     }
     // #endregion constructor and lifecycle hooks
     
@@ -159,14 +177,25 @@ export class IpaKeyboardComponent implements FormElementConfig {
 
     public onCharClick(char: string) {
         
-        const clipboard: Clipboard = navigator.clipboard;
-        clipboard.writeText(char);
-        console.log('Copied to clipboard:', char);
-        /* if(event.value) {
+        if(this.attachTo) {
+            this.actionDataSource?.setValue({
+                senderID: this.id,
+                targetID: this.actionTarget,
+                emit: true,
+                value: {
+                    name: 'addChar',
+                    data: {
+                        target: this.attachTo,
+                        char
+                    },
+                }
+            });
+        }
+        else {
             const clipboard: Clipboard = navigator.clipboard;
-            clipboard.writeText(event.value);
-            this.toastSvc.showSuccess(`Copied ${event.value} to clipboard`);
-        } */
+            clipboard.writeText(char);
+            console.log('Copied to clipboard:', char);
+        }
     }
     
     // #endregion public methods

@@ -1,12 +1,20 @@
-<p-button (click)="showDialog()" label="Show" />
-<p-dialog header="IPA Chart" [modal]="true" [(visible)]="visible" [style]="{ width: '25rem' }">
+<p-button (click)="op.toggle($event)" icon="pi pi-language" label="IPA" />
+<p-overlayPanel #op
+    [style]="{ width: '25rem' }"
+    appendTo="body">
     <ng-template pTemplate="body">
         <div class="grid grid-no-gutter pt-2">
             @for(ipaItem of ipaMap; track ipa) {
-                <div class="col-1 shadow-4 rounded m-1 ipa-button" [pTooltip]="ipaItem.tooltip">
-                    <span class="text-xl" (click)="onCharClick(ipaItem.ipa)">{{ipaItem.ipa}}</span>
+                <div 
+                    class="col-1 shadow-4 rounded m-1 ipa-button" 
+                    [pTooltip]="ipaItem.tooltip"
+                    pRipple
+                    (click)="onCharClick(ipaItem.ipa)">
+                    <span 
+                        class="text-xl" 
+                        >{{ipaItem.ipa}}</span>
                 </div>
             }
         </div>
     </ng-template>
-</p-dialog>
+</p-overlayPanel>

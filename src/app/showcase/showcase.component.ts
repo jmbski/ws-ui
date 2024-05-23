@@ -140,6 +140,15 @@ export class ShowcaseComponent {
         },
         cancel: () => {
             console.log('cancel');
+        },
+        addChar: (data?: WeakObject) => {
+            const { target, char } = data ?? {};
+            if(isString(target) && isString(char)) {
+                const value = this.formGroup.get(target)?.value;
+                this.formGroup.get(target)?.setValue(value + char);
+                this.formGroup.updateValueAndValidity();
+                this.cd.detectChanges();
+            }
         }
     };
 
@@ -164,6 +173,21 @@ export class ShowcaseComponent {
             options: <PMultiSelectConfig>{
                 tooltip: 'This is a tooltip'
             }
+        },
+        {
+            elementType: BUTTON_GROUP,
+            id: 'button_group_1',
+
+            buttons: [
+                {
+                    id: 'button_1',
+                    label: 'Submit',
+                    action: {
+                        name: 'submit',
+                        data: { id: 'text_2' }
+                    }
+                }
+            ],
         },
         {
             elementType: ElementType.BUTTON,
@@ -305,7 +329,16 @@ export class ShowcaseComponent {
             value: 'test2',
             label: 'Test Input 2',
             layoutStyles: {
-                baseClass: 'col-6'
+                baseClass: 'col-4'
+            }
+        },
+        {
+            elementType: ElementType.IPA_KEYBOARD,
+            id: 'ipa_1',
+            hasForm: true,
+            attachTo: 'text_2',
+            layoutStyles: {
+                baseClass: 'col-2'
             }
         },
         {
