@@ -1,8 +1,8 @@
 
 
 import { TemplateRef } from '@angular/core';
-import { WeakObject, GenericFunction, DialogComponentType } from '../../../models/general';
-import { StyleGroup } from '../../../models/style-types';
+
+import { WeakObject, GenericFunction, DialogComponentType , StyleGroup } from 'warskald-ui/models';
 
 
 
