@@ -231,7 +231,7 @@ export const StyleGroupProp: PropertyTypeGuard = { predicate: isStyleGroup };
 
 export function objIsType<T>(obj: unknown, typeGuards: TypeMapping<T> | string[]): obj is T {
     if(Array.isArray(typeGuards)) {
-        return isWeakObject(obj) && typeGuards.every(key => isWeakObject(obj[key]));
+        return isWeakObject(obj) && typeGuards.every(key => Object.hasOwn(obj, key));
     }
     return isWeakObject(obj) && Object.keys(typeGuards).every(key => {
         const { predicate, optional } = typeGuards[key as keyof T];
