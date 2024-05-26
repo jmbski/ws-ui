@@ -40,6 +40,7 @@ export interface PInputNumberConfig {
     inputStyleClass?: string | undefined;
     showClear?: boolean;
     autofocus?: boolean | undefined;
+    disabled?: boolean;
 
     [key: string]: unknown;
 }
