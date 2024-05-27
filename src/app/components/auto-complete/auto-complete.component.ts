@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { SelectItem } from 'primeng/api';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteLazyLoadEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent } from 'primeng/autocomplete';
 import { ComponentConfig, AutoCompleteConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PAutoCompleteConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
@@ -39,6 +40,8 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
     
     public innerControl: FormControl = new FormControl(undefined);
+
+    public suggestions: WeakObject[] = [];
 
 
     [key: string]: unknown;

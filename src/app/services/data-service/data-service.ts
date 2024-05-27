@@ -9,6 +9,7 @@ import {
 import { Subscription } from 'rxjs';
 import { LogLevels, NgLogService, LoggableClass } from '../log-service/_index';
 import { ComponentLogLevels } from 'warskald-ui/common';
+import { objIsType } from 'warskald-ui/type-guards';
 
 /**
  * A token for the default data sources to be registered with the data service.
@@ -176,24 +177,26 @@ export class DataService {
      * @param callback - the callback function to execute when the data source emits a new value
      * @returns - a subscription to the data source
      */
-    public static subscribeToDataSource(id: string,  subscriber: LocalObject, callback: GenericFunction<unknown>): Subscription | undefined {
+    public static subscribeToDataSource(id: string,  subscriber: unknown, callback: GenericFunction<unknown>): Subscription | undefined {
 
         const dataSource: DataSource | undefined = DataService.getDataSource(id);
         
-        if(!dataSource) {
+        if(objIsType<LocalObject>(subscriber, ['LOCAL_ID'])) {
+            if(!dataSource) {
+                
+                DataService.registerDataSource({id})
+                    .then(newDataSource => {
+                        DataService.subscribeToDataSource(newDataSource.id, subscriber, callback);
+                    });
+                
+            }
             
-            DataService.registerDataSource({id})
-                .then(newDataSource => {
-                    DataService.subscribeToDataSource(newDataSource.id, subscriber, callback);
+            else {
+    
+                return dataSource.value$.subscribe(message => {
+                    message.readValue(subscriber, callback);
                 });
-            
-        }
-        
-        else {
-
-            return dataSource.value$.subscribe(message => {
-                message.readValue(subscriber, callback);
-            });
+            }
         }
 
         return undefined;
