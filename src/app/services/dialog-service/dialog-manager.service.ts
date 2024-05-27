@@ -32,7 +32,7 @@ export class DialogManagerService {
 
     public dialogComponentRefMap: Map<ModularDialogRef, ComponentRef<ModularDialogComponent>> = new Map();
 
-    public dockedDialogs$: BehaviorSubject<MenuItem[]> = new BehaviorSubject<MenuItem[]>([]);
+    public dockedDialogs$: BehaviorSubject<ModularDialogRef[]> = new BehaviorSubject<ModularDialogRef[]>([]);
 
     public baseZIndex: number = 1101;
 
@@ -41,11 +41,7 @@ export class DialogManagerService {
 
     // #region private properties
 
-    private _dockedDialogs: MenuItem[] = [];
-
     private _dialogsByZIndexOrder: ModularDialogComponent[] = [];
-
-    private _appRef?: ApplicationRef;
 
     private _injector?: Injector;
 
@@ -63,6 +59,15 @@ export class DialogManagerService {
         if(input) {
             this.processDialogRequests();
         }
+    }
+
+    private _dockedDialogs: ModularDialogRef[] = [];
+    public get dockedDialogs() {
+        return this._dockedDialogs;
+    }
+    public set dockedDialogs(input: ModularDialogRef[]) {
+        this._dockedDialogs = input;
+        this.dockedDialogs$.next(input);
     }
     // #endregion getters/setters
 
@@ -89,11 +94,13 @@ export class DialogManagerService {
 
     // #region constructor and lifecycle hooks
     constructor(
-        public cd: ChangeDetectorRef,
         private appRef: ApplicationRef, 
         private injector: Injector,
     ) {
         
+        setTimeout(() => {
+            this.dialogManager = this.createManagerDock();
+        });
     }
 
     // #endregion constructor and lifecycle hooks
@@ -101,22 +108,51 @@ export class DialogManagerService {
 
     // #region public methods
 
-    public restoreDialog(dialog: ModularDialogComponent) {
-        this.removeDialogFromDock(dialog);
-        this.moveDialogToTopZIndex(dialog);
-    }
-
-    public moveDialogToTopZIndex(dialog: ModularDialogComponent) {
-        this.removeDialogFromZIndexOrder(dialog);
-        this._dialogsByZIndexOrder.push(dialog);
-        this.updateZIndexes();
-    }
-
-    public removeDialogFromZIndexOrder(dialog: ModularDialogComponent) {
+    public minimizeDialog(dialogRef: ModularDialogRef) {
         
-        this._dialogsByZIndexOrder = this._dialogsByZIndexOrder.filter((dialogByZindexOrder) => {
-            return !isEqual(dialogByZindexOrder, dialog);
+        const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
+        if(dialog) {
+            dialog.animateMinimize();
+            this.removeDialogFromZIndexOrder(dialogRef);
+            const newDockedDialogs = [...this.dockedDialogs.slice(), dialogRef];
+            this.dockedDialogs = newDockedDialogs;
+            this.dialogManager?.cd.detectChanges();
+        }
+    }
+
+    public restoreDialog(dialogRef: ModularDialogRef) {
+        const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
+        if(dialog) {
+            dialog.animateRestore();
+            this.moveDialogToTopZIndex(dialogRef);
+            this.removeDialogFromDock(dialogRef);
+            this.dialogManager?.cd.detectChanges();
+        }
+    }
+
+    public removeDialogFromDock(dialogRef: ModularDialogRef) {
+        this.dockedDialogs = this.dockedDialogs.filter((dockedDialog) => {
+            return !isEqual(dockedDialog, dialogRef);
         });
+    }
+
+    public moveDialogToTopZIndex(dialogRef: ModularDialogRef) {
+        const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
+        if(dialog) {
+            this.removeDialogFromZIndexOrder(dialogRef);
+            this._dialogsByZIndexOrder.push(dialog);
+            this.updateZIndexes();
+        }
+    }
+
+    public removeDialogFromZIndexOrder(dialogRef: ModularDialogRef) {
+        
+        const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
+        if(dialog) {
+            this._dialogsByZIndexOrder = this._dialogsByZIndexOrder.filter((dialogByZindexOrder) => {
+                return !isEqual(dialogByZindexOrder, dialog);
+            });
+        }
     }
 
     public updateZIndexes() {
@@ -127,23 +163,6 @@ export class DialogManagerService {
             }
             dialog.cd.detectChanges();
         });
-    }
-
-    public addDockedDialog(dialog: ModularDialogComponent) {
-        this._dockedDialogs.push({
-            label: dialog.header ?? 'Unlabeled Dialog',
-            state: { dialog },
-        });
-        this.dockedDialogs$.next(this._dockedDialogs);
-    }
-
-    public removeDialogFromDock(dialog: ModularDialogComponent) {
-
-        this._dockedDialogs = this._dockedDialogs.filter((dockedDialog) => {
-            return !isEqual(dockedDialog.state?.dialog, dialog);
-        });
-
-        this.dockedDialogs$.next(this._dockedDialogs);
     }
 
     public processDialogRequests() {
@@ -161,6 +180,7 @@ export class DialogManagerService {
         let dialogRef: ModularDialogRef | undefined = undefined;
         if(allowMultiple === true || dialogID == undefined) {
             dialogID = nanoid();
+            
         }        
 
         if(this.modularDialogMap.get(dialogID) == undefined) {
@@ -179,12 +199,9 @@ export class DialogManagerService {
     }
     
     public removeDialog(dialogRef: ModularDialogRef) {
-        const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
-        if(dialog) {
-            this.removeDialogFromDock(dialog);
-            this.removeDialogFromZIndexOrder(dialog);
-        }
-        
+
+        this.removeDialogFromDock(dialogRef);
+        this.removeDialogFromZIndexOrder(dialogRef);
         this.removeDialogComponentFromBody(dialogRef);
     }
 
@@ -194,8 +211,8 @@ export class DialogManagerService {
         }
 
         const dialogComponentRef = this.dialogComponentRefMap.get(dialogRef);
-        if(dialogComponentRef && this._appRef) {
-            this._appRef.detachView(dialogComponentRef.hostView);
+        if(dialogComponentRef && this.appRef) {
+            this.appRef.detachView(dialogComponentRef.hostView);
             dialogComponentRef.destroy();
             this.dialogComponentRefMap.delete(dialogRef);
         }
@@ -240,12 +257,21 @@ export class DialogManagerService {
         map.set(ModularDialogConfig, config);
 
         const dialogRef = new ModularDialogRef();
+        dialogRef.dialogID = config.dialogID;
+        dialogRef.title = config.title ?? 'Untitled Dialog';
+
         map.set(ModularDialogRef, dialogRef);
+
+        if(config.customInjectors) {
+            config.customInjectors.forEach((injectorMapping) => {
+                map.set(injectorMapping.token, injectorMapping.value);
+            });
+        }
 
         const subs: Subscription[] = [];
         
         subs.push(dialogRef.onMinimize.subscribe(() => {
-            this.dialogComponentRefMap.get(dialogRef)?.instance.minimize();
+            this.minimizeDialog(dialogRef);
         }));
 
         subs.push(dialogRef.onMaximize.subscribe(() => {
@@ -254,11 +280,12 @@ export class DialogManagerService {
         }));
 
         subs.push(dialogRef.onRestore.subscribe(() => {
-            this.dialogComponentRefMap.get(dialogRef)?.instance.restore();
+            console.log('Restoring dialog');
+            this.restoreDialog(dialogRef);
         }));
 
         subs.push(dialogRef.onClose.subscribe(() => {
-            this.dialogComponentRefMap.get(dialogRef)?.instance.close();
+            this.removeDialog(dialogRef);
         }));
 
         subs.push(dialogRef.onSubmit.subscribe((output?: unknown) => {
@@ -270,9 +297,9 @@ export class DialogManagerService {
             this.removeDialogComponentFromBody(dialogRef);
         }));
 
-        subs.forEach(sub => {
+        /* subs.forEach(sub => {
             sub.unsubscribe();
-        });
+        }); */
 
         const componentRef = createComponent(ModularDialogComponent, { 
             environmentInjector: this.appRef.injector, 
@@ -281,7 +308,7 @@ export class DialogManagerService {
 
         componentRef.instance.config = config;
 
-        this.moveDialogToTopZIndex(componentRef.instance);
+        this.moveDialogToTopZIndex(dialogRef);
         
 
         this.appRef.attachView(componentRef.hostView);

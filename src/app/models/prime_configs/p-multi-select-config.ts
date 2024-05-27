@@ -28,7 +28,11 @@ export interface PMultiSelectConfig {
     emptyFilterMessage?: string;
     emptyMessage?: string;
     resetFilterOnHide?: boolean;
+    placeholder?: string | undefined;
+    displaySelectedLabel?: boolean;
+    maxSelectedLabels?: number | null;
     dropdownIcon?: string | undefined;
+    selectAll?: boolean;
     optionLabel?: string | undefined;
     optionValue?: string | undefined;
     optionDisabled?: string | undefined;

@@ -1,5 +1,5 @@
 <ws-page-layout #pageLayout [config]="pageLayoutConfig">
-    
+    <p-button label="Test Dialog" (onClick)="openDialog()"></p-button>
     <form [formGroup]="formGroup">
         <ws-element-renderer #formComponent 
             [actionMap]="actionMap"
@@ -11,3 +11,9 @@
         <ws-element-renderer [elements]="elements"></ws-element-renderer>
     } -->
 </ws-page-layout>
+
+<ng-template #testContent>
+    <div class="flex justify-content-center align-items-center w-full h-full">
+        <h1>Test Content</h1>
+    </div>
+</ng-template>

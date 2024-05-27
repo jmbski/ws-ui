@@ -2,7 +2,7 @@
 
 import { TemplateRef } from '@angular/core';
 
-import { WeakObject, GenericFunction, DialogComponentType , StyleGroup } from 'warskald-ui/models';
+import { WeakObject, GenericFunction, DialogComponentType , StyleGroup, HTMLRef } from 'warskald-ui/models';
 
 
 
@@ -16,7 +16,9 @@ export class ModularDialogConfig {
 
     styles?: StyleGroup;
 
-    headerContent?: DialogComponentType;
+    title?: string;
+
+    header?: DialogComponentType;
     headerStyles?: StyleGroup;
     headerData?: WeakObject;
 
@@ -28,7 +30,7 @@ export class ModularDialogConfig {
     footerStyles?: StyleGroup;
     footerData?: WeakObject;
 
-    navBoundaryElementRef?: TemplateRef<unknown> | HTMLElement | string;
+    navBoundaryElementRef?: HTMLRef;
 
     appendTo?: string | TemplateRef<unknown>;
 
@@ -62,7 +64,15 @@ export class ModularDialogConfig {
     cancelIcon?: string;
 
     data?: WeakObject;
-    customInjectors?: WeakMap<object, unknown>;
+    customInjectors?: InjectorMapping[];
+
+    submitFunction?: (data?: unknown) => void;
+    cancelFunction?: (data?: unknown) => void;
 
     [key: string]: unknown;
+}
+
+export interface InjectorMapping {
+    token: object;
+    value: unknown;
 }

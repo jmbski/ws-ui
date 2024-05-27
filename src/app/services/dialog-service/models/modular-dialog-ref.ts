@@ -5,6 +5,9 @@ import { Observable, Subject } from 'rxjs';
  */
 export class ModularDialogRef {
 
+    public dialogID: string = '';
+    public title?: string;
+
     constructor() {}
 
     /**
@@ -124,8 +127,8 @@ export class ModularDialogRef {
      * @param {unknown} value - Data to consume upon submitting.
      * @group Method
      */
-    submit(value: unknown) {
-        this._onSubmit.next(value);
+    submit() {
+        this._onSubmit.next();
     }
 
     /**
@@ -136,8 +139,8 @@ export class ModularDialogRef {
      * 
      * @group Method
      */
-    cancel(value: unknown) {
-        this._onCancel.next(value);
+    cancel() {
+        this._onCancel.next();
     }
 
     private readonly _onClose = new Subject<unknown>();
@@ -230,19 +233,19 @@ export class ModularDialogRef {
      */
     onToggle: Observable<unknown> = this._onToggle.asObservable();
 
-    private readonly _onSubmit = new Subject<unknown>();
+    private readonly _onSubmit = new Subject<void>();
     /**
      * Event triggered on submit. 
      * @param {unknown} value - Data to consume upon submitting.
      * @group Events
      */
-    onSubmit: Observable<unknown> = this._onSubmit.asObservable();
+    onSubmit: Observable<void> = this._onSubmit.asObservable();
 
-    private readonly _onCancel = new Subject<unknown>();
+    private readonly _onCancel = new Subject<void>();
     /**
      * Event triggered on cancel.
      * @group Events
      */
-    onCancel: Observable<unknown> = this._onCancel.asObservable();
+    onCancel: Observable<void> = this._onCancel.asObservable();
     
 }

@@ -1,1 +1,115 @@
-<p>modular-dialog works!</p>
+<div #modularDialog class="modular-dialog">
+
+    <p-dialog #pDialog 
+        [(visible)]="visible" 
+        [style]="style" 
+        [class]="{'animating': animating}"
+        [styleClass]="minimized ? 'p-dialog-minimized' : 'p-dialog-restored'"
+        [styleClass]="collapsed ? 'p-dialog-collapsed' : ''"
+        [appendTo]="body"
+        [closable]="false"
+        [autoZIndex]="true"
+        (mousedown)="handleDialogTouched()"
+    >
+        <ng-template pTemplate="header">
+            <div class="grid grid-nogutter w-full">
+                <div class="col-6">
+                    
+                    @if(isComponentRef(header)) {
+                        <ng-container *ngComponentOutlet="header; inputs: headerData"></ng-container>
+                    }
+                    @else if(isTemplate(header)) {
+                        <ng-container *ngTemplateOutlet="header; context: headerData"></ng-container>
+                    }
+                    @else {
+                        <span class="p-dialog-title">{{header}}</span>
+                    }
+                </div>
+                <div class="col-6 flex justify-content-end align-items-center">
+                    @if(minimizable) {
+                        <p-button
+                            icon="pi pi-minus"
+                            styleClass="p-dialog-header-icon"
+                            class="float-right"
+                            (onClick)="minimize()"
+                        ></p-button>
+                    }
+                    @if(collapsible) {
+                        <p-button 
+                            [icon]="collapsed ? 'pi pi-chevron-up rotate-180' : 'pi pi-chevron-up'"
+                            styleClass="p-dialog-header-icon"
+                            class="float-right" 
+                            (onClick)="toggleCollapse()">
+                        </p-button>
+                    }
+                    @if(closable) {
+                        <p-button
+                            icon="pi pi-times" 
+                            styleClass="p-dialog-header-icon" 
+                            class="float-right" 
+                            (onClick)="close()">
+                        </p-button>
+                    }
+                </div>
+            </div>
+        </ng-template>
+
+        <ng-template pTemplate="content">
+            <div class="modular-dialog-content">
+                @if(isComponentRef(content)) {
+                    <ng-container *ngComponentOutlet="content; inputs: contentData"></ng-container>
+                }
+                @else if(isTemplate(content)) {
+                    <ng-container *ngTemplateOutlet="content; context: contentData"></ng-container>
+                }
+                @else {
+                    <div [innerHTML]="content"></div>
+                }
+            </div>
+        </ng-template>
+
+        @if(showSubmitButton || showCancelButton || footer) {
+            <ng-template pTemplate="footer">
+                <div class="grid grid-no-gutter w-full">
+                    @if(footer) {
+                        <div class="col-12">
+                            @if(isComponentRef(footer)) {
+                                <ng-container *ngComponentOutlet="footer; inputs: footerData"></ng-container>
+                            }
+                            @else if(isTemplate(footer)) {
+                                <ng-container *ngTemplateOutlet="footer; context: footerData"></ng-container>
+                            }
+                            @else {
+                                <div [innerHTML]="footer"></div>
+                            }
+                        </div>
+                    }
+
+                    @if(showCancelButton || showSubmitButton) {
+                        
+                        <div class="col-12 flex justify-content-end">
+                            @if(showSubmitButton) {
+                                <p-button 
+                                    [label]="submitLabel"
+                                    [icon]="submitIcon"
+                                    styleClass="p-button-sm"
+                                    (onClick)="submit()"
+                                ></p-button>
+                            }
+                            @if(showCancelButton) {
+                                <p-button 
+                                    [label]="cancelLabel"
+                                    [icon]="cancelIcon"
+                                    styleClass="p-button-sm"
+                                    (onClick)="cancel()"
+                                ></p-button>
+                            }
+                        </div>
+                    }
+
+                </div>
+            </ng-template>
+        }
+    </p-dialog>
+
+</div>

@@ -1,0 +1,45 @@
+:host ::ng-deep {
+    .p-dialog {
+        max-width: 95vw;
+        min-width: 20rem;
+        transform-origin: bottom;
+        position: fixed;
+
+        .p-dialog-header {
+            padding: 0.5rem;
+            h3 {
+                margin: 0;
+            }
+        }
+        
+        &-minimized {
+            transform: scale(0);
+        }
+
+        &-collapsed {
+            .p-dialog-content {
+                padding: 0 !important;
+                height: 0px !important;
+            }
+
+            .p-dialog-footer {
+                padding: 0 !important;
+                height: 0px !important;
+            }
+
+            overflow: hidden;
+        }
+    }
+
+    .animating {
+        * {
+            transition: all .3s ease;
+        }
+    }
+
+    .modular-dialog-content {
+        padding: .5rem;
+    }
+
+    
+}

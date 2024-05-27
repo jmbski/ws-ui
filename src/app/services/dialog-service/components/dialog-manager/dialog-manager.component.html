@@ -9,3 +9,22 @@
     </ng-template>
     
 </p-dock> -->
+
+<div class="ws-dialog-mgr-dock">
+    @for(item of dockedDialogs; track item.dialogID ) {
+        <div class="ws-dialog-mgr-dock-item">
+            <span class="mr-2">{{item.title}}</span>
+            <div class="ws-dialog-mgr-icons">
+                <i class="pi pi-window-maximize mr-1 ws-dialog-mgr-dock-item-button" 
+                    pRipple
+                    (click)="restoreDialog(item)">
+                </i>
+                
+                <i class="pi pi-times ws-dialog-mgr-dock-item-button"
+                    pRipple
+                    (click)="closeDialog(item)">
+                </i>
+            </div>
+        </div>
+    }
+</div>

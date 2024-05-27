@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoremIpsum } from 'lorem-ipsum';
 import { nanoid } from 'nanoid';
@@ -20,13 +20,14 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction } from 'warskald-ui/models';
-import { FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig } from 'warskald-ui/models';
+import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { isString } from 'lodash';
 import { IsButtonAction } from '../type-guards/page-type-guards';
 import { IpaKeyboardComponent } from '../components/ipa-keyboard/ipa-keyboard.component';
+import { ButtonModule } from 'primeng/button';
 
 const { 
     BUTTON_GROUP,
@@ -58,6 +59,7 @@ export interface MegaMenuConfig {
     standalone: true,
     imports: [
         BlockableUiComponent,
+        ButtonModule,
         CommonModule,
         DynamicComponent,
         ElementRendererComponent,
@@ -423,6 +425,7 @@ export class ShowcaseComponent {
 
     @ViewChild('pageLayout') pageLayout?: PageLayoutComponent;
     @ViewChild('formComponent') formComponent?: ElementRendererComponent;
+    @ViewChild('testContent') testContent?: TemplateRef<unknown>;
     
     // #endregion viewchildren and contentchildren
     
@@ -430,6 +433,7 @@ export class ShowcaseComponent {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
+        private dialogMgr: DialogManagerService,
     ) {
 
     }
@@ -539,6 +543,40 @@ export class ShowcaseComponent {
     
     
     // #region public methods
+
+    public openDialog() {
+        const dialogForm: FormGroup = new FormGroup({});
+        const dialogRef = this.dialogMgr.openModularDialog({
+            dialogID: 'test-dialog',
+            allowMultiple: true,
+            header: 'Test Dialog',
+            appendTo: 'body',
+            closable: true,
+            title: 'Test Dialog',
+            collapsible: true,
+            content: ElementRendererComponent,
+            contentData: <ContainerConfig>{
+                elementType: ElementType.CONTAINER,
+                id: 'container_1',
+                hasForm: true,
+                elements: [
+                    {
+                        elementType: ElementType.INPUT_TEXT,
+                        id: 'text_1',
+                        hasForm: true,
+                        value: 'test',
+                    }
+                ],
+                form: dialogForm,
+            },
+            minimizable: true,
+            showCancelButton: true,
+        });
+
+        dialogRef?.onSubmit.subscribe(() => {
+            console.log('submit:', dialogForm.value);
+        });
+    }
     
     // #endregion public methods
     

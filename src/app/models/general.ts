@@ -79,3 +79,4 @@ export interface ButtonAction {
     data?: WeakObject;
 }
 
+export type HTMLRef = HTMLElement | TemplateRef<unknown> | string;

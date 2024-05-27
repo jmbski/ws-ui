@@ -74,13 +74,15 @@ export class MultiSelectComponent implements MultiSelectConfig, ControlValueAcce
 
     @Input() baseStyles?: StyleGroup = {};
     
-    @Input() options: Partial<MultiSelect> = {};
+    @Input() options: PMultiSelectConfig = {};
 
     @Input() children?: ComponentConfig[];
 
     @Input() layoutStyles?: StyleGroup = {};
 
     @Input() optionValues: SelectItem[] = [];
+
+    @Input() filterValue?: string;
 
     @Input() onChanged: GenericFunction<void> = () => {};
 

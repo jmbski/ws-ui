@@ -62,7 +62,7 @@ export class PullToRefreshComponent {
             document.addEventListener('touchstart', (e) => {
                 touchstartY = e.touches[0].clientY;
                 validStart = touchstartY <= this.pullHeightStart;
-            });
+            }, { passive: false });
 
             document.addEventListener('touchmove', (e) => {
                 const touchY = e.touches[0].clientY;
