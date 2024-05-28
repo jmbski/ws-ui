@@ -126,7 +126,7 @@ export class PropTracker<T> {
                     delete data[key];
                 }
             });
-            localStorage.setItem(this.localStorageKey, JSON.stringify(this._data));
+            localStorage.setItem(this.localStorageKey, JSON.stringify(data));
         }
     }
 
