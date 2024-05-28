@@ -1,7 +1,9 @@
 import { BehaviorSubject } from 'rxjs';
-import { KeyOf } from './general';
-
-
+import { KeyOf, WeakObject } from './general';
+import { isWeakObject, TypeGuard } from '../type-guards/general-type-guards';
+import { LoggableClass } from '../services/log-service/loggable-decorator';
+import { LogLevels } from '../services/log-service/log-service-constants';
+import { cloneDeep } from 'lodash';
 
 export type PropertySubjects<T> = Record<KeyOf<T>, BehaviorSubject<T[KeyOf<T>]>>;
 
@@ -18,6 +20,12 @@ export function buildPropertySubjects<T>(data: T): PropertySubjects<T> {
     return settings;
 }
 
+@LoggableClass({
+    LOCAL_ID: 'PropTracker',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 export class PropTracker<T> {
     
     // #region public properties
@@ -30,7 +38,7 @@ export class PropTracker<T> {
     
     // #region private properties
     
-    private _data: Record<KeyOf<T>, T[KeyOf<T>]>;
+    private _data!: Record<KeyOf<T>, T[KeyOf<T>]>;
 
     // #endregion private properties
     
@@ -61,17 +69,14 @@ export class PropTracker<T> {
     
     
     // #region constructor and lifecycle hooks
-    constructor(private data: T) {
+    constructor(
+        private data: T, 
+        private typeGuard?: TypeGuard<T>,
+        private useLocal: boolean = true,
+        private localStorageKey: string = 'app-data'
+    ) {
         
-        this._data = this.data;
-
-        this.settings = {} as PropertySubjects<T>;
-        for (const key in data) {
-            this.settings[key] = new BehaviorSubject(data[key]);
-            this.settings[key].subscribe(value => {
-                this.changes.next({key, value} as PropertyChange<T>);
-            });
-        }
+        this.loadData();
     }
     
     // #endregion constructor and lifecycle hooks
@@ -112,7 +117,42 @@ export class PropTracker<T> {
     }
 
     public saveLocal(): void {
-        localStorage.setItem('app-data', JSON.stringify(this._data));
+        if(this.useLocal) {
+            localStorage.setItem(this.localStorageKey, JSON.stringify(this._data));
+        }
+    }
+
+    public loadData(): void {
+
+        this.settings = {} as PropertySubjects<T>;
+
+        if(this.useLocal) {
+            const dataStr = localStorage.getItem(this.localStorageKey);
+            if(dataStr) {
+                const data = JSON.parse(dataStr);
+                const typeGuard = this.typeGuard ?? this.defaultTypeGuard; 
+                if(typeGuard(data) && isWeakObject(this.data)) {
+                    Object.assign(this.data, data);
+                }
+            }
+        }
+
+        this._data = cloneDeep(this.data);
+
+        this.settings = {} as PropertySubjects<T>;
+
+        for (const key in this.data) {
+            this.settings[key] = new BehaviorSubject(this._data[key]);
+            this.settings[key].subscribe(value => {
+                this.changes.next({key, value} as PropertyChange<T>);
+            });
+        }
+
+        this.saveLocal();
+    }
+
+    public defaultTypeGuard(data: unknown): data is T {
+        return isWeakObject(data);
     }
     
     // #endregion public methods

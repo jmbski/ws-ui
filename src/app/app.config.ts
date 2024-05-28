@@ -6,6 +6,7 @@ import { ClassRegistry, LogLevels, LogServiceConfig, NgLogService } from 'warska
 import { environment } from 'environment';
 import { WsComponentMap } from 'warskald-ui/components';
 import { ComponentLogLevels } from './common/constants';
+import { PropTracker } from './models/property-tracker';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'showcase', pathMatch: 'full' },
@@ -16,6 +17,21 @@ export const routes: Routes = [
 NgLogService.initialize(<LogServiceConfig>environment.logSettings);
 DataService.initialize();
 ClassRegistry.initialize(WsComponentMap);
+
+export interface AppSettingsConfig {
+    test1?: string;
+    test2?: number;
+    test3?: boolean;
+    test4?: string[];
+    test5?: number[];
+
+    [key: string]: unknown;
+}
+
+export const AppSettings: PropTracker<AppSettingsConfig> = new PropTracker<AppSettingsConfig>({
+    test1: 'test3',
+});
+
 export const appConfig: ApplicationConfig = {
     providers: [
         provideRouter(routes),
