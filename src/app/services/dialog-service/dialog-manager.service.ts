@@ -199,7 +199,7 @@ export class DialogManagerService {
     }
     
     public removeDialog(dialogRef: ModularDialogRef) {
-
+        this.dialogRefsById.delete(dialogRef.dialogID);
         this.removeDialogFromDock(dialogRef);
         this.removeDialogFromZIndexOrder(dialogRef);
         this.removeDialogComponentFromBody(dialogRef);
@@ -286,6 +286,7 @@ export class DialogManagerService {
 
         subs.push(dialogRef.onClose.subscribe(() => {
             this.removeDialog(dialogRef);
+            dialogRef.destroy();
         }));
 
         subs.push(dialogRef.onSubmit.subscribe((...output: unknown[]) => {
@@ -302,6 +303,7 @@ export class DialogManagerService {
 
         subs.push(dialogRef.onDestroy.subscribe(() => {
             this.removeDialogComponentFromBody(dialogRef);
+            subs.forEach(sub => sub.unsubscribe());
         }));
 
         const componentRef = createComponent(ModularDialogComponent, { 
