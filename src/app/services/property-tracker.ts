@@ -1,7 +1,7 @@
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
 import { KeyOf } from 'warskald-ui/models';
-import { TypeGuard, isWeakObject } from 'warskald-ui/type-guards';
+import { TypeGuard, isCast, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './log-service/_index';
 
 export type PropertySubjects<T> = Record<KeyOf<T>, BehaviorSubject<T[KeyOf<T>]>>;
@@ -30,6 +30,8 @@ export class PropTracker<T> {
     // #region public properties
     
     public settings: PropertySubjects<T> = {} as PropertySubjects<T>;
+
+    public ignoredKeys: string[] = [];
 
     public changes: BehaviorSubject<PropertyChange<T>> = new BehaviorSubject<PropertyChange<T>>({key: '', value: ''} as PropertyChange<T>);
     // #endregion public properties
@@ -118,6 +120,12 @@ export class PropTracker<T> {
 
     public saveLocal(): void {
         if(this.useLocal) {
+            const data = cloneDeep(this._data);
+            Object.keys(data).forEach(key => {
+                if(this.ignoredKeys.includes(key) && isCast<KeyOf<T>>(key)) {
+                    delete data[key];
+                }
+            });
             localStorage.setItem(this.localStorageKey, JSON.stringify(this._data));
         }
     }
@@ -149,6 +157,18 @@ export class PropTracker<T> {
         }
 
         this.saveLocal();
+    }
+
+    public setIgnoredKeys(keys: string[]): void {
+        this.ignoredKeys = keys;
+    }
+
+    public addIgnoredKey(key: string): void {
+        this.ignoredKeys.push(key);
+    }
+
+    public removeIgnoredKey(key: string): void {
+        this.ignoredKeys = this.ignoredKeys.filter(k => k !== key);
     }
 
     public defaultTypeGuard(data: unknown): data is T {
