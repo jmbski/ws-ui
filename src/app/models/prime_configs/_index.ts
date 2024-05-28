@@ -3,6 +3,7 @@ export * from './p-auto-complete';
 export * from './p-button';
 export * from './p-calendar';
 export * from './p-color-picker';
+export * from './p-dropdown';
 export * from './p-input-number';
 export * from './p-input-switch';
 export * from './p-input-text';

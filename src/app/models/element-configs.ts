@@ -136,6 +136,7 @@ export interface CheckboxConfig extends FormElementConfig {
 export interface DropdownConfig extends FormElementConfig {
     elementType: ElementType.DROPDOWN;
     optionValues: SelectItem[];
+    options?: PrimeConfigs.PDropdownConfig;
 }
 
 export interface MultiSelectConfig extends FormElementConfig {

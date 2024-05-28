@@ -1,0 +1,66 @@
+import { ScrollerOptions, OverlayOptions } from 'primeng/api';
+import { WeakObject } from '../general';
+
+export interface PDropdownConfig {
+    id?: string;
+    scrollHeight?: string;
+    filter?: boolean;
+    name?: string;
+    style?: WeakObject;
+    panelStyle?: WeakObject;
+    styleClass?: string;
+    panelStyleClass?: string;
+    readonly?: boolean;
+    required?: boolean;
+    editable?: boolean;
+    appendTo?: unknown;
+    tabindex?: number;
+    placeholder?: string;
+    loadingIcon?: string;
+    filterPlaceholder?: string;
+    filterLocale?: string;
+    variant?: 'outlined' | 'filled';
+    inputId?: string;
+    dataKey?: string;
+    filterBy?: string;
+    filterFields?: unknown[];
+    autofocus?: boolean;
+    resetFilterOnHide?: boolean;
+    checkmark?: boolean;
+    dropdownIcon?: string;
+    loading?: boolean;
+    optionLabel?: string;
+    optionValue?: string;
+    optionDisabled?: string;
+    optionGroupLabel?: string;
+    optionGroupChildren?: string;
+    autoDisplayFirst?: boolean;
+    group?: boolean;
+    showClear?: boolean;
+    emptyFilterMessage?: string;
+    emptyMessage?: string;
+    lazy?: boolean;
+    virtualScroll?: boolean;
+    virtualScrollItemSize?: number;
+    virtualScrollOptions?: ScrollerOptions;
+    overlayOptions?: OverlayOptions;
+    ariaFilterLabel?: string;
+    ariaLabel?: string;
+    ariaLabelledBy?: string;
+    filterMatchMode?: 'endsWith' | 'startsWith' | 'contains' | 'equals' | 'notEquals' | 'in' | 'lt' | 'lte' | 'gt' | 'gte';
+    maxlength?: number;
+    tooltip?: string;
+    tooltipPosition?: 'left' | 'top' | 'bottom' | 'right';
+    tooltipPositionStyle?: string;
+    tooltipStyleClass?: string;
+    focusOnHover?: boolean;
+    selectOnFocus?: boolean;
+    autoOptionFocus?: boolean;
+    autofocusFilter?: boolean;
+    disabled?: boolean;
+    filterValue?: string;
+    options?: unknown[];
+
+    [key: string]: unknown;
+}
+
