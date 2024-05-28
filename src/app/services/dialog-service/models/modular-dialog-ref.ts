@@ -127,8 +127,8 @@ export class ModularDialogRef {
      * @param {unknown} value - Data to consume upon submitting.
      * @group Method
      */
-    submit() {
-        this._onSubmit.next();
+    submit(...args: unknown[]) {
+        this._onSubmit.next(args);
     }
 
     /**
@@ -139,8 +139,8 @@ export class ModularDialogRef {
      * 
      * @group Method
      */
-    cancel() {
-        this._onCancel.next();
+    cancel(...args: unknown[]) {
+        this._onCancel.next(args);
     }
 
     private readonly _onClose = new Subject<unknown>();
@@ -233,19 +233,19 @@ export class ModularDialogRef {
      */
     onToggle: Observable<unknown> = this._onToggle.asObservable();
 
-    private readonly _onSubmit = new Subject<void>();
+    private readonly _onSubmit = new Subject<unknown | undefined>();
     /**
      * Event triggered on submit. 
      * @param {unknown} value - Data to consume upon submitting.
      * @group Events
      */
-    onSubmit: Observable<void> = this._onSubmit.asObservable();
+    onSubmit: Observable<unknown | undefined> = this._onSubmit.asObservable();
 
-    private readonly _onCancel = new Subject<void>();
+    private readonly _onCancel = new Subject<unknown | undefined>();
     /**
      * Event triggered on cancel.
      * @group Events
      */
-    onCancel: Observable<void> = this._onCancel.asObservable();
+    onCancel: Observable<unknown | undefined> = this._onCancel.asObservable();
     
 }

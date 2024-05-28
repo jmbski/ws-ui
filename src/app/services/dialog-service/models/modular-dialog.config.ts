@@ -58,10 +58,12 @@ export class ModularDialogConfig {
     showSubmitButton?: boolean;
     submitLabel?: string;
     submitIcon?: string;
+    onSubmit?: GenericFunction<void>;
 
     showCancelButton?: boolean;
     cancelLabel?: string;
     cancelIcon?: string;
+    onCancel?: GenericFunction<void>;
 
     data?: WeakObject;
     customInjectors?: InjectorMapping[];

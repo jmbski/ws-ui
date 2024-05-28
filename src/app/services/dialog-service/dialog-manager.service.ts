@@ -288,18 +288,21 @@ export class DialogManagerService {
             this.removeDialog(dialogRef);
         }));
 
-        subs.push(dialogRef.onSubmit.subscribe((output?: unknown) => {
-            //implement
-            
+        subs.push(dialogRef.onSubmit.subscribe((...output: unknown[]) => {
+            if(config.onSubmit) {
+                config.onSubmit(...output);
+            }
+        }));
+
+        subs.push(dialogRef.onCancel.subscribe((...output: unknown[]) => {
+            if(config.onCancel) {
+                config.onCancel(...output);
+            }
         }));
 
         subs.push(dialogRef.onDestroy.subscribe(() => {
             this.removeDialogComponentFromBody(dialogRef);
         }));
-
-        /* subs.forEach(sub => {
-            sub.unsubscribe();
-        }); */
 
         const componentRef = createComponent(ModularDialogComponent, { 
             environmentInjector: this.appRef.injector, 
