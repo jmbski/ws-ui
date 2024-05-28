@@ -569,6 +569,11 @@ export class ShowcaseComponent {
                 ],
                 form: dialogForm,
             },
+            styles: {
+                style: {
+                    minWidth: '80vw'
+                }
+            },
             minimizable: true,
             showCancelButton: true,
         });

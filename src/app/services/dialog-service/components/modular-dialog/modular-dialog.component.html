@@ -2,7 +2,7 @@
 
     <p-dialog #pDialog 
         [(visible)]="visible" 
-        [style]="style" 
+        [style]="styles?.style" 
         [class]="{'animating': animating}"
         [styleClass]="minimized ? 'p-dialog-minimized' : 'p-dialog-restored'"
         [styleClass]="collapsed ? 'p-dialog-collapsed' : ''"
