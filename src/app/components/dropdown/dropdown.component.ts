@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { DropdownChangeEvent, DropdownFilterEvent, DropdownLazyLoadEvent, DropdownModule } from 'primeng/dropdown';
-import { PDropdownConfig } from 'src/app/models/prime_configs/p-dropdown';
+import { PDropdownConfig } from 'warskald-ui/models';
 import { ComponentConfig, DropdownConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 
