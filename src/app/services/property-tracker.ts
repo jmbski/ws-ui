@@ -98,7 +98,8 @@ export class PropTracker<T> {
     }
 
     public getValue(key: KeyOf<T>): T[KeyOf<T>] {
-        return this.settings[key].value;
+        return this._data[key];
+
     }
 
     public setValue(key: KeyOf<T>, value: T[KeyOf<T>]): void {

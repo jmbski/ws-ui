@@ -8,6 +8,7 @@ import { AppDeviceInfo, LayoutChangeObserver$ } from 'warskald-ui/common';
 import { BlockableUiComponent, MenuBarComponent, MenuBarConfig, NavLogoComponent, NavLogoConfig, PullToRefreshComponent } from 'warskald-ui/components';
 import { PageLayoutConfig, TopNavConfig } from 'warskald-ui/models';
 import { LayoutService, LoggableComponent, LogLevels, NavigationService, WSMenuItem } from 'warskald-ui/services';
+import { AppSettings } from './app.config';
 
 @LoggableComponent({
     LOCAL_ID: 'AppComponent',
@@ -81,6 +82,13 @@ export class AppComponent {
 
         AppDeviceInfo.isMobile = this.deviceDetector.isMobile();
         AppDeviceInfo.isTablet = this.deviceDetector.isTablet();
+
+        AppSettings.settings.test1?.subscribe((value: unknown) => {
+            console.log('test1', value);
+        });
+        AppSettings.setValue('test2', 5);
+        AppSettings.setValue('test1', 'test2');
+        console.log('AppSettings', AppSettings.getValue('alsdjkg'));
     }
 
     ngAfterViewInit() {
