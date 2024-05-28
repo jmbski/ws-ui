@@ -200,6 +200,7 @@ export class DialogManagerService {
     
     public removeDialog(dialogRef: ModularDialogRef) {
         this.dialogRefsById.delete(dialogRef.dialogID);
+        this.modularDialogMap.delete(dialogRef.dialogID);
         this.removeDialogFromDock(dialogRef);
         this.removeDialogFromZIndexOrder(dialogRef);
         this.removeDialogComponentFromBody(dialogRef);

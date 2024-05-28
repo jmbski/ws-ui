@@ -548,7 +548,7 @@ export class ShowcaseComponent {
         const dialogForm: FormGroup = new FormGroup({});
         const dialogRef = this.dialogMgr.openModularDialog({
             dialogID: 'test-dialog',
-            allowMultiple: true,
+            allowMultiple: false,
             header: 'Test Dialog',
             appendTo: 'body',
             closable: true,
