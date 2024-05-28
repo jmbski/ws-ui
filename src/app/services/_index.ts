@@ -6,6 +6,7 @@ export * from './layout-service';
 export * from './log-service/_index';
 export * from './menu-service/_index';
 export * from './nav-service/_index';
+export * from './property-tracker';
 export * from './theme.service';
 export * from './toast-service';
 export * from './utils';

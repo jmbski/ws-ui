@@ -7,6 +7,5 @@ export * from './extensions';
 export * from './general';
 export * from './page-elements';
 export * from './prime_configs/_index';
-export * from './property-tracker';
 export * from './style-types';
 export * from './svg/_index';

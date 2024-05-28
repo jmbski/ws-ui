@@ -1,9 +1,8 @@
 import { BehaviorSubject } from 'rxjs';
-import { KeyOf, WeakObject } from './general';
-import { isWeakObject, TypeGuard } from '../type-guards/general-type-guards';
-import { LoggableClass } from '../services/log-service/loggable-decorator';
-import { LogLevels } from '../services/log-service/log-service-constants';
 import { cloneDeep } from 'lodash';
+import { KeyOf } from 'warskald-ui/models';
+import { TypeGuard, isWeakObject } from 'warskald-ui/type-guards';
+import { LoggableClass, LogLevels } from './log-service/_index';
 
 export type PropertySubjects<T> = Record<KeyOf<T>, BehaviorSubject<T[KeyOf<T>]>>;
 
