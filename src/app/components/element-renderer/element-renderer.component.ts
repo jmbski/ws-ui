@@ -182,7 +182,7 @@ export class ElementRendererComponent implements ContainerConfig {
                     elementId: element.id ?? nanoid(),
                     config: element
                 };
-
+                console.log(this.form);
                 if(element.hasForm && this.form) {
                     if(classType === ElementRendererComponent) {
                         const subGroup = new FormGroup({});
