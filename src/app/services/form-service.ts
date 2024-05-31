@@ -51,6 +51,7 @@ export class FormService {
             element = {
                 elementType,
                 id: propName,
+                label: propName.toFormat('label'),
                 hasForm: true,
             };
 
