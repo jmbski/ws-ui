@@ -44,15 +44,32 @@ export class FormService {
         return undefined;
     }
 
-    public static propToElement(propName: string, propValue: unknown) {
+    public static propToElement(propName: string, propValue: unknown): ComponentConfig[] | undefined {
         const elementType = FormService.getElementType(propValue);
         let element: ComponentConfig | undefined = undefined;
+        let labelElement: ComponentConfig | undefined = undefined;
         if(elementType) {
+            labelElement = {
+                elementType: ElementType.GENERAL,
+                id: `${propName}-label`,
+                value: propName.toFormat('label'),
+                layoutStyles: {
+                    baseClass: 'col-3 flex align-items-center'
+                }
+            };
             element = {
                 elementType,
                 id: propName,
-                label: propName.toFormat('label'),
                 hasForm: true,
+                baseStyles: {
+                    baseClass: 'w-full'
+                },
+                layoutStyles: {
+                    baseClass: 'col-9'
+                },
+                options: {
+                    styleClass: 'w-full'
+                }
             };
 
             if(elementType === ElementType.CONTAINER) {
@@ -70,20 +87,20 @@ export class FormService {
             }
         }
 
-        return element;
+        return (labelElement && element) ? [labelElement, element] : undefined;
         
     }
     
     
     // #region public methods
     public static objToElements(obj: WeakObject)  {
-        const elements: BaseComponentConfig[] = [];
+        const elements: ComponentConfig[] = [];
         for(const propName in obj) {
             if(Object.hasOwn(obj, propName)) {
                 const propValue = obj[propName];
-                const element = FormService.propToElement(propName, propValue);
-                if(element) {
-                    elements.push(element);
+                const subElements = FormService.propToElement(propName, propValue);
+                if(subElements) {
+                    elements.push(...subElements);
                 }
             }
         }

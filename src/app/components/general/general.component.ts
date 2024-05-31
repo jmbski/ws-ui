@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, input, Input, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { nanoid } from 'nanoid';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { ElementType, StyleGroup } from 'warskald-ui/models';
+import { ElementType, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels, NgLogService, RegisterClassType } from 'warskald-ui/services';
 import { isString } from 'warskald-ui/type-guards';
 
@@ -48,6 +49,12 @@ export class GeneralComponent {
     @Input() elementType = ElementType.GENERAL as const;
 
     @Input() id: string = nanoid();
+
+    @Input() hasForm = true as const;
+
+    @Input() options?: WeakObject;
+
+    @Input() form?: FormGroup | FormControl;
     
     @Input() src?: string;
 
@@ -61,7 +68,7 @@ export class GeneralComponent {
 
     @Input() label?: string;
     
-    @Input() value?: unknown;
+    @Input() value?: string;
     
     // #endregion standard inputs
     
@@ -97,7 +104,7 @@ export class GeneralComponent {
         if(element) {
             const newElement: HTMLElement = document.createElement('div');
             newElement.id = this.id + nanoid();
-            newElement.innerHTML = this.content || '';
+            newElement.innerHTML = this.value || '';
             element.appendChild(newElement);
         }
     }

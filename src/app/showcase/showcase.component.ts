@@ -553,11 +553,11 @@ export class ShowcaseComponent {
     // #region public methods
 
     public openDialog() {
-        const topRefs = Array.from(this.formComponent?.componentRefs ?? []);
+        /* const topRefs = Array.from(this.formComponent?.componentRefs ?? []);
         topRefs.forEach((ref) => {
             console.log('ref:', ref._componentRef.changeDetectorRef);
-        });
-        /* const dialogForm: FormGroup = new FormGroup({});
+        }); */
+        const dialogForm: FormGroup = new FormGroup({});
         const dialogRef = this.dialogMgr.openModularDialog({
             dialogID: 'test-dialog',
             allowMultiple: false,
@@ -568,6 +568,13 @@ export class ShowcaseComponent {
             collapsible: true,
             content: ElementRendererComponent,
             contentData: <ContainerConfig>{
+                elements: FormService.objToElements(this.testObj),
+                elementType: ElementType.CONTAINER,
+                id: 'container_1',
+                
+                form: dialogForm,
+            },
+            /* contentData: <ContainerConfig>{
                 elementType: ElementType.CONTAINER,
                 id: 'container_1',
                 hasForm: true,
@@ -610,7 +617,7 @@ export class ShowcaseComponent {
                     }
                 ],
                 form: dialogForm,
-            },
+            }, */
             styles: {
                 style: {
                     minWidth: '80vw'
@@ -622,7 +629,7 @@ export class ShowcaseComponent {
 
         dialogRef?.onSubmit.subscribe(() => {
             console.log('submit:', dialogForm.value);
-        }); */
+        });
     }
     
     // #endregion public methods
