@@ -169,7 +169,7 @@ export interface AutoCompleteConfig extends FormElementConfig {
 export interface InputTextConfig extends FormElementConfig {
     elementType: ElementType.INPUT_TEXT;
     options?: PrimeConfigs.PInputTextConfig;
-    externalListener$?: BehaviorSubject<unknown>;
+    externalListener$?: BehaviorSubject<string>;
 }
 
 

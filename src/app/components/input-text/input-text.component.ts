@@ -89,12 +89,12 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
 
     // #region get/set inputs
 
-    private _externalListener$?: BehaviorSubject<unknown>;
+    private _externalListener$?: BehaviorSubject<string>;
     @Input()
-    get externalListener$(): BehaviorSubject<unknown> | undefined {
+    get externalListener$(): BehaviorSubject<string> | undefined {
         return this._externalListener$;
     }
-    set externalListener$(value: BehaviorSubject<unknown> | undefined) {
+    set externalListener$(value: BehaviorSubject<string> | undefined) {
         if(this._externalListener$) {
             this._externalListener$.unsubscribe();
         }
