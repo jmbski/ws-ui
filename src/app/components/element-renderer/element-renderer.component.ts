@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, QueryList, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig } from 'warskald-ui/models';
+import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig, NgComponentOutletRef } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { IsButtonAction, isCast, isString } from 'warskald-ui/type-guards';
 import { LogLevels, NgLogService, LoggableComponent, initStyleGroups, DataService } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
@@ -117,7 +117,7 @@ export class ElementRendererComponent implements ContainerConfig {
     
     // #region viewchildren and contentchildren
 
-    @ViewChildren(ViewContainerRefDirective) public viewContainerRefs?: ViewContainerRefDirective[];
+    @ViewChildren(NgComponentOutlet) componentRefs?: QueryList<NgComponentOutletRef>;
     
     // #endregion viewchildren and contentchildren
     
@@ -158,7 +158,6 @@ export class ElementRendererComponent implements ContainerConfig {
         initStyleGroups.bind(this)();
         this.model$.next(this.toModels(this.elements));
         this.cd.detectChanges();
-        
     }
     // #endregion constructor and lifecycle hooks
     
@@ -182,7 +181,7 @@ export class ElementRendererComponent implements ContainerConfig {
                     elementId: element.id ?? nanoid(),
                     config: element
                 };
-                console.log(this.form);
+                
                 if(element.hasForm && this.form) {
                     if(classType === ElementRendererComponent) {
                         const subGroup = new FormGroup({});

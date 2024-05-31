@@ -538,6 +538,9 @@ export class ShowcaseComponent {
             });
         }); */
     }
+
+    ngAfterViewInit() {
+    }
     
     // #endregion constructor and lifecycle hooks
     
@@ -545,7 +548,11 @@ export class ShowcaseComponent {
     // #region public methods
 
     public openDialog() {
-        const dialogForm: FormGroup = new FormGroup({});
+        const topRefs = Array.from(this.formComponent?.componentRefs ?? []);
+        topRefs.forEach((ref) => {
+            console.log('ref:', ref._componentRef.changeDetectorRef);
+        });
+        /* const dialogForm: FormGroup = new FormGroup({});
         const dialogRef = this.dialogMgr.openModularDialog({
             dialogID: 'test-dialog',
             allowMultiple: false,
@@ -610,7 +617,7 @@ export class ShowcaseComponent {
 
         dialogRef?.onSubmit.subscribe(() => {
             console.log('submit:', dialogForm.value);
-        });
+        }); */
     }
     
     // #endregion public methods

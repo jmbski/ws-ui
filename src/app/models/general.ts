@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, TemplateRef, Type } from '@angular/core';
+import { ChangeDetectorRef, ComponentRef, TemplateRef, Type } from '@angular/core';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -80,3 +80,9 @@ export interface ButtonAction {
 }
 
 export type HTMLRef = HTMLElement | TemplateRef<unknown> | string;
+
+export interface NgComponentOutletRef {
+    _componentRef: ComponentRef<unknown>;
+
+    [key: string]: unknown;
+}
