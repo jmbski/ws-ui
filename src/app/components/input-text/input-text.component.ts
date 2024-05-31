@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
+import { BehaviorSubject } from 'rxjs';
 import { ComponentConfig, InputTextConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PInputTextConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 
@@ -87,6 +88,23 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
 
 
     // #region get/set inputs
+
+    private _externalListener$?: BehaviorSubject<unknown>;
+    @Input()
+    get externalListener$(): BehaviorSubject<unknown> | undefined {
+        return this._externalListener$;
+    }
+    set externalListener$(value: BehaviorSubject<unknown> | undefined) {
+        if(this._externalListener$) {
+            this._externalListener$.unsubscribe();
+        }
+        this._externalListener$ = value;
+        if(value) {
+            value.subscribe((newValue) => {
+                this.writeValue(newValue as string);
+            });
+        }
+    }
 
     // #endregion get/set inputs
 

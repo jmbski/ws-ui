@@ -18,6 +18,7 @@ import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'pri
 import { TreeSelectNodeExpandEvent, TreeSelectNodeCollapseEvent } from 'primeng/treeselect';
 import { AccordionTabCloseEvent, AccordionTabOpenEvent } from 'primeng/accordion';
 import { AutoCompleteCompleteEvent, AutoCompleteSelectEvent, AutoCompleteUnselectEvent, AutoCompleteDropdownClickEvent, AutoCompleteLazyLoadEvent } from 'primeng/autocomplete';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * Represents an element to render on a page
@@ -168,7 +169,7 @@ export interface AutoCompleteConfig extends FormElementConfig {
 export interface InputTextConfig extends FormElementConfig {
     elementType: ElementType.INPUT_TEXT;
     options?: PrimeConfigs.PInputTextConfig;
-
+    externalListener$?: BehaviorSubject<unknown>;
 }
 
 

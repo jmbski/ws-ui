@@ -28,6 +28,7 @@ import { isString } from 'lodash';
 import { IsButtonAction } from '../type-guards/page-type-guards';
 import { IpaKeyboardComponent } from '../components/ipa-keyboard/ipa-keyboard.component';
 import { ButtonModule } from 'primeng/button';
+import { BehaviorSubject } from 'rxjs';
 
 const { 
     BUTTON_GROUP,
@@ -154,6 +155,8 @@ export class ShowcaseComponent {
         }
     };
 
+    public textListener$: BehaviorSubject<string> = new BehaviorSubject<string>('');
+
     public formComponents: ComponentConfig[] = [
 
         {
@@ -202,6 +205,7 @@ export class ShowcaseComponent {
             },
             onClickHandler: (event: MouseEvent) => {
                 console.log('Button Clicked');
+                this.textListener$.next('test from subject');
             }
         },
         {
@@ -332,7 +336,8 @@ export class ShowcaseComponent {
             label: 'Test Input 2',
             layoutStyles: {
                 baseClass: 'col-4'
-            }
+            },
+            externalListener$: this.textListener$
         },
         {
             elementType: ElementType.IPA_KEYBOARD,
