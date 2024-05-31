@@ -106,6 +106,18 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
         }
     }
 
+    private _disabled: boolean = false;
+    @Input() 
+    get disabled(): boolean {
+        return this._disabled;
+    }
+    set disabled(value: boolean) {
+        this._disabled = value;
+        if(this.setDisabledState) {
+            this.setDisabledState(value);
+        }
+    }
+
     // #endregion get/set inputs
 
 
