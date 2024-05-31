@@ -165,7 +165,7 @@ export interface AutoCompleteConfig extends FormElementConfig {
 }
 
 
-export interface InputTextConfig extends BaseComponentConfig {
+export interface InputTextConfig extends FormElementConfig {
     elementType: ElementType.INPUT_TEXT;
     options?: PrimeConfigs.PInputTextConfig;
 

@@ -1,5 +1,5 @@
 import { InputNumber } from 'primeng/inputnumber';
-import { BaseComponentConfig, ElementType, ObjectOf, WeakObject } from 'warskald-ui/models';
+import { BaseComponentConfig, ComponentConfig, ElementType, ObjectOf, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
 
 
@@ -46,7 +46,7 @@ export class FormService {
 
     public static propToElement(propName: string, propValue: unknown) {
         const elementType = FormService.getElementType(propValue);
-        let element: BaseComponentConfig | undefined = undefined;
+        let element: ComponentConfig | undefined = undefined;
         if(elementType) {
             element = {
                 elementType,
