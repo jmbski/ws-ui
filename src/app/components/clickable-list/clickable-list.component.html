@@ -1,0 +1,37 @@
+@if(orientation === 'vertical') {
+    <ul
+        class="ws-clickable-list-vertical"
+        [class]="listStyleClasses"
+        [style]="listStyles?.style">
+
+        @for(item of value; track value) {
+            @if(useRipple) {
+                <li
+                    class="ws-clickable-list-item"
+                    [class]="itemStyleClasses"
+                    [style]="itemStyles?.style">
+                    <span pRipple
+                        [class]="itemSpanStyleClasses"
+                        [style]="itemSpanStyles?.style"
+                        (click)="clickHandler!(item, $event)">
+                        {{item}}
+                    </span>
+                </li>
+            }
+            @else {
+                <li
+                    class="ws-clickable-list-item"
+                    [class]="itemStyleClasses"
+                    [style]="itemStyles?.style">
+                    <span
+                        [class]="itemSpanStyleClasses"
+                        [style]="itemSpanStyles?.style"
+                        (click)="clickHandler!(item, $event)">
+                        {{item}}
+                    </span>
+                </li>
+            }
+            
+        }
+    </ul>
+}

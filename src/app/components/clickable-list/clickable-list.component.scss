@@ -1,0 +1,22 @@
+@import 'primeflex/primeflex.scss';
+
+.ws-clickable {
+    &-list {
+        &-item {
+            &-span {
+                cursor: pointer;
+                border-radius: 5px;
+                padding: 0 .5rem;
+                transition: all 0.3s ease;
+                background-color: var(--surface-100);
+                display: flex;
+                width: fit-content;
+                @extend .shadow-4;
+            }
+
+            &-span:hover {
+                background-color: var(--surface-200);
+            }
+        }
+    }
+}

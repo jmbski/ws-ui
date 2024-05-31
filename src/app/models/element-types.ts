@@ -5,6 +5,7 @@ export enum ElementType {
     BUTTON_GROUP = 'button-group',
     CALENDAR = 'calendar',
     CHECKBOX = 'checkbox',
+    CLICKABLE_LIST = 'clickable-list',
     COLOR_PICKER = 'color-picker',
     COMPONENT = 'component',
     CONTAINER = 'container',

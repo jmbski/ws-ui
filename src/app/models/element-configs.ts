@@ -342,6 +342,14 @@ export interface GeneralComponentConfig extends BaseComponentConfig {
     elementType: ElementType.GENERAL;
 }
 
+export interface ClickableListConfig extends BaseComponentConfig {
+    elementType: ElementType.CLICKABLE_LIST;
+    value: string[];
+    useRipple?: boolean;
+    clickHandler?: GenericFunction<void>;
+    orientation?: 'horizontal' | 'vertical';
+}
+
 export interface IpaKeyboardConfig extends FormElementConfig {
     elementType: ElementType.IPA_KEYBOARD;
     attachTo?: string;
@@ -362,6 +370,7 @@ export type ComponentConfig =
     ButtonGroupConfig |
     CalendarConfig |
     CheckboxConfig |
+    ClickableListConfig |
     ColorPickerConfig |
     ContainerConfig |
     DropdownConfig |

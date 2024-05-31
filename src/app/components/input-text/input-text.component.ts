@@ -182,7 +182,7 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
     }
 
     public disableForm(): void {
-        this.form?.disable();
+        this.form?.disable();  
         this.innerControl.disable();
     }
 

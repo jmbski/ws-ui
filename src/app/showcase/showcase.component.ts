@@ -158,7 +158,16 @@ export class ShowcaseComponent {
     public textListener$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
     public formComponents: ComponentConfig[] = [
-
+        {
+            elementType: ElementType.CLICKABLE_LIST,
+            id: 'clickable_list_1',
+            clickHandler: (item: string, event: MouseEvent) => {
+                console.log('clicked:', item);
+            },
+            hasForm: true,
+            orientation: 'vertical',
+            value: ['test1', 'test2', 'test3'],
+        },
         {
             elementType: ElementType.MULTI_SELECT,
             value: [],

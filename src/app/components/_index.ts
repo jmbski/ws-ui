@@ -37,6 +37,7 @@ import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { Type } from '@angular/core';
 import { WsTableComponent } from './ws-table/_index';
 import { IpaKeyboardComponent } from './ipa-keyboard/ipa-keyboard.component';
+import { ClickableListComponent } from './clickable-list/clickable-list.component';
 
 export * from './accordion/accordion.component';
 export * from './auto-complete/auto-complete.component';
@@ -82,6 +83,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     ButtonGroupComponent,
     CalendarComponent,
     CheckboxComponent,
+    ClickableListComponent,
     ColorPickerComponent,
     DropdownComponent,
     DynamicComponent,
@@ -118,6 +120,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.BUTTON_GROUP]: ButtonGroupComponent,
     [ElementType.CALENDAR]: CalendarComponent,
     [ElementType.CHECKBOX]: CheckboxComponent,
+    [ElementType.CLICKABLE_LIST]: ClickableListComponent,
     [ElementType.COLOR_PICKER]: ColorPickerComponent,
     [ElementType.COMPONENT]: ElementRendererComponent,
     [ElementType.CONTAINER]: ElementRendererComponent,
