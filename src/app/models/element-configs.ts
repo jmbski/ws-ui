@@ -365,6 +365,7 @@ export type ComponentConfig =
     ContainerConfig |
     DropdownConfig |
     FormElementConfig |
+    GeneralComponentConfig |
     HtmlEditorConfig |
     InputNumberConfig |
     InputSwitchConfig |
