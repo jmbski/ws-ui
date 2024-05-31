@@ -170,6 +170,7 @@ export interface InputTextConfig extends FormElementConfig {
     elementType: ElementType.INPUT_TEXT;
     options?: PrimeConfigs.PInputTextConfig;
     externalListener$?: BehaviorSubject<string>;
+    disabled?: boolean;
 }
 
 
