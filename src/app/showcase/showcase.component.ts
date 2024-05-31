@@ -337,7 +337,8 @@ export class ShowcaseComponent {
             layoutStyles: {
                 baseClass: 'col-4'
             },
-            externalListener$: this.textListener$
+            disabled: true,
+            //externalListener$: this.textListener$
         },
         {
             elementType: ElementType.IPA_KEYBOARD,

@@ -154,6 +154,8 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
                 this.writeValue(value);
             }
         });
+
+        this.disabled = this._disabled;
     }
 
     // #endregion constructor and lifecycle hooks
@@ -176,7 +178,17 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
     }
 
     public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
+        isDisabled ? this.disableForm() : this.enableForm();
+    }
+
+    public disableForm(): void {
+        this.form?.disable();
+        this.innerControl.disable();
+    }
+
+    public enableForm(): void {
+        this.form?.enable();
+        this.innerControl.enable();
     }
 
     // #endregion public methods
