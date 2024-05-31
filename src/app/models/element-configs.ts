@@ -337,6 +337,10 @@ export interface AutoCompleteConfig extends FormElementConfig {
     onLazyLoadHandler?: (event: AutoCompleteLazyLoadEvent) => void;
 }
 
+export interface GeneralComponentConfig extends BaseComponentConfig {
+    elementType: ElementType.GENERAL;
+}
+
 export interface IpaKeyboardConfig extends FormElementConfig {
     elementType: ElementType.IPA_KEYBOARD;
     attachTo?: string;
