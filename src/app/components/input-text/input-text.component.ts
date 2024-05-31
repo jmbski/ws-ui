@@ -101,7 +101,7 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
         this._externalListener$ = value;
         if(value) {
             value.subscribe((newValue) => {
-                this.writeValue(newValue as string);
+                this.writeValue(newValue);
             });
         }
     }
@@ -152,6 +152,7 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
     public writeValue(obj: string): void {
         this.value = obj;
         this.form?.patchValue(this.value);
+        this.cd.detectChanges();
     }
 
     public registerOnChange(fn: GenericFunction<unknown>): void {
