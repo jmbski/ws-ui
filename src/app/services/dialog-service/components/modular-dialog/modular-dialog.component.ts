@@ -52,6 +52,7 @@ export class ModularDialogComponent {
     public collapseIconElement?: HTMLElement;
 
     public showSubmitButton: boolean = true;
+    public submitAutoFocus: boolean = true;
     public submitLabel: string = 'Submit';
     public submitIcon: string = 'pi pi-check';
     public innerSubmitHandler?: GenericFunction<unknown>;

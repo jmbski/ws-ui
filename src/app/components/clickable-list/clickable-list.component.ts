@@ -82,7 +82,7 @@ export class ClickableListComponent implements ClickableListConfig {
 
     @Input() layoutStyles?: StyleGroup = {};
 
-    @Input() orientation?: 'horizontal' | 'vertical' = 'horizontal';
+    @Input() orientation?: 'horizontal' | 'vertical' = 'vertical';
 
     @Input() useRipple?: boolean = true;
 

@@ -58,6 +58,7 @@ export class ModularDialogConfig {
     showSubmitButton?: boolean;
     submitLabel?: string;
     submitIcon?: string;
+    submitAutoFocus?: boolean = true;
     onSubmit?: GenericFunction<void>;
 
     showCancelButton?: boolean;
