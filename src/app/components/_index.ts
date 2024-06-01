@@ -51,6 +51,7 @@ export * from './color-picker/color-picker.component';
 export * from './dropdown/dropdown.component';
 export * from './dynamic/dynamic.component';
 export * from './element-renderer/element-renderer.component';
+export * from './element-renderer/form-dialog';
 export * from './general/general.component';
 export * from './html-editor/html-editor.component';
 export * from './image/image.component';
