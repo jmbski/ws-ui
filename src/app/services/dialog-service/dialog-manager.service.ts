@@ -294,12 +294,14 @@ export class DialogManagerService {
             if(config.onSubmit) {
                 config.onSubmit(...output);
             }
+            dialogRef.close();
         }));
 
         subs.push(dialogRef.onCancel.subscribe((...output: unknown[]) => {
             if(config.onCancel) {
                 config.onCancel(...output);
             }
+            dialogRef.close();
         }));
 
         subs.push(dialogRef.onDestroy.subscribe(() => {
