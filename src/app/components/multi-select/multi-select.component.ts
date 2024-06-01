@@ -6,6 +6,7 @@ import { MultiSelect, MultiSelectBlurEvent, MultiSelectChangeEvent, MultiSelectF
 import { ComponentConfig, MultiSelectConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PMultiSelectConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { isWeakObject } from 'warskald-ui/type-guards';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'MultiSelectComponent',
@@ -31,16 +32,13 @@ import { isWeakObject } from 'warskald-ui/type-guards';
     templateUrl: './multi-select.component.html',
     styleUrl: './multi-select.component.scss'
 })
-export class MultiSelectComponent implements MultiSelectConfig, ControlValueAccessor {
+export class MultiSelectComponent extends BaseWidget<unknown> implements MultiSelectConfig, ControlValueAccessor {
 
     // #region public properties
 
     public defaultBaseStyleClass: string = 'app-multi-select w-full';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl('');
-
 
     [key: string]: unknown;
 
@@ -61,32 +59,12 @@ export class MultiSelectComponent implements MultiSelectConfig, ControlValueAcce
     @Input() elementType = ElementType.MULTI_SELECT as const;
 
     @Input() value: string[] = [];
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PMultiSelectConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
 
     @Input() optionValues: SelectItem[] = [];
 
     @Input() filterValue?: string;
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onMouseEnterHandler(event: unknown): void {}
 
@@ -134,7 +112,7 @@ export class MultiSelectComponent implements MultiSelectConfig, ControlValueAcce
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
+        super(cd);
     }
 
     ngOnInit() {
@@ -154,23 +132,6 @@ export class MultiSelectComponent implements MultiSelectConfig, ControlValueAcce
 
 
     // #region public methods
-
-    public writeValue(obj: string[]): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

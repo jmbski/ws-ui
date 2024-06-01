@@ -5,6 +5,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { BehaviorSubject } from 'rxjs';
 import { ComponentConfig, InputTextConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PInputTextConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'InputTextComponent',
@@ -30,7 +31,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './input-text.component.html',
     styleUrl: './input-text.component.scss'
 })
-export class InputTextComponent implements InputTextConfig, ControlValueAccessor {
+export class InputTextComponent extends BaseWidget<string> implements InputTextConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -38,8 +39,6 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
     public defaultBaseStyleClass: string = 'app-input-text';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(undefined);
 
 
     [key: string]: unknown;
@@ -61,28 +60,8 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
     @Input() elementType = ElementType.INPUT_TEXT as const;
 
     @Input() value: string = '';
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options?: WeakObject;
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     // #endregion standard inputs
 
@@ -106,18 +85,6 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
         }
     }
 
-    private _disabled: boolean = false;
-    @Input() 
-    get disabled(): boolean {
-        return this._disabled;
-    }
-    set disabled(value: boolean) {
-        this._disabled = value;
-        if(this.setDisabledState) {
-            this.setDisabledState(value);
-        }
-    }
-
     // #endregion get/set inputs
 
 
@@ -135,61 +102,13 @@ export class InputTextComponent implements InputTextConfig, ControlValueAccessor
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
-
-        this.form?.valueChanges.subscribe((value) => {
-            if(value !== this.value) {
-                this.writeValue(value);
-            }
-        });
-
-        this.disabled = this._disabled;
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: string): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-        this.cd.detectChanges();
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.disableForm() : this.enableForm();
-    }
-
-    public disableForm(): void {
-        this.form?.disable();  
-        this.innerControl.disable();
-    }
-
-    public enableForm(): void {
-        this.form?.enable();
-        this.innerControl.enable();
-    }
 
     // #endregion public methods
 

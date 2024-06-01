@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { SelectButtonChangeEvent, SelectButtonModule, SelectButtonOptionClickEvent } from 'primeng/selectbutton';
 import { ComponentConfig, SelectButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSelectButtonConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'SelectButtonComponent',
@@ -29,7 +30,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './select-button.component.html',
     styleUrl: './select-button.component.scss'
 })
-export class SelectButtonComponent implements SelectButtonConfig, ControlValueAccessor {
+export class SelectButtonComponent extends BaseWidget<unknown> implements SelectButtonConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -37,8 +38,6 @@ export class SelectButtonComponent implements SelectButtonConfig, ControlValueAc
     public defaultBaseStyleClass: string = 'app-select-button';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(undefined);
 
 
     [key: string]: unknown;
@@ -60,28 +59,8 @@ export class SelectButtonComponent implements SelectButtonConfig, ControlValueAc
     @Input() elementType = ElementType.SELECT_BUTTON as const;
 
     @Input() value: boolean = false;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PSelectButtonConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
     
     @Input() onOptionClickHandler(event: SelectButtonOptionClickEvent): void {}
 
@@ -109,42 +88,13 @@ export class SelectButtonComponent implements SelectButtonConfig, ControlValueAc
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: boolean): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

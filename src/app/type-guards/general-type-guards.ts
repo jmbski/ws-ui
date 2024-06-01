@@ -1,6 +1,7 @@
 import { TemplateRef, Type } from '@angular/core';
 import { CssStyleObject, GenericFunction, WeakObject, TypedRecord, StyleGroup, UnionTypeOf } from 'warskald-ui/models';
 import { isEmpty } from 'lodash';
+import { FormControl, FormGroup } from '@angular/forms';
 
 /**
      * Checks if the input is a string indexed object.
@@ -305,4 +306,8 @@ export function isCast<T>(value: unknown): value is T {
 
 export function castAs<T>(value: unknown): T {
     return value as T;
+}
+
+export function isForm(obj: unknown): obj is FormControl | FormGroup {
+    return obj instanceof FormControl || obj instanceof FormGroup;
 }

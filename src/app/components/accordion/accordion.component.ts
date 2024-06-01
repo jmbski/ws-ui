@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { Accordion, AccordionModule, AccordionTabCloseEvent, AccordionTabOpenEvent } from 'primeng/accordion';
 import { ComponentConfig, AccordionConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PAccordionConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'AccordionComponent',
@@ -21,7 +22,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './accordion.component.html',
     styleUrl: './accordion.component.scss'
 })
-export class AccordionComponent implements AccordionConfig {
+export class AccordionComponent extends BaseWidget<unknown> implements AccordionConfig {
 
     // #region public properties
 
@@ -50,24 +51,8 @@ export class AccordionComponent implements AccordionConfig {
     @Input() elementType = ElementType.ACCORDION as const;
 
     @Input() value: unknown = undefined;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PAccordionConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
 
     @Input() onCloseHandler(event: AccordionTabCloseEvent): void {}
 
@@ -98,12 +83,7 @@ export class AccordionComponent implements AccordionConfig {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks

@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { Calendar, CalendarModule, CalendarMonthChangeEvent, CalendarYearChangeEvent } from 'primeng/calendar';
 import { ComponentConfig, CalendarConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PCalendarConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'CalendarComponent',
@@ -29,7 +30,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './calendar.component.html',
     styleUrl: './calendar.component.scss'
 })
-export class CalendarComponent implements CalendarConfig, ControlValueAccessor {
+export class CalendarComponent extends BaseWidget<unknown> implements CalendarConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -37,8 +38,6 @@ export class CalendarComponent implements CalendarConfig, ControlValueAccessor {
     public defaultBaseStyleClass: string = 'app-calendar';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(undefined);
 
 
     [key: string]: unknown;
@@ -60,28 +59,8 @@ export class CalendarComponent implements CalendarConfig, ControlValueAccessor {
     @Input() elementType = ElementType.CALENDAR as const;
 
     @Input() value: unknown = undefined;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PCalendarConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onFocusHandler(event: Event): void {}
 
@@ -132,42 +111,13 @@ export class CalendarComponent implements CalendarConfig, ControlValueAccessor {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods 
-
-    public writeValue(obj: unknown): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn; 
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

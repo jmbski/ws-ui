@@ -3,6 +3,7 @@ import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { ButtonAction, ButtonGroupConfig, ButtonTemplate, DataSource, ElementType, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { DataService, initStyleGroups, LoggableComponent, LogLevels, RegisterClassType } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @RegisterClassType(ElementType.BUTTON_GROUP)
 @LoggableComponent({
@@ -21,7 +22,7 @@ import { DataService, initStyleGroups, LoggableComponent, LogLevels, RegisterCla
     templateUrl: './button-group.component.html',
     styleUrl: './button-group.component.scss'
 })
-export class ButtonGroupComponent implements ButtonGroupConfig {
+export class ButtonGroupComponent extends BaseWidget<unknown> implements ButtonGroupConfig {
 
     // #region public properties
 
@@ -54,19 +55,16 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
     
     // #region standard inputs
 
-    @Input() label?: string | undefined;
     @Input() elementType = ElementType.BUTTON_GROUP as const;
-    @Input() id: string = '';
+
     @Input() value?: unknown = '';
-    @Input() baseStyles?: StyleGroup = {};
+
     @Input() options?: WeakObject = {};
-    @Input() layoutStyles?: StyleGroup = {};
 
     @Input() buttonStyles?: StyleGroup = {};
 
     @Input() buttons: ButtonTemplate[] = [];
 
-    @Input() actionID?: string;
     // #endregion standard inputs
     
     
@@ -89,23 +87,9 @@ export class ButtonGroupComponent implements ButtonGroupConfig {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    } 
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        if(this.actionID) {
-            const endIndex = this.actionID.indexOf('_Actions');
-            if(endIndex > 0) {
-                const rootID = this.actionID.substring(0, endIndex);
-                this.actionTarget = `ElementRendererComponent_${rootID}`;
-            }
-            this.actionDataSource = DataService.getDataSource(this.actionID);
-        }
-        console.log('\nACTIONS:\n', this.actionID); 
+        super(cd);
     }
-
-    ngAfterViewInit() {      
-    }
+    
     // #endregion constructor and lifecycle hooks
     
     

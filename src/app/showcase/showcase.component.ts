@@ -139,7 +139,7 @@ export class ShowcaseComponent {
     public actionMap: FunctionMap = {
         submit: (data?: WeakObject) => {
             
-            console.log('submit', this.formGroup.get(<string>data?.id)?.value, data);
+            console.log('submit', this.formGroup.value, data);
         },
         cancel: () => {
             console.log('cancel');
@@ -198,7 +198,7 @@ export class ShowcaseComponent {
                     label: 'Submit',
                     action: {
                         name: 'submit',
-                        data: { id: 'text_2' }
+                        data: { id: 'text_area_1' }
                     }
                 }
             ],
@@ -325,7 +325,7 @@ export class ShowcaseComponent {
                 rows: 5,
                 cols: 30,
 
-            }
+            },
         },
         {
             elementType: ElementType.HTML_EDITOR,

@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { CheckboxChangeEvent, CheckboxModule } from 'primeng/checkbox';
 import { ComponentConfig, CheckboxConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'CheckboxComponent',
@@ -29,13 +30,13 @@ import { LoggableComponent, LogLevels } from 'warskald-ui/services';
     templateUrl: './checkbox.component.html',
     styleUrl: './checkbox.component.scss'
 })
-export class CheckboxComponent implements CheckboxConfig, ControlValueAccessor {
+export class CheckboxComponent extends BaseWidget<boolean> implements CheckboxConfig, ControlValueAccessor {
 
     // #region public properties
 
+    public defaultBaseStyleClass: string = 'ws-checkbox';
 
-    public innerControl: FormControl = new FormControl(false);
-
+    public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
     [key: string]: unknown;
 
@@ -56,28 +57,8 @@ export class CheckboxComponent implements CheckboxConfig, ControlValueAccessor {
     @Input() elementType = ElementType.CHECKBOX as const;
 
     @Input() value: boolean = false;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup;
     
     @Input() options?: WeakObject;
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup;
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onChangeHandler(event: CheckboxChangeEvent): void {}
    
@@ -107,39 +88,13 @@ export class CheckboxComponent implements CheckboxConfig, ControlValueAccessor {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: boolean): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

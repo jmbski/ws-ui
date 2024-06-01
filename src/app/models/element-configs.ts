@@ -69,6 +69,8 @@ export interface BaseComponentConfig {
      * Styles and classes to use for the layout of the element
      */
     layoutStyles?: StyleGroup;
+    
+    disabled?: boolean;
 
     [key: string]: unknown;
 }

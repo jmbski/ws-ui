@@ -6,6 +6,7 @@ import { DropdownChangeEvent, DropdownFilterEvent, DropdownLazyLoadEvent, Dropdo
 import { PDropdownConfig } from 'warskald-ui/models';
 import { ComponentConfig, DropdownConfig, ElementType, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'DropdownComponent',
@@ -31,7 +32,7 @@ import { LoggableComponent, LogLevels } from 'warskald-ui/services';
     templateUrl: './dropdown.component.html',
     styleUrl: './dropdown.component.scss'
 })
-export class DropdownComponent implements DropdownConfig, ControlValueAccessor {
+export class DropdownComponent extends BaseWidget<string> implements DropdownConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -39,8 +40,6 @@ export class DropdownComponent implements DropdownConfig, ControlValueAccessor {
     public defaultBaseStyleClass: string = 'app-dropdown';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl('');
 
 
     [key: string]: unknown;
@@ -62,30 +61,10 @@ export class DropdownComponent implements DropdownConfig, ControlValueAccessor {
     @Input() elementType = ElementType.DROPDOWN as const;
 
     @Input() value: string = '';
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options?: PDropdownConfig;
 
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
     @Input() optionValues: SelectItem[] = [];
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onMouseEnterHandler(event: unknown): void {}
 
@@ -129,39 +108,13 @@ export class DropdownComponent implements DropdownConfig, ControlValueAccessor {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: string): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

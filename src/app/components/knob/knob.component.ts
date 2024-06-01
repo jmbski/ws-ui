@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { KnobModule } from 'primeng/knob';
 import { ComponentConfig, KnobConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PKnobConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'KnobComponent',
@@ -29,7 +30,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './knob.component.html',
     styleUrl: './knob.component.scss'
 })
-export class KnobComponent implements KnobConfig, ControlValueAccessor {
+export class KnobComponent extends BaseWidget<number> implements KnobConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -37,8 +38,6 @@ export class KnobComponent implements KnobConfig, ControlValueAccessor {
     public defaultBaseStyleClass: string = 'app-knob';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(undefined);
 
 
     [key: string]: unknown;
@@ -60,28 +59,8 @@ export class KnobComponent implements KnobConfig, ControlValueAccessor {
     @Input() elementType = ElementType.KNOB as const;
 
     @Input() value: number = 0;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PKnobConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onChangeHandler(event: number): void {}
 
@@ -107,42 +86,13 @@ export class KnobComponent implements KnobConfig, ControlValueAccessor {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: number): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

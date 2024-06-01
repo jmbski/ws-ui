@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { RippleModule } from 'primeng/ripple';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'IpaKeyboardComponent',
@@ -38,15 +39,13 @@ import { RippleModule } from 'primeng/ripple';
     templateUrl: './ipa-keyboard.component.html',
     styleUrl: './ipa-keyboard.component.scss'
 })
-export class IpaKeyboardComponent implements FormElementConfig {
+export class IpaKeyboardComponent extends BaseWidget<string> implements FormElementConfig {
 
     // #region public properties
 
     public defaultBaseStyleClass: string = 'app-ipa-keyboard';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(undefined);
 
     public ipaMap: IpaData[] = IpaMapping;
 
@@ -77,28 +76,8 @@ export class IpaKeyboardComponent implements FormElementConfig {
     @Input() elementType = ElementType.IPA_KEYBOARD as const;
 
     @Input() value: string = '';
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options?: WeakObject;
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() attachTo?: string;
 
@@ -125,49 +104,13 @@ export class IpaKeyboardComponent implements FormElementConfig {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        
+        super(cd);
     }
 
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
-        if(this.actionID) {
-            const endIndex = this.actionID.indexOf('_Actions');
-            if(endIndex > 0) {
-                const rootID = this.actionID.substring(0, endIndex);
-                this.actionTarget = `ElementRendererComponent_${rootID}`;
-            }
-            this.actionDataSource = DataService.getDataSource(this.actionID);
-        }
-    }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
-
-    public writeValue(obj: string): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     public showDialog(): void {
         this.visible = true;

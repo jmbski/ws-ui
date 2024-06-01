@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { SliderChangeEvent, SliderModule, SliderSlideEndEvent } from 'primeng/slider';
 import { ComponentConfig, SliderConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PSliderConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'SliderComponent',
@@ -29,7 +30,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './slider.component.html',
     styleUrl: './slider.component.scss'
 })
-export class SliderComponent implements SliderConfig, ControlValueAccessor {
+export class SliderComponent extends BaseWidget<number> implements SliderConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -37,8 +38,6 @@ export class SliderComponent implements SliderConfig, ControlValueAccessor {
     public defaultBaseStyleClass: string = 'app-slider';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl(0);
 
 
     [key: string]: unknown;
@@ -60,29 +59,9 @@ export class SliderComponent implements SliderConfig, ControlValueAccessor {
     @Input() elementType = ElementType.SLIDER as const;
 
     @Input() value: number = 0;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PSliderConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
-
+    
     @Input() onChangeHandler(event: SliderChangeEvent): void {}
 
     @Input() onSlideEndHandler(event: SliderSlideEndEvent): void {}
@@ -109,42 +88,13 @@ export class SliderComponent implements SliderConfig, ControlValueAccessor {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: number): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

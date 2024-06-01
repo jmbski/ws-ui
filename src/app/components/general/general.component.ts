@@ -5,6 +5,7 @@ import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { ElementType, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels, NgLogService, RegisterClassType } from 'warskald-ui/services';
 import { isString } from 'warskald-ui/type-guards';
+import { BaseWidget } from '../base-widget';
 
 @RegisterClassType(ElementType.GENERAL)
 @LoggableComponent({
@@ -22,7 +23,7 @@ import { isString } from 'warskald-ui/type-guards';
     templateUrl: './general.component.html',
     styleUrl: './general.component.scss'
 })
-export class GeneralComponent {
+export class GeneralComponent extends BaseWidget<unknown> {
     // #region public properties
 
     public defaultBaseStyleClass = '';
@@ -48,25 +49,11 @@ export class GeneralComponent {
     
     @Input() elementType = ElementType.GENERAL as const;
 
-    @Input() id: string = nanoid();
-
-    @Input() hasForm = true as const;
-
     @Input() options?: WeakObject;
-
-    @Input() form?: FormGroup | FormControl;
     
     @Input() src?: string;
 
-    @Input() baseStyles?: StyleGroup = {};
-
-    @Input() layoutStyles?: StyleGroup;
-
-    @Input() actionID?: string;
-
     @Input() content?: string;
-
-    @Input() label?: string;
     
     @Input() value?: string;
     
@@ -95,7 +82,7 @@ export class GeneralComponent {
         public cd: ChangeDetectorRef,
         public el: ElementRef,
     ) {
-        
+        super(cd);
     }
 
     ngOnInit() {

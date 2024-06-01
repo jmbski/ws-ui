@@ -4,6 +4,7 @@ import { FormControl, FormGroup } from '@angular/forms';
 import { RippleModule } from 'primeng/ripple';
 import { ClickableListConfig, ComponentConfig, ElementType, GenericFunction, PButtonConfig, StyleGroup } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'ClickableListComponent',
@@ -21,7 +22,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './clickable-list.component.html',
     styleUrl: './clickable-list.component.scss'
 })
-export class ClickableListComponent implements ClickableListConfig {
+export class ClickableListComponent extends BaseWidget<unknown> implements ClickableListConfig {
 
     // #region public properties
 
@@ -63,24 +64,8 @@ export class ClickableListComponent implements ClickableListConfig {
     @Input() elementType = ElementType.CLICKABLE_LIST as const;
 
     @Input() value: string[] = [];
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PButtonConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
 
     @Input() orientation?: 'horizontal' | 'vertical' = 'vertical';
 
@@ -118,12 +103,9 @@ export class ClickableListComponent implements ClickableListConfig {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        
+        super(cd);
     }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-    }
+    
     // #endregion constructor and lifecycle hooks
     
     

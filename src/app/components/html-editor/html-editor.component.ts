@@ -7,6 +7,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
 import { EditorInitEvent, EditorModule, EditorTextChangeEvent } from 'primeng/editor';
 import { debounceTime } from 'rxjs';
 import Quill from 'quill';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'HtmlEditorComponent',
@@ -32,7 +33,7 @@ import Quill from 'quill';
     templateUrl: './html-editor.component.html',
     styleUrl: './html-editor.component.scss'
 })
-export class HtmlEditorComponent implements HtmlEditorConfig, ControlValueAccessor {
+export class HtmlEditorComponent extends BaseWidget<unknown> implements HtmlEditorConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -62,26 +63,8 @@ export class HtmlEditorComponent implements HtmlEditorConfig, ControlValueAccess
     // #region standard inputs
     
     @Input() elementType = ElementType.HTML_EDITOR as const;
-
-    @Input() id: string = nanoid();
     
     @Input() src?: string;
-
-    @Input() baseStyles?: StyleGroup = {};
-
-    @Input() layoutStyles?: StyleGroup;
-
-    @Input() actionID?: string;
-
-    @Input() label?: string;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl<unknown>;
-
-    @Input() onChange: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
     
     // #endregion standard inputs
     
@@ -95,7 +78,7 @@ export class HtmlEditorComponent implements HtmlEditorConfig, ControlValueAccess
     }
     set value(input: string) {
         this._value = input;
-        this.onChange(input);
+        this.onChanged(input);
         this.onTouched();
         this.form?.patchValue(input);
     }
@@ -117,7 +100,7 @@ export class HtmlEditorComponent implements HtmlEditorConfig, ControlValueAccess
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        
+        super(cd);
     }
 
     ngAfterViewInit() {
@@ -128,31 +111,6 @@ export class HtmlEditorComponent implements HtmlEditorConfig, ControlValueAccess
     
     
     // #region public methods
-
-    
-    
-    writeValue(obj: string): void {
-        this.value = obj;
-    }
-
-    registerOnChange(fn: GenericFunction<void>): void {
-        this.onChange = fn;
-    }
-
-    registerOnTouched(fn: GenericFunction<void>): void {
-        this.onTouched = fn;
-    }
-
-    setDisabledState?(isDisabled: boolean): void {
-        if(isDisabled) {
-            this.editorControl.disable();
-            this.form?.disable();
-        }
-        else {
-            this.editorControl.enable();
-            this.form?.enable();
-        }
-    }
 
     public onTextChange(event: EditorTextChangeEvent) {
 

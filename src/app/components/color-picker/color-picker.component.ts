@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { ColorPicker, ColorPickerChangeEvent, ColorPickerModule } from 'primeng/colorpicker';
 import { ComponentConfig, ColorPickerConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PColorPickerConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'ColorPickerComponent',
@@ -29,7 +30,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './color-picker.component.html',
     styleUrl: './color-picker.component.scss'
 })
-export class ColorPickerComponent implements ColorPickerConfig, ControlValueAccessor {
+export class ColorPickerComponent extends BaseWidget<string> implements ColorPickerConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -37,8 +38,6 @@ export class ColorPickerComponent implements ColorPickerConfig, ControlValueAcce
     public defaultBaseStyleClass: string = 'app-color-picker';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-    public innerControl: FormControl = new FormControl('');
 
 
     [key: string]: unknown;
@@ -60,28 +59,8 @@ export class ColorPickerComponent implements ColorPickerConfig, ControlValueAcce
     @Input() elementType = ElementType.COLOR_PICKER as const;
 
     @Input() value: string = '';
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PColorPickerConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onChangeHandler(event: ColorPickerChangeEvent): void {}
 
@@ -113,42 +92,13 @@ export class ColorPickerComponent implements ColorPickerConfig, ControlValueAcce
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: string): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

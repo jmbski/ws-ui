@@ -10,6 +10,7 @@ import { LogLevels, NgLogService, LoggableClass } from './log-service/_index';
 import { WSMenuItem } from './menu-service/_index';
 import { ChangeDetectorRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
+import { DataService } from './data-service/data-service';
 
 export interface XMLPropertyDef {
     name: string;
@@ -303,6 +304,20 @@ export class Utils  {
 
 export function hasChangeDetector(value: unknown): value is BaseComponentClass {
     return isWeakObject(value) && Object.hasOwn(value, 'cd');
+}
+
+export function initActions(this: unknown) {
+
+    if(isWeakObject(this)) {
+        if(isString(this.actionID)) {
+            const endIndex = this.actionID.indexOf('_Actions');
+            if(endIndex > 0) {
+                const rootID = this.actionID.substring(0, endIndex);
+                this.actionTarget = `ElementRendererComponent_${rootID}`;
+            }
+            this.actionDataSource = DataService.getDataSource(this.actionID);
+        }
+    }
 }
 
 export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = true) {

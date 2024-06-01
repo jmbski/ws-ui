@@ -4,6 +4,7 @@ import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, Reacti
 import { Button, ButtonModule } from 'primeng/button';
 import { ComponentConfig, ButtonConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PButtonConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'ButtonComponent',
@@ -22,7 +23,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './button.component.html',
     styleUrl: './button.component.scss'
 })
-export class ButtonComponent implements ButtonConfig {
+export class ButtonComponent extends BaseWidget<unknown> implements ButtonConfig {
 
     // #region public properties
 
@@ -51,28 +52,8 @@ export class ButtonComponent implements ButtonConfig {
     @Input() elementType = ElementType.BUTTON as const;
 
     @Input() value: unknown = undefined;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PButtonConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() onClickHandler(event: MouseEvent): void {}
 
@@ -105,14 +86,7 @@ export class ButtonComponent implements ButtonConfig {
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks

@@ -5,6 +5,7 @@ import { SelectItem } from 'primeng/api';
 import { AutoComplete, AutoCompleteCompleteEvent, AutoCompleteDropdownClickEvent, AutoCompleteLazyLoadEvent, AutoCompleteModule, AutoCompleteSelectEvent, AutoCompleteUnselectEvent } from 'primeng/autocomplete';
 import { ComponentConfig, AutoCompleteConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PAutoCompleteConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 @LoggableComponent({
     LOCAL_ID: 'AutoCompleteComponent',
@@ -30,7 +31,7 @@ import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/servi
     templateUrl: './auto-complete.component.html',
     styleUrl: './auto-complete.component.scss'
 })
-export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAccessor {
+export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCompleteConfig, ControlValueAccessor {
 
     // #region public properties
 
@@ -38,8 +39,6 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     public defaultBaseStyleClass: string = 'app-auto-complete';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-    
-    public innerControl: FormControl = new FormControl(undefined);
 
     public suggestions: WeakObject[] = [];
 
@@ -63,28 +62,8 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     @Input() elementType = ElementType.AUTO_COMPLETE as const;
 
     @Input() value: unknown = undefined;
-
-    @Input() hasForm = true as const;
-
-    @Input() form?: FormControl | FormGroup;
-
-    @Input() label?: string;
-
-    @Input() actionID?: string;
-
-    @Input() id: string = '';
-
-    @Input() baseStyles?: StyleGroup = {};
     
     @Input() options: PAutoCompleteConfig = {};
-
-    @Input() children?: ComponentConfig[];
-
-    @Input() layoutStyles?: StyleGroup = {};
-
-    @Input() onChanged: GenericFunction<void> = () => {};
-
-    @Input() onTouched: GenericFunction<void> = () => {};
 
     @Input() completeMethodHandler(event: AutoCompleteCompleteEvent): void {}
 
@@ -131,42 +110,13 @@ export class AutoCompleteComponent implements AutoCompleteConfig, ControlValueAc
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-    
-    }
-
-    ngOnInit() {
-        initStyleGroups.bind(this)();
-        this.cd.detectChanges();
-
-        this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            this.onChanged(value);
-            this.onTouched(value);
-            this.writeValue(value);
-        });
+        super(cd);
     }
 
     // #endregion constructor and lifecycle hooks
 
 
     // #region public methods
-
-    public writeValue(obj: unknown): void {
-        this.value = obj;
-        this.form?.patchValue(this.value);
-    }
-
-    public registerOnChange(fn: GenericFunction<unknown>): void {
-        this.onChange = fn;
-    }
-
-    public registerOnTouched(fn: GenericFunction<unknown>): void {
-        this.onTouched = fn;
-    }
-
-    public setDisabledState?(isDisabled: boolean): void {
-        isDisabled ? this.innerControl?.disable() : this.innerControl?.enable();
-    }
 
     // #endregion public methods
 

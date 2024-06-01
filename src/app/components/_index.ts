@@ -41,6 +41,7 @@ import { ClickableListComponent } from './clickable-list/clickable-list.componen
 
 export * from './accordion/accordion.component';
 export * from './auto-complete/auto-complete.component';
+export * from './base-widget';
 export * from './blockable-ui/blockable-ui.component';
 export * from './button-group/button-group.component';
 export * from './button/button.component';
