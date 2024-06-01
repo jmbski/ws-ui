@@ -29,6 +29,7 @@ import { IsButtonAction } from '../type-guards/page-type-guards';
 import { IpaKeyboardComponent } from '../components/ipa-keyboard/ipa-keyboard.component';
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject } from 'rxjs';
+import { getFormDialog } from '../components/element-renderer/form-dialog';
 
 const { 
     BUTTON_GROUP,
@@ -567,78 +568,13 @@ export class ShowcaseComponent {
         topRefs.forEach((ref) => {
             console.log('ref:', ref._componentRef.changeDetectorRef);
         }); */
-        const dialogForm: FormGroup = new FormGroup({});
-        const dialogRef = this.dialogMgr.openModularDialog({
-            dialogID: 'test-dialog',
-            allowMultiple: false,
-            header: 'Test Dialog',
-            appendTo: 'body',
-            closable: true,
-            title: 'Test Dialog',
-            collapsible: true,
-            content: ElementRendererComponent,
-            contentData: <ContainerConfig>{
-                elements: FormService.objToElements(this.testObj),
-                elementType: ElementType.CONTAINER,
-                id: 'container_1',
-                
-                form: dialogForm,
-            },
-            /* contentData: <ContainerConfig>{
-                elementType: ElementType.CONTAINER,
-                id: 'container_1',
-                hasForm: true,
-                elements: [
-                    {
-                        elementType: ElementType.DROPDOWN,
-                        id: 'text_1',
-                        hasForm: true,
-                        value: 'test1',
-                        options: {
-                            optionLabel: 'label',
-                            optionValue: 'value',
-                            showClear: true,
-                            style: {
-                                width: '100%'
-                            }
-                        },
-                        optionValues: [
-                            {
-                                label: 'Test 1',
-                                value: 'test1'
-                            },
-                            {
-                                label: 'Test 2',
-                                value: 'test2'
-                            },
-                            {
-                                label: 'Test 3',
-                                value: 'test3'
-                            },
-                            {
-                                label: 'Test 4',
-                                value: 'test4'
-                            },
-                            {
-                                label: 'Test 5',
-                                value: 'test5'
-                            },
-                        ]
-                    }
-                ],
-                form: dialogForm,
-            }, */
-            styles: {
-                style: {
-                    minWidth: '80vw'
-                }
-            },
-            minimizable: true,
-            showCancelButton: true,
-        });
+
+        const { options, form } = getFormDialog('Test Dialog', FormService.objToElements(this.testObj));
+        
+        const dialogRef = this.dialogMgr.openModularDialog(options);
 
         dialogRef?.onSubmit.subscribe(() => {
-            console.log('submit:', dialogForm.value);
+            console.log('submit:', form.value);
         });
     }
     
