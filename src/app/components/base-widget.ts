@@ -95,7 +95,6 @@ export class BaseWidget<T> {
 
         this.innerControl = new FormControl(this.value);
         this.innerControl.valueChanges.subscribe((value) => {
-            console.log('internal change', value, this.value);
             if(value !== this.value) {
                 this.onChanged(value);
                 this.onTouched(value);
@@ -104,7 +103,6 @@ export class BaseWidget<T> {
         });
 
         this.form?.valueChanges.subscribe((value) => {
-            console.log('external change', value, this.value);
             if(value !== this.value) {
                 this.writeValue(value);
             }
