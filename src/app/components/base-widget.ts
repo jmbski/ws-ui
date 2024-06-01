@@ -121,6 +121,7 @@ export class BaseWidget<T> {
     public writeValue(obj: T): void {
         this.value = obj;
         this.form?.patchValue(this.value);
+        this._cd.detectChanges();
     }
     
 
