@@ -6,6 +6,8 @@ import { LoggableClass, LogLevels } from './log-service/_index';
 
 export type PropertySubjects<T> = Record<KeyOf<T>, BehaviorSubject<ValueOf<T>>>;
 
+export type UpdaterFunctionMap<T> = Record<KeyOf<T>, GenericFunction<unknown>>;
+
 export interface PropertyChange<T> {
     key: KeyOf<T>;
     value: ValueOf<T>;
@@ -42,7 +44,7 @@ export class PropTracker<T> {
     
     private _data!: Record<KeyOf<T>, ValueOf<T>>;
 
-    private _updateFunctionMap: FunctionMap = {};
+    private _updateFunctionMap: UpdaterFunctionMap<T> = {} as UpdaterFunctionMap<T>;
 
     // #endregion private properties
     
@@ -162,7 +164,7 @@ export class PropTracker<T> {
         this.saveLocal();
     }
 
-    public setUpdateFunctions(funcMap: FunctionMap): void {
+    public setUpdateFunctions(funcMap: UpdaterFunctionMap<T>): void {
         this._updateFunctionMap = funcMap;
     }
 
