@@ -7,6 +7,7 @@ import { environment } from 'environment';
 import { WsComponentMap } from 'warskald-ui/components';
 import { ComponentLogLevels } from './common/constants';
 import { PropTracker } from './services/property-tracker';
+import { nanoid } from 'nanoid';
 
 export const routes: Routes = [
     { path: '', redirectTo: 'showcase', pathMatch: 'full' },
@@ -30,6 +31,13 @@ export interface AppSettingsConfig {
 
 export const AppSettings: PropTracker<AppSettingsConfig> = new PropTracker<AppSettingsConfig>({
     test1: 'test3',
+});
+
+AppSettings.setUpdateFunctions({
+    test1: () => {
+        const newVal = nanoid();
+        AppSettings.settings.test1.next(newVal);
+    }
 });
 
 export const appConfig: ApplicationConfig = {

@@ -452,6 +452,17 @@ export class ShowcaseComponent {
         private dialogMgr: DialogManagerService,
     ) {
 
+        interface test {
+            test: number;
+            test2?: string;
+            test3?: string;
+        }
+
+        const test: test = {
+            test: 5,
+        };
+
+        console.log('PROTO',Object.getPrototypeOf(test));
     }
 
     ngOnInit() {

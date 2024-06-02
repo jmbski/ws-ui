@@ -1,14 +1,14 @@
 import { BehaviorSubject } from 'rxjs';
 import { cloneDeep } from 'lodash';
-import { KeyOf } from 'warskald-ui/models';
+import { FunctionMap, GenericFunction, KeyOf, ValueOf } from 'warskald-ui/models';
 import { TypeGuard, isCast, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './log-service/_index';
 
-export type PropertySubjects<T> = Record<KeyOf<T>, BehaviorSubject<T[KeyOf<T>]>>;
+export type PropertySubjects<T> = Record<KeyOf<T>, BehaviorSubject<ValueOf<T>>>;
 
 export interface PropertyChange<T> {
     key: KeyOf<T>;
-    value: T[KeyOf<T>];
+    value: ValueOf<T>;
 }
 
 export function buildPropertySubjects<T>(data: T): PropertySubjects<T> {
@@ -34,12 +34,15 @@ export class PropTracker<T> {
     public ignoredKeys: string[] = [];
 
     public changes: BehaviorSubject<PropertyChange<T>> = new BehaviorSubject<PropertyChange<T>>({key: '', value: ''} as PropertyChange<T>);
+
     // #endregion public properties
     
     
     // #region private properties
     
-    private _data!: Record<KeyOf<T>, T[KeyOf<T>]>;
+    private _data!: Record<KeyOf<T>, ValueOf<T>>;
+
+    private _updateFunctionMap: FunctionMap = {};
 
     // #endregion private properties
     
@@ -74,7 +77,7 @@ export class PropTracker<T> {
         private data: T, 
         private typeGuard?: TypeGuard<T>,
         private useLocal: boolean = true,
-        private localStorageKey: string = 'app-data'
+        private localStorageKey: string = 'app-data',
     ) {
         
         this.loadData();
@@ -99,12 +102,12 @@ export class PropTracker<T> {
         this.saveLocal();
     }
 
-    public getValue(key: KeyOf<T>): T[KeyOf<T>] {
+    public getValue(key: KeyOf<T>): ValueOf<T> {
         return this._data[key];
 
     }
 
-    public setValue(key: KeyOf<T>, value: T[KeyOf<T>]): void {
+    public setValue(key: KeyOf<T>, value: ValueOf<T>): void {
         this._data[key] = value;
         if(key in this.settings) {
             this.settings[key].next(value);
@@ -157,6 +160,30 @@ export class PropTracker<T> {
         }
 
         this.saveLocal();
+    }
+
+    public setUpdateFunctions(funcMap: FunctionMap): void {
+        this._updateFunctionMap = funcMap;
+    }
+
+    public addUpdateFunction(key: KeyOf<T>, func: GenericFunction<unknown>): void {
+        this._updateFunctionMap[key] = func;
+    }
+
+    public updateValue(key: KeyOf<T>, value?: ValueOf<T>): void {
+        if(key in this._updateFunctionMap) {
+            this._updateFunctionMap[key](value);
+        }
+    }
+
+    public updateValues(data: T): void {
+        for (const key in data) {
+            this.updateValue(key, data[key]);
+        }
+    }
+
+    public removeUpdateFunction(key: KeyOf<T>): void {
+        delete this._updateFunctionMap[key];
     }
 
     public setIgnoredKeys(keys: string[]): void {

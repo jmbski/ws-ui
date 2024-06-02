@@ -68,7 +68,7 @@ export type FunctionMap = Record<string, GenericFunction<unknown>>;
 
 export type KeyOf<T> = Extract<keyof T, string>;
 
-export type ValueOf<T> = T[keyof T];
+export type ValueOf<T> = T[KeyOf<T>];
 
 export type ObjectOf<T> = Partial<Record<KeyOf<T>, ValueOf<T>>>;
 

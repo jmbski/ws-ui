@@ -88,7 +88,8 @@ export class AppComponent {
         });
         AppSettings.setValue('test2', 5);
         AppSettings.setValue('test1', 'test2');
-        console.log('AppSettings', AppSettings.getValue('alsdjkg'));
+        AppSettings.updateValue('test1');
+        console.log('AppSettings', AppSettings.getValue('test1'));
     }
 
     ngAfterViewInit() {

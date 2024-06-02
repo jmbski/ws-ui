@@ -25,6 +25,7 @@ export enum ElementType {
     SELECT_BUTTON = 'select-button',
     SLIDER = 'slider',
     SPLIT_BUTTON = 'split-button',
+    STEPPER = 'stepper',
     TEXT_AREA = 'text-area',
     TEXT_BLOCK = 'text-block',
     TOGGLE_BUTTON = 'toggle-button',

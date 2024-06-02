@@ -1,5 +1,5 @@
 import { TemplateRef, Type } from '@angular/core';
-import { CssStyleObject, GenericFunction, WeakObject, TypedRecord, StyleGroup, UnionTypeOf } from 'warskald-ui/models';
+import { CssStyleObject, GenericFunction, WeakObject, TypedRecord, StyleGroup, UnionTypeOf, KeyOf } from 'warskald-ui/models';
 import { isEmpty } from 'lodash';
 import { FormControl, FormGroup } from '@angular/forms';
 
@@ -310,4 +310,8 @@ export function castAs<T>(value: unknown): T {
 
 export function isForm(obj: unknown): obj is FormControl | FormGroup {
     return obj instanceof FormControl || obj instanceof FormGroup;
+}
+
+export function isKeyOf<T>(value: unknown, obj: T): value is KeyOf<T> {
+    return isWeakObject(obj) && isString(value) && Object.keys(obj).includes(value);
 }

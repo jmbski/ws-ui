@@ -69,7 +69,7 @@ export interface BaseComponentConfig {
      * Styles and classes to use for the layout of the element
      */
     layoutStyles?: StyleGroup;
-    
+
     disabled?: boolean;
 
     [key: string]: unknown;
@@ -144,9 +144,9 @@ export interface DropdownConfig extends FormElementConfig {
 
 export interface MultiSelectConfig extends FormElementConfig {
     elementType: ElementType.MULTI_SELECT;
-    value: unknown[];
-    optionValues: SelectItem[];
-    options: PrimeConfigs.PMultiSelectConfig;
+    value?: unknown[];
+    optionValues?: SelectItem[];
+    options?: PrimeConfigs.PMultiSelectConfig;
     onClickHandler?: (event: Event) => void;
     onMouseEnterHandler?: (event: unknown) => void;
     onChangeHandler?: (event: MultiSelectChangeEvent) => void;
@@ -360,6 +360,14 @@ export interface IpaKeyboardConfig extends FormElementConfig {
 export interface IpaAction {
     target: string;
     char: string;
+}
+
+export interface StepperConfig extends BaseComponentConfig {
+    elementType: ElementType.STEPPER;
+    options?: PrimeConfigs.PStepperConfig;
+    onClickHandler?: GenericFunction<void>;
+    activeStepChangeHandler?: GenericFunction<void>;
+    children?: ContainerConfig[];
 }
 
 /**

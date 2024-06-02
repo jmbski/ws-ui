@@ -38,6 +38,7 @@ import { Type } from '@angular/core';
 import { WsTableComponent } from './ws-table/_index';
 import { IpaKeyboardComponent } from './ipa-keyboard/ipa-keyboard.component';
 import { ClickableListComponent } from './clickable-list/clickable-list.component';
+import { StepperComponent } from './stepper/stepper.component';
 
 export * from './accordion/accordion.component';
 export * from './auto-complete/auto-complete.component';
@@ -108,6 +109,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     SelectButtonComponent,
     SliderComponent,
     SplitButtonComponent,
+    StepperComponent,
     SvgComponent,
     TabbedResponseTableComponent,
     TextAreaComponent,
@@ -141,6 +143,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.SELECT_BUTTON]: SelectButtonComponent,
     [ElementType.SLIDER]: SliderComponent,
     [ElementType.SPLIT_BUTTON]: SplitButtonComponent,
+    [ElementType.STEPPER]: StepperComponent,
     [ElementType.TEXT_AREA]: TextAreaComponent,
     [ElementType.TEXT_BLOCK]: TextBlockComponent,
     [ElementType.TOGGLE_BUTTON]: ToggleButtonComponent,

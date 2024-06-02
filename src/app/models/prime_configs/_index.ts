@@ -15,5 +15,6 @@ export * from './p-radio-button';
 export * from './p-select-button';
 export * from './p-slider';
 export * from './p-split-button';
+export * from './p-stepper';
 export * from './p-toggle-button';
 export * from './p-tree-select';
