@@ -367,7 +367,15 @@ export function initStyleGroups(this: unknown, onlyStylePropNames: boolean = tru
     this.cd.detectChanges();
 }
 
-export function formToObject(form: FormControl | FormGroup): WeakObject {
-    console.log('formToObject', form.value);
-    return {};
+export function parseCssString(value: string) {
+    const cssObj: WeakObject = {};
+    const cssArray: string[] = value.split(';');
+    cssArray.forEach((css: string) => {
+        const cssPair: string[] = css.split(':');
+        if(cssPair.length === 2) {
+            cssObj[cssPair[0].trim()] = cssPair[1].trim();
+        }
+    });
+    return cssObj;
 }
+

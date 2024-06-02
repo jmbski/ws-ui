@@ -16,7 +16,7 @@ export enum ElementType {
     INPUT_NUMBER = 'input-number',
     INPUT_SWITCH = 'input-switch',
     INPUT_TEXT = 'input-text',
-    IPA_KEYBOARD = 'ipa-keyboard',
+    CUSTOM_KEYS = 'custom-keys',
     KNOB = 'knob',
     MULTI_SELECT = 'multi-select',
     PANEL = 'panel',

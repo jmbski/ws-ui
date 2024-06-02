@@ -1,24 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { ComponentConfig, DataSource, ElementType, FormElementConfig, GenericFunction, StyleGroup, WeakObject } from 'warskald-ui/models';
-import { DataService, initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
-import { IpaData, IpaMapping } from './ipa-map';
+import { ComponentConfig, DataSource, ElementType, FormElementConfig, GenericFunction, PButtonConfig, StyleGroup, WeakObject } from 'warskald-ui/models';
+import { DataService, initStyleGroups, LoggableComponent, LogLevels, parseCssString } from 'warskald-ui/services';
+import { IpaMapping } from './ipa-map';
+import { CharMap } from 'src/app/models/element-configs';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { RippleModule } from 'primeng/ripple';
 import { BaseWidget } from '../base-widget';
+import { isString, isWeakObject } from 'warskald-ui/type-guards';
 
 @LoggableComponent({
-    LOCAL_ID: 'IpaKeyboardComponent',
+    LOCAL_ID: 'CustomKeysComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Error
+    localLogLevel: LogLevels.Debug
 })
 @Component({
-    selector: 'ws-ipa-keyboard',
+    selector: 'ws-custom-keys',
     standalone: true,
     imports: [
         ButtonModule,
@@ -32,22 +34,45 @@ import { BaseWidget } from '../base-widget';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            useExisting: forwardRef(() => IpaKeyboardComponent),
+            useExisting: forwardRef(() => CustomKeysComponent),
             multi: true
         }
     ],
-    templateUrl: './ipa-keyboard.component.html',
-    styleUrl: './ipa-keyboard.component.scss'
+    templateUrl: './custom-keys.component.html',
+    styleUrl: './custom-keys.component.scss'
 })
-export class IpaKeyboardComponent extends BaseWidget<string> implements FormElementConfig {
+export class CustomKeysComponent extends BaseWidget<string> implements FormElementConfig {
 
     // #region public properties
 
-    public defaultBaseStyleClass: string = 'app-ipa-keyboard';
+    public defaultBaseStyleClass: string = 'app-custom-keys';
+
+    public defaultPanelStyleClass: string = 'app-custom-keys-panel';
+
+    public defaultPanelBodyStyleClass: string = 'app-custom-keys-panel-body';
+
+    public defaultPanelCharButtonStyleClass: string = 'app-custom-keys-panel-char-button';
+
+    public defaultPanelCharTextStyleClass: string = 'app-custom-keys-panel-char-button-text';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
+    
+    public panelStyleClasses: string[] = [this.defaultPanelStyleClass];
 
-    public ipaMap: IpaData[] = IpaMapping;
+    public panelBodyStyleClasses: string[] = [this.defaultPanelBodyStyleClass];
+
+    public panelCharButtonStyleClasses: string[] = [this.defaultPanelCharButtonStyleClass];
+
+    public panelCharTextStyleClasses: string[] = [this.defaultPanelCharTextStyleClass];
+
+
+    public panelStyleClass: string = this.defaultPanelStyleClass;
+
+    public defaultPanelStyle: WeakObject = {
+        width: '25rem',
+    };
+
+    public panelStyle: WeakObject = {};
 
     public visible: boolean = true;
 
@@ -67,26 +92,41 @@ export class IpaKeyboardComponent extends BaseWidget<string> implements FormElem
     
     
     // #region getters/setters
-    
+
     // #endregion getters/setters
     
     
     // #region standard inputs
     
-    @Input() elementType = ElementType.IPA_KEYBOARD as const;
+    @Input() elementType = ElementType.CUSTOM_KEYS as const;
 
     @Input() value: string = '';
     
-    @Input() options?: WeakObject;
+    @Input() options: PButtonConfig = {};
+
+    @Input() panelOptions?: Partial<OverlayPanel>;
 
     @Input() attachTo?: string;
+
+    @Input() charMap!: CharMap[];
+
+    @Input() icon: string = 'pi pi-language';
+
+    @Input() panelStyles?: StyleGroup = {};
+
+    @Input() panelBodyStyles?: StyleGroup = {};
+
+    @Input() panelCharButtonStyles?: StyleGroup = {};
+
+    @Input() panelCharTextStyles?: StyleGroup = {};
+    
 
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
-    
+
     // #endregion get/set inputs
     
     
@@ -105,6 +145,30 @@ export class IpaKeyboardComponent extends BaseWidget<string> implements FormElem
         public cd: ChangeDetectorRef,
     ) {
         super(cd);
+    }
+
+    ngOnInit() {
+        this.charMap ??= IpaMapping;
+        this.label ??= 'IPA';
+    }
+
+    ngAfterViewInit() {
+        this.panelStyleClass = this.panelStyleClasses.join(' ');
+
+        const { style } = this.panelStyles ?? {};
+        let panelStyle: WeakObject = {};
+
+        if(isString(style)) {
+            panelStyle = parseCssString(style);
+        }
+        else if(isWeakObject(style)) {
+            panelStyle = style;
+        }
+
+        this.panelStyle = {
+            ...this.defaultPanelStyle,
+            ...panelStyle,
+        };
     }
 
     // #endregion constructor and lifecycle hooks

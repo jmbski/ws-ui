@@ -1,0 +1,35 @@
+@import 'primeflex/primeflex.scss';
+
+.op-toggle-button {
+    transition: all 0.3s ease;
+}
+
+.op-toggle-button:hover {
+    background-color: var(--surface-50);
+    box-shadow: 0px 1px 10px rgba(58, 80, 95, 0.12), 0px 4px 5px rgba(58, 80, 95, 0.12), 0px 2px 4px -1px rgba(58, 80, 95, 0.12) !important;
+    cursor: pointer;
+}
+
+.app-custom-keys-panel {
+    width: 25rem;
+
+    &-body {
+        @extend .grid;
+        @extend .grid-nogutter;
+        @extend .pt-2;
+    }
+
+    &-char-button {
+        @extend .col-1;
+        @extend .shadow-4;
+        @extend .border-round;
+        @extend .m-1;
+        @extend .op-toggle-button;
+        @extend .flex;
+        @extend .justify-content-center;
+
+        &-text {
+            @extend .text-2xl;
+        }
+    }
+}

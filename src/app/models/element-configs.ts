@@ -352,12 +352,26 @@ export interface ClickableListConfig extends BaseComponentConfig {
     orientation?: 'horizontal' | 'vertical';
 }
 
-export interface IpaKeyboardConfig extends FormElementConfig {
-    elementType: ElementType.IPA_KEYBOARD;
-    attachTo?: string;
+export interface CharMap {
+    char: string;
+    decimal?: number;
+    hex?: string;
+    tooltip?: string;
 }
 
-export interface IpaAction {
+export interface CustomKeysConfig extends FormElementConfig {
+    elementType: ElementType.CUSTOM_KEYS;
+    attachTo?: string;
+    options?: PrimeConfigs.PButtonConfig;
+    charMap?: CharMap[];
+    icon?: string;
+    panelStyles?: StyleGroup;
+    panelBodyStyles?: StyleGroup;
+    panelCharButtonStyles?: StyleGroup;
+    panelCharTextStyles?: StyleGroup;
+}
+
+export interface CustomCharAction {
     target: string;
     char: string;
 }
@@ -390,7 +404,7 @@ export type ComponentConfig =
     InputNumberConfig |
     InputSwitchConfig |
     InputTextConfig |
-    IpaKeyboardConfig |
+    CustomKeysConfig |
     KnobConfig |
     MultiSelectConfig |
     PanelConfig |

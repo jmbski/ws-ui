@@ -26,7 +26,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SelectItem } from 'primeng/api';
 import { isString } from 'lodash';
 import { IsButtonAction } from '../type-guards/page-type-guards';
-import { IpaKeyboardComponent } from '../components/ipa-keyboard/ipa-keyboard.component';
+import { CustomKeysComponent } from '../components/custom-keys/custom-keys.component';
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject } from 'rxjs';
 import { getFormDialog } from '../components/element-renderer/form-dialog';
@@ -67,7 +67,7 @@ export interface MegaMenuConfig {
         ElementRendererComponent,
         HtmlEditorComponent,
         ImageComponent,
-        IpaKeyboardComponent,
+        CustomKeysComponent,
         MenuBarComponent,
         NavLogoComponent,
         PageLayoutComponent,
@@ -351,7 +351,7 @@ export class ShowcaseComponent {
             //externalListener$: this.textListener$
         },
         {
-            elementType: ElementType.IPA_KEYBOARD,
+            elementType: ElementType.CUSTOM_KEYS,
             id: 'ipa_1',
             hasForm: true,
             attachTo: 'text_2',

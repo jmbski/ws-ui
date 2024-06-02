@@ -36,7 +36,7 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { Type } from '@angular/core';
 import { WsTableComponent } from './ws-table/_index';
-import { IpaKeyboardComponent } from './ipa-keyboard/ipa-keyboard.component';
+import { CustomKeysComponent } from './custom-keys/custom-keys.component';
 import { ClickableListComponent } from './clickable-list/clickable-list.component';
 import { StepperComponent } from './stepper/stepper.component';
 
@@ -49,6 +49,7 @@ export * from './button/button.component';
 export * from './calendar/calendar.component';
 export * from './checkbox/checkbox.component';
 export * from './color-picker/color-picker.component';
+export * from './custom-keys/custom-keys.component';
 export * from './dropdown/dropdown.component';
 export * from './dynamic/dynamic.component';
 export * from './element-renderer/element-renderer.component';
@@ -78,6 +79,7 @@ export * from './toggle-button/toggle-button.component';
 export * from './top-nav/top-nav.component';
 export * from './tree-select/tree-select.component';
 export * from './ws-table/_index';
+
 export const WsComponentMap: Record<string, Type<unknown>> = {
     AccordionComponent,
     AutoCompleteComponent,
@@ -88,6 +90,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     CheckboxComponent,
     ClickableListComponent,
     ColorPickerComponent,
+    CustomKeysComponent,
     DropdownComponent,
     DynamicComponent,
     ElementRendererComponent,
@@ -97,7 +100,6 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     InputNumberComponent,
     InputSwitchComponent,
     InputTextComponent,
-    IpaKeyboardComponent,
     KnobComponent,
     MenuBarComponent,
     MultiSelectComponent,
@@ -128,6 +130,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.COLOR_PICKER]: ColorPickerComponent,
     [ElementType.COMPONENT]: ElementRendererComponent,
     [ElementType.CONTAINER]: ElementRendererComponent,
+    [ElementType.CUSTOM_KEYS]: CustomKeysComponent,
     [ElementType.DROPDOWN]: DropdownComponent,
     [ElementType.GENERAL]: GeneralComponent,
     [ElementType.HTML_EDITOR]: HtmlEditorComponent,
@@ -135,7 +138,6 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.INPUT_NUMBER]: InputNumberComponent,
     [ElementType.INPUT_SWITCH]: InputSwitchComponent,
     [ElementType.INPUT_TEXT]: InputTextComponent,
-    [ElementType.IPA_KEYBOARD]: IpaKeyboardComponent,
     [ElementType.KNOB]: KnobComponent,
     [ElementType.MULTI_SELECT]: MultiSelectComponent,
     [ElementType.PANEL]: PanelComponent,

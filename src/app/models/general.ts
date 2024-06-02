@@ -70,6 +70,8 @@ export type KeyOf<T> = Extract<keyof T, string>;
 
 export type ValueOf<T> = T[KeyOf<T>];
 
+export type Nullable<T = void> = T | null | undefined;
+
 export type ObjectOf<T> = Partial<Record<KeyOf<T>, ValueOf<T>>>;
 
 export type ButtonIconPosition = 'left' | 'right' | 'top' | 'bottom';

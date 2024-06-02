@@ -1,0 +1,47 @@
+<p-button #buttonRef
+    [icon]="icon" 
+    [label]="label"
+    [type]="options.type ?? 'button'"
+    [iconPos]="options.iconPos ?? 'left'"
+    [badge]="options.badge"
+    [loading]="options.loading ?? false"
+    [loadingIcon]="options.loadingIcon"
+    [raised]="options.raised ?? false"
+    [rounded]="options.rounded ?? false"
+    [text]="options.text ?? false"
+    [plain]="options.plain ?? false"
+    [severity]="options.severity"
+    [outlined]="options.outlined ?? false"
+    [link]="options.link ?? false"
+    [tabindex]="options.tabindex"
+    [size]="options.size"
+    [style]="options.style"
+    [styleClass]="options.styleClass"
+    [badgeClass]="options.badgeClass"
+    [ariaLabel]="options.ariaLabel"
+    [autofocus]="options.autofocus"
+    (onClick)="op.toggle($event)"
+
+/>
+<p-overlayPanel #op
+    [styleClass]="panelStyleClass"
+    [style]="panelStyle"
+    appendTo="body">
+    <ng-template pTemplate="body">
+        <div [class]="panelBodyStyleClasses" [style]="panelBodyStyles?.style">
+            @for(charItem of charMap; track char) {
+                <div 
+                    [class]="panelCharButtonStyleClasses"
+                    [style]="panelCharButtonStyles?.style"
+                    [pTooltip]="charItem.tooltip"
+                    pRipple
+                    (click)="onCharClick(charItem.char)">
+                    <span 
+                        [class]="panelCharTextStyleClasses"
+                        [style]="panelCharTextStyles?.style" 
+                        >{{charItem.char.trim()}}</span>
+                </div>
+            }
+        </div>
+    </ng-template>
+</p-overlayPanel>
