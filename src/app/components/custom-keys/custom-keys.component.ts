@@ -1,10 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, forwardRef, Input } from '@angular/core';
 import { FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
-import { ComponentConfig, DataSource, ElementType, FormElementConfig, GenericFunction, PButtonConfig, StyleGroup, WeakObject } from 'warskald-ui/models';
+import { CharMap, ComponentConfig, DataSource, ElementType, FormElementConfig, GenericFunction, PButtonConfig, StyleGroup, WeakObject } from 'warskald-ui/models';
 import { DataService, initStyleGroups, LoggableComponent, LogLevels, parseCssString } from 'warskald-ui/services';
 import { IpaMapping } from './ipa-map';
-import { CharMap } from 'src/app/models/element-configs';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TooltipModule } from 'primeng/tooltip';

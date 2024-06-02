@@ -1,5 +1,4 @@
 import { TemplateRef } from '@angular/core';
-import { GenericFunction } from '../general';
 
 export interface PStepperConfig {
     activeStep?: number;
