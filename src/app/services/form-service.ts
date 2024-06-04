@@ -1,6 +1,6 @@
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { BaseComponentConfig, ComponentConfig, ContainerConfig, ElementType, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
+import { BaseComponentConfig, ComponentConfig, ContainerConfig, ElementType, InputNumberConfig, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
 
 
@@ -173,6 +173,31 @@ export class FormService {
                 baseClass: 'w-full'
             },
             externalListener$: listener,
+            disabled,
+        };
+    
+    }
+
+    public static getNumberElement(
+        propName: string,
+        value: number,
+        layoutStyleClass: string = 'col-12', 
+        disabled: boolean = false, 
+        label?: string,
+    ): InputNumberConfig {
+
+        return {
+            elementType: ElementType.INPUT_NUMBER,
+            id: propName,
+            hasForm: true,
+            label,
+            value,
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            },
+            baseStyles: {
+                baseClass: 'w-full'
+            },
             disabled,
         };
     
