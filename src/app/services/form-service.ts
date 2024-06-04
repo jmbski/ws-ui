@@ -122,7 +122,7 @@ export class FormService {
         }
     }
 
-    public standardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {
+    public static standardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {
         return {
             elementType: ElementType.CONTAINER,
             id,
@@ -139,7 +139,7 @@ export class FormService {
         };
     }
 
-    public labelElement(label: string, id?: string, layoutStyleClass: string = 'col-3'): ComponentConfig {
+    public static labelElement(label: string, id?: string, layoutStyleClass: string = 'col-3'): ComponentConfig {
         id ??= `${label.toFormat('label')}-label`;
         return {
             elementType: ElementType.GENERAL,
@@ -151,7 +151,7 @@ export class FormService {
         };
     }
 
-    public getTextElement(
+    public static getTextElement(
         propName: string,
         value: string,
         layoutStyleClass: string = 'col-12', 
