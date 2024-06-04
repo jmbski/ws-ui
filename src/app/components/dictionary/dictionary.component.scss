@@ -4,11 +4,11 @@
     @include styleclass('grid w-full');
 
     &-header {
-        @include styleclass('col-12 grid w-full border-round border-3 p-0');
+        @include styleclass('col-12 grid w-full p-0');
     }
 
     &-body {
-        @include styleclass('col-12 grid w-full border-round border-3 mt-2');
+        @include styleclass('col-12 grid w-full mt-2');
     }
 
     &-key-input {

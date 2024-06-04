@@ -198,6 +198,9 @@ export class FormService {
             baseStyles: {
                 baseClass: 'w-full'
             },
+            options: {
+                inputStyleClass: 'w-full',
+            },
             disabled,
         };
     
