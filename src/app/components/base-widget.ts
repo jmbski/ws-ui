@@ -46,6 +46,8 @@ export class BaseWidget<T> {
 
     @Input() layoutStyles?: StyleGroup = {};
 
+    @Input() labelStyles?: StyleGroup = {};
+
     @Input() onChanged: GenericFunction<void> = () => {};
 
     @Input() onTouched: GenericFunction<void> = () => {};

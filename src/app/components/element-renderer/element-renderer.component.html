@@ -3,7 +3,10 @@
             @if(element.config && element.classType != null) {
                 <div [class]="element.config.layoutStyles?.baseClass ?? 'col-12'" [style]="layoutStyles?.style">
                     @if(element.config.label) {
-                        <label [for]="element.config.id">{{element.config.label}}</label>
+                        <label
+                            [class]="element.config.labelStyles?.baseClass ?? 'ws-label'"
+                            [style]="element.config.labelStyles?.style"
+                            [for]="element.config.id">{{element.config.label}}</label>
                     
                     }
                     <ng-container *ngComponentOutlet="element.classType; inputs: element.config;" class="test-class">

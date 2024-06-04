@@ -56,6 +56,16 @@ export interface BaseComponentConfig {
     baseStyles?: StyleGroup;
 
     /**
+     * Styles and classes to use for the layout of the element
+     */
+    layoutStyles?: StyleGroup;
+
+    /**
+     * The syles to apply to the item label
+     */
+    labelStyles?: StyleGroup;
+
+    /**
      * The options to apply to the element
      */
     options?: WeakObject;
@@ -64,11 +74,6 @@ export interface BaseComponentConfig {
      * The children of the element
      */
     children?: ComponentConfig[];
-
-    /**
-     * Styles and classes to use for the layout of the element
-     */
-    layoutStyles?: StyleGroup;
 
     disabled?: boolean;
 
