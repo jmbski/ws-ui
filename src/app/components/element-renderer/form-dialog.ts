@@ -31,6 +31,7 @@ export function getFormDialog(header: string, elements: ComponentConfig[], actio
             form,
             elements,
             actionMap,
+            layoutStyles,
         },
         appendTo: 'body',
         allowMultiple: false,
