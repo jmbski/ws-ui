@@ -1,5 +1,6 @@
 import { InputNumber } from 'primeng/inputnumber';
-import { BaseComponentConfig, ComponentConfig, ElementType, ObjectOf, WeakObject } from 'warskald-ui/models';
+import { BehaviorSubject } from 'rxjs';
+import { BaseComponentConfig, ComponentConfig, ContainerConfig, ElementType, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
 
 
@@ -119,6 +120,62 @@ export class FormService {
                 target[propName] = formProp;
             }
         }
+    }
+
+    public standardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {
+        return {
+            elementType: ElementType.CONTAINER,
+            id,
+            label,
+            elements,
+            hasForm: true,
+            layoutStyles: {
+                baseClass: 'p-1 w-full flex align-items-center border-2 border-200 border-round flex-column m-1 shadow-4'
+            },
+            baseStyles: {
+                baseClass: 'p-1 flex align-items-center w-full grid grid-nogutter',
+                overrideDefault: true
+            }
+        };
+    }
+
+    public labelElement(label: string, id?: string, layoutStyleClass: string = 'col-3'): ComponentConfig {
+        id ??= `${label.toFormat('label')}-label`;
+        return {
+            elementType: ElementType.GENERAL,
+            id,
+            value: label,
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            }
+        };
+    }
+
+    public getTextElement(
+        propName: string,
+        value: string,
+        layoutStyleClass: string = 'col-12', 
+        disabled: boolean = false, 
+        label?: string,
+        listener?: BehaviorSubject<string>
+    ): InputTextConfig {
+
+        return {
+            elementType: ElementType.INPUT_TEXT,
+            id: propName,
+            hasForm: true,
+            label,
+            value,
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            },
+            baseStyles: {
+                baseClass: 'w-full'
+            },
+            externalListener$: listener,
+            disabled,
+        };
+    
     }
     
     // #endregion public methods
