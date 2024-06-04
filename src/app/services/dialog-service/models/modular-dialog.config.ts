@@ -72,6 +72,8 @@ export class ModularDialogConfig {
     submitFunction?: (data?: unknown) => void;
     cancelFunction?: (data?: unknown) => void;
 
+    modal?: boolean;
+
     [key: string]: unknown;
 }
 

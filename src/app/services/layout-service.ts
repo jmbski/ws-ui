@@ -97,6 +97,47 @@ export class LayoutService {
         const appTopNavShadow: HTMLElement = <HTMLElement>document.querySelector('.app-top-nav-shadow');
         return appTopNavShadow.clientHeight > 0;
     }
+
+    public static getStackingContextElements(root: HTMLElement = document.body): HTMLElement[] {
+        const stackingContexts: HTMLElement[] = [];
+        const traversedElements: HTMLElement[] = [];
+    
+        function createsStackingContext(element: HTMLElement): boolean {
+            const style = getComputedStyle(element);
+    
+            return (
+                style.zIndex !== 'auto' && ['relative', 'absolute', 'fixed'].includes(style.position) ||
+                parseFloat(style.opacity) < 1 ||
+                style.transform !== 'none' ||
+                style.filter !== 'none' ||
+                style.perspective !== 'none' ||
+                style.clip !== 'auto' ||
+                style.mask !== 'none' ||
+                (style.maskImage && style.maskImage !== 'none') ||
+                style.willChange === 'transform' ||
+                style.willChange === 'opacity' ||
+                style.contain === 'layout' ||
+                style.contain === 'paint'
+            );
+        }
+    
+        function traverse(node: Element): void {
+            if (node instanceof HTMLElement) {
+                if (createsStackingContext(node)) {
+                    stackingContexts.push(node);
+                }
+    
+                traversedElements.push(node);
+    
+                for (const child of Array.from(node.children)) {
+                    traverse(child);
+                }
+            }
+        }
+    
+        traverse(root);
+        return stackingContexts;
+    }
     
     // #endregion public methods
     

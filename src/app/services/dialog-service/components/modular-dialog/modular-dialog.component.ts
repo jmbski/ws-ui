@@ -9,7 +9,17 @@ import { isObservable } from 'rxjs';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
+import { PrimeNGConfig } from 'primeng/api';
+import { UniqueComponentId, ZIndexUtils } from 'primeng/utils';
 
+
+function moveOnTop(this: Dialog) {
+    if (this.autoZIndex) {
+        console.log(this.container, this.baseZIndex, this.config.zIndex.modal);
+        ZIndexUtils.set('modal', this.container, this.baseZIndex + this.config.zIndex.modal);
+        (this.wrapper as HTMLElement).style.zIndex = String(parseInt((this.container as HTMLDivElement).style.zIndex, 10) - 1);
+    }
+}
 @Component({
     selector: 'ws-modular-dialog',
     standalone: true,
@@ -87,6 +97,8 @@ export class ModularDialogComponent {
 
     public config?: WeakObject;
 
+    public modal?: boolean = false;
+
     [key: string]: unknown;
 
     // #endregion public properties
@@ -138,12 +150,14 @@ export class ModularDialogComponent {
         public cd: ChangeDetectorRef,
         public dialogManagerSvc: DialogManagerService,
         private dialogRef: ModularDialogRef,
+        public primeConfig: PrimeNGConfig,
     ) {
-    
     }
 
     ngAfterViewInit() {
+
         this._initialize();
+        
     }
     // #endregion constructor and lifecycle hooks
 
@@ -325,6 +339,9 @@ export class ModularDialogComponent {
 
     private _registerEventHandlers() {
         if(this.pDialog) {
+            /* this.dialogElement?.addEventListener('mousedown', (event: MouseEvent) => {
+                console.log(this.pDialog?.container, this.primeConfig.zIndex);
+            }); */
             /* if(this.dialogElement) {
                 const headerElement = this.dialogElement.querySelector('.p-dialog-header') as HTMLElement;
                 if(headerElement) {

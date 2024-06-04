@@ -34,7 +34,7 @@ export function getFormDialog(header: string, elements: ComponentConfig[], actio
             layoutStyles,
         },
         appendTo: 'body',
-        allowMultiple: false,
+        allowMultiple: true,
         styles: {
             style: {
                 maxWidth: '85vw',

@@ -23,7 +23,7 @@ import {
 import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig } from 'warskald-ui/models';
 import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { SelectItem } from 'primeng/api';
+import { PrimeNGConfig, SelectItem } from 'primeng/api';
 import { isString } from 'lodash';
 import { IsButtonAction } from '../type-guards/page-type-guards';
 import { CustomKeysComponent } from '../components/custom-keys/custom-keys.component';
@@ -595,7 +595,7 @@ export class ShowcaseComponent {
         }); */
 
         const { options, form } = getFormDialog('Test Dialog', FormService.objToElements(this.testObj));
-        
+        options.modal = false;
         const dialogRef = this.dialogMgr.openModularDialog(options);
 
         dialogRef?.onSubmit.subscribe(() => {

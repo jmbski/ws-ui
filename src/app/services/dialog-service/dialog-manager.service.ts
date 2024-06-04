@@ -1,6 +1,6 @@
 
 import { ApplicationRef, ChangeDetectorRef, ComponentRef, createComponent, ElementRef, EmbeddedViewRef, Injectable, Injector } from '@angular/core';
-import { MenuItem } from 'primeng/api';
+import { MenuItem, PrimeNGConfig } from 'primeng/api';
 import { DynamicInjector } from 'warskald-ui/models';
 import { Subscription, BehaviorSubject } from 'rxjs';
 import { LoggableClass, LoggableComponent, LogLevels } from '../log-service/_index';
@@ -33,8 +33,6 @@ export class DialogManagerService {
     public dialogComponentRefMap: Map<ModularDialogRef, ComponentRef<ModularDialogComponent>> = new Map();
 
     public dockedDialogs$: BehaviorSubject<ModularDialogRef[]> = new BehaviorSubject<ModularDialogRef[]>([]);
-
-    public baseZIndex: number = 1101;
 
     // #endregion public properties
 
@@ -69,6 +67,10 @@ export class DialogManagerService {
         this._dockedDialogs = input;
         this.dockedDialogs$.next(input);
     }
+
+    get baseZIndex() {
+        return this.primeConfig.zIndex.overlay;
+    }
     // #endregion getters/setters
 
 
@@ -96,6 +98,7 @@ export class DialogManagerService {
     constructor(
         private appRef: ApplicationRef, 
         private injector: Injector,
+        private primeConfig: PrimeNGConfig,
     ) {
         
         setTimeout(() => {

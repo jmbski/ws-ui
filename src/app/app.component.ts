@@ -126,6 +126,9 @@ export class AppComponent {
             menu: 11000,     // overlay menus
             tooltip: 11050  // tooltip
         };
+
+        const stackElements = LayoutService.getStackingContextElements();
+        
         const menuItems: WSMenuItem[] = [
             {
                 label: 'About Us',

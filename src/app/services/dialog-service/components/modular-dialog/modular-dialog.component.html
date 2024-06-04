@@ -8,7 +8,9 @@
         [styleClass]="collapsed ? 'p-dialog-collapsed' : ''"
         [appendTo]="body"
         [closable]="false"
+        [modal]="modal"
         [autoZIndex]="true"
+        [baseZIndex]="primeConfig.zIndex.modal"
         (mousedown)="handleDialogTouched()"
     >
         <ng-template pTemplate="header">
