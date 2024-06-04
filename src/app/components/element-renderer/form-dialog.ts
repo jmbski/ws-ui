@@ -1,5 +1,5 @@
 import { FormGroup } from '@angular/forms';
-import { ComponentConfig, ContainerConfig, ElementType, FunctionMap, toCamelCase } from 'warskald-ui/models';
+import { ComponentConfig, ContainerConfig, ElementType, FunctionMap, StyleGroup, toCamelCase } from 'warskald-ui/models';
 import { ModularDialogConfig, ModularDialogRef } from 'warskald-ui/services';
 import { ElementRendererComponent } from './element-renderer.component';
 
@@ -17,7 +17,7 @@ export interface FormDialogOptions {
     [key: string]: unknown;
 }
 
-export function getFormDialog(header: string, elements: ComponentConfig[], actionMap?: FunctionMap): FormDialogOptions {
+export function getFormDialog(header: string, elements: ComponentConfig[], actionMap?: FunctionMap, layoutStyles?: StyleGroup): FormDialogOptions {
     const form: FormGroup = new FormGroup({});
 
     const options = {
