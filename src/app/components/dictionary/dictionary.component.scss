@@ -1,0 +1,21 @@
+@import 'primeflex/primeflex.scss';
+
+.ws-dictionary {
+    @include styleclass('grid w-full');
+
+    &-header {
+        @include styleclass('col-12 grid w-full border-round border-3 p-0');
+    }
+
+    &-body {
+        @include styleclass('col-12 grid w-full border-round border-3 mt-2');
+    }
+
+    &-key-input {
+        @include styleclass('col-6');
+    }
+
+    &-value-input {
+        @include styleclass('col-6');
+    }
+}

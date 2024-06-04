@@ -160,6 +160,20 @@ export class ShowcaseComponent {
 
     public formComponents: ComponentConfig[] = [
         {
+            elementType: ElementType.DICTIONARY,
+            id: 'dictionary_1',
+            hasForm: true,
+            layoutStyles: {
+                baseClass: 'col-12'
+            },
+            value: {
+                test: 'test',
+                test2: 'test2',
+                test3: 'test3',
+                test4: 'test4',
+            },
+        },
+        {
             elementType: ElementType.CLICKABLE_LIST,
             id: 'clickable_list_1',
             clickHandler: (item: string, event: MouseEvent) => {

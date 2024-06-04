@@ -10,6 +10,7 @@ export enum ElementType {
     COMPONENT = 'component',
     CONTAINER = 'container',
     CUSTOM_KEYS = 'custom-keys',
+    DICTIONARY = 'dictionary',
     DROPDOWN = 'dropdown',
     GENERAL = 'general',
     HTML_EDITOR = 'html-editor',

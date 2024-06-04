@@ -39,6 +39,7 @@ import { WsTableComponent } from './ws-table/_index';
 import { CustomKeysComponent } from './custom-keys/custom-keys.component';
 import { ClickableListComponent } from './clickable-list/clickable-list.component';
 import { StepperComponent } from './stepper/stepper.component';
+import { DictionaryComponent } from './dictionary/dictionary.component';
 
 export * from './accordion/accordion.component';
 export * from './auto-complete/auto-complete.component';
@@ -50,6 +51,7 @@ export * from './calendar/calendar.component';
 export * from './checkbox/checkbox.component';
 export * from './color-picker/color-picker.component';
 export * from './custom-keys/custom-keys.component';
+export * from './dictionary/dictionary.component';
 export * from './dropdown/dropdown.component';
 export * from './dynamic/dynamic.component';
 export * from './element-renderer/element-renderer.component';
@@ -91,6 +93,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     ClickableListComponent,
     ColorPickerComponent,
     CustomKeysComponent,
+    DictionaryComponent,
     DropdownComponent,
     DynamicComponent,
     ElementRendererComponent,
@@ -131,6 +134,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.COMPONENT]: ElementRendererComponent,
     [ElementType.CONTAINER]: ElementRendererComponent,
     [ElementType.CUSTOM_KEYS]: CustomKeysComponent,
+    [ElementType.DICTIONARY]: DictionaryComponent,
     [ElementType.DROPDOWN]: DropdownComponent,
     [ElementType.GENERAL]: GeneralComponent,
     [ElementType.HTML_EDITOR]: HtmlEditorComponent,

@@ -11,7 +11,7 @@ import { SelectButtonChangeEvent, SelectButtonOptionClickEvent } from 'primeng/s
 import { SliderChangeEvent, SliderSlideEndEvent } from 'primeng/slider';
 import { ToggleButtonChangeEvent } from 'primeng/togglebutton';
 import { ElementType } from './element-types';
-import { ButtonAction, FunctionMap, GenericFunction, WeakObject } from './general';
+import { ButtonAction, DictionaryItem, FunctionMap, GenericFunction, WeakObject } from './general';
 import * as PrimeConfigs from './prime_configs/_index';
 import { StyleGroup } from './style-types';
 import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
@@ -384,6 +384,14 @@ export interface StepperConfig extends BaseComponentConfig {
     children?: ContainerConfig[];
 }
 
+export interface DictionaryConfig extends FormElementConfig {
+    elementType: ElementType.DICTIONARY;
+    //items?: DictionaryItem[];
+    value?: WeakObject;
+    headerStyles?: StyleGroup;
+    bodyStyles?: StyleGroup;
+}
+
 /**
  * Union type of all possible element configs
  */
@@ -397,6 +405,8 @@ export type ComponentConfig =
     ClickableListConfig |
     ColorPickerConfig |
     ContainerConfig |
+    CustomKeysConfig |
+    DictionaryConfig |
     DropdownConfig |
     FormElementConfig |
     GeneralComponentConfig |
@@ -404,7 +414,6 @@ export type ComponentConfig =
     InputNumberConfig |
     InputSwitchConfig |
     InputTextConfig |
-    CustomKeysConfig |
     KnobConfig |
     MultiSelectConfig |
     PanelConfig |

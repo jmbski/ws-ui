@@ -1,4 +1,6 @@
+import { KeyValue } from '@angular/common';
 import { ChangeDetectorRef, ComponentRef, TemplateRef, Type } from '@angular/core';
+import { SelectItem } from 'primeng/api';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -87,4 +89,20 @@ export interface NgComponentOutletRef {
     _componentRef: ComponentRef<unknown>;
 
     [key: string]: unknown;
+}
+
+export type StrKeyValue = KeyValue<string, unknown>;
+
+export type DictionaryType = 'string' | 'number' | 'boolean';
+
+export const DictionaryTypes: SelectItem[] = [
+    {label: 'String', value: 'string'},
+    {label: 'Number', value: 'number'},
+    {label: 'Boolean', value: 'boolean'},
+] as const;
+
+export interface DictionaryItem {
+    key: string;
+    value: unknown;
+    type?: DictionaryType;
 }

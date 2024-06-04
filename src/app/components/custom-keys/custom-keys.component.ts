@@ -16,7 +16,7 @@ import { isString, isWeakObject } from 'warskald-ui/type-guards';
     LOCAL_ID: 'CustomKeysComponent',
     autoAddLogs: true,
     canLog: true,
-    localLogLevel: LogLevels.Debug
+    localLogLevel: LogLevels.Error
 })
 @Component({
     selector: 'ws-custom-keys',

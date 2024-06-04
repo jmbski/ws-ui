@@ -1,0 +1,68 @@
+<div 
+    [class]="baseStyleClasses"
+    [style]="baseStyles?.style">
+
+    <div [class]="headerStyleClasses" [style]="headerStyles?.style">
+        <p-inputGroup class="col-6">
+            <p-inputGroupAddon>Value Type:</p-inputGroupAddon>
+            <p-dropdown 
+                [options]="typeOptions" 
+                appendTo="body"
+                [formControl]="typesControl"
+                styleClass="w-full"
+                [showClear]="true" 
+                [placeholder]="'Select Type'">
+            </p-dropdown>
+        </p-inputGroup>
+        <p-inputGroup class="col-6">
+            <p-inputGroupAddon>Key:</p-inputGroupAddon>
+            <input pInputText [formControl]="newKeyControl" [value]="key" (input)="updateKey($event)">
+            <p-button icon="pi pi-plus" (click)="addItem()"></p-button>
+        </p-inputGroup>
+    </div>
+
+    <form [formGroup]="objectForm" [class]="bodyStyleClasses" [style]="bodyStyles?.style">
+        @for(item of items; track item.key) {
+            <p-inputGroup class="ws-dictionary-key-input">
+                <p-inputGroupAddon>Key:</p-inputGroupAddon>
+                <input pInputText [formControlName]="item.key" [value]="item.key" (input)="updateKey(item, $event)">
+            </p-inputGroup>
+            <p-inputGroup class="ws-dictionary-value-input">
+                <p-inputGroupAddon>Value:</p-inputGroupAddon>
+                @switch(item.type) {
+                    @case('string') {
+                        <input pInputText 
+                            [formControlName]="item.key + 'Value'" 
+                            [value]="item.value" 
+                            (input)="updateValue(item, $event)"
+                        >
+                    }
+                    @case('number') {
+                        <p-inputNumber 
+                            [formControlName]="item.key + 'Value'" 
+                            (onValueChange)="updateValue(item, $event)"
+                        >
+                        </p-inputNumber>
+                    }
+                    @case('boolean') {
+                        <!-- <p-selectButton 
+                            [options]="booleanOptions"
+                            [formControlName]="item.key + 'Value'" 
+                            (onChange)="updateValue(item, $event)"
+                        >
+                        </p-selectButton> -->
+                        <!-- <p-toggleButton 
+                            [formControlName]="item.key + 'Value'" 
+                            (onChange)="updateValue(item, $event)"
+                        >
+                        </p-toggleButton> -->
+                        
+                    }
+
+                }
+                <p-button icon="pi pi-trash" (click)="deleteItem(item)"></p-button>
+            </p-inputGroup>
+            
+        }
+    </form>
+</div>
