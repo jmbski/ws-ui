@@ -20,7 +20,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig } from 'warskald-ui/models';
 import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PrimeNGConfig, SelectItem } from 'primeng/api';
@@ -607,8 +607,21 @@ export class ShowcaseComponent {
         topRefs.forEach((ref) => {
             console.log('ref:', ref._componentRef.changeDetectorRef);
         }); */
-
-        const { options, form } = getFormDialog('Test Dialog', FormService.objToElements(this.testObj));
+        const formElement: DictionaryConfig = {
+            elementType: ElementType.DICTIONARY,
+            id: 'dictionary_1',
+            hasForm: true,
+            layoutStyles: {
+                baseClass: 'col-12'
+            },
+            value: {
+                test: 'test',
+                test2: 2,
+                test3: false,
+                test4: ['test4', 'test5'],
+            },
+        };
+        const { options, form } = getFormDialog('Test Dialog', [formElement]);
         options.modal = false;
         const dialogRef = this.dialogMgr.openModularDialog(options);
 
