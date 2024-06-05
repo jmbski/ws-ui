@@ -1,6 +1,22 @@
 @import 'primeflex/primeflex.scss';
 @import './z-index.scss';
 
+.ws-element-border {
+    border-color: var(--surface-d) !important;
+    border-width: 2px !important;
+}
+
+.p-button {
+
+    background-color: var(--button-std-bg);
+    border-color: var(--surface-border);
+
+    &:hover {
+        background-color: var(--button-std-bg-hover);
+        border-color: var(--bluegray-300) !important;
+    }
+}
+
 .ws {
     &-button {
         //z-index: var(--bz-button);
@@ -16,4 +32,14 @@
 
         }
     }
+
+
+    &-dict-btn {
+        @include styleclass('border-noround');
+
+        &-end {
+            @extend .border-noround-left;
+        }
+    }
 }
+

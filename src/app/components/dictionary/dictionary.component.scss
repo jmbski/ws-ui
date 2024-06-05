@@ -1,21 +1,33 @@
 @import 'primeflex/primeflex.scss';
 
-.ws-dictionary {
-    @include styleclass('grid w-full');
 
-    &-header {
-        @include styleclass('col-12 grid w-full p-0');
+
+:host ::ng-deep {
+    .ws-dict {
+        @include styleclass('grid w-full p-1 line-height-1');
+    
+        &-header {
+            @include styleclass('col-12 grid w-full');
+        }
+    
+        &-body {
+            @include styleclass('col-12 grid w-full');
+        }
+    
+        &-field {
+            @include styleclass('col-6');
+        }
+
+        &-input {
+            padding: 0rem 0.875rem;
+            line-height: 1;
+        }
     }
 
-    &-body {
-        @include styleclass('col-12 grid w-full');
-    }
-
-    &-key-input {
-        @include styleclass('col-6');
-    }
-
-    &-value-input {
-        @include styleclass('col-6');
+    .p-chips .p-chips-multiple-container{
+        flex-wrap: nowrap !important;
+        line-height: 1;
+        padding: 0 0.875rem !important;
+        overflow: auto;
     }
 }

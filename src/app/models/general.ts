@@ -1,6 +1,7 @@
 import { KeyValue } from '@angular/common';
 import { ChangeDetectorRef, ComponentRef, TemplateRef, Type } from '@angular/core';
-import { SelectItem } from 'primeng/api';
+import { AsyncValidatorFn, FormControl, ValidatorFn } from '@angular/forms';
+import { SelectItem, TooltipOptions } from 'primeng/api';
 
 /**
  * Shorthand for a record of string keys and values of type T.
@@ -93,16 +94,31 @@ export interface NgComponentOutletRef {
 
 export type StrKeyValue = KeyValue<string, unknown>;
 
-export type DictionaryType = 'string' | 'number' | 'boolean';
+export type DictionaryType = 'string' | 'number' | 'boolean' | 'string[]' | 'number[]';
 
 export const DictionaryTypes: SelectItem[] = [
     {label: 'String', value: 'string'},
     {label: 'Number', value: 'number'},
     {label: 'Boolean', value: 'boolean'},
+    {label: 'String Array', value: 'string[]'},
+    {label: 'Number Array', value: 'number[]'},
 ] as const;
+
+export const DictionaryDefaults: Record<DictionaryType, unknown> = {
+    string: '',
+    number: 0,
+    boolean: false,
+    'string[]': [],
+    'number[]': [],
+};
 
 export interface DictionaryItem {
     key: string;
     value: unknown;
     type?: DictionaryType;
+    keyControl: FormControl;
+    tooltip: string;
+    valueControl: FormControl;
 }
+
+export type FormValidator = ValidatorFn | AsyncValidatorFn;

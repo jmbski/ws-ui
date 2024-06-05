@@ -1,18 +1,40 @@
+import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { BaseComponentConfig, ComponentConfig, ContainerConfig, ElementType, InputNumberConfig, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
+import { ComponentConfig, ContainerConfig, ElementType, FormValidator, InputNumberConfig, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
+import { LoggableClass, LogLevels } from './_index';
 
 
-
+@LoggableClass({
+    LOCAL_ID: 'FormService',
+    autoAddLogs: true,
+    canLog: true,
+    localLogLevel: LogLevels.Error
+})
 export class FormService {
     // #region public properties
+    public control: FormControl = new FormControl('', Validators.required);
     
     // #endregion public properties
     
     
     // #region private properties
     
+    private static _validatorsFns: Map<string, FormValidator> = new Map<string, FormValidator>([
+        ['email', Validators.email],
+        ['min', Validators.min(1)],
+        ['required', Validators.required],
+        ['requiredTrue', Validators.requiredTrue],
+    ]);
+
+    private static _validatorMessages: Map<string, string> = new Map<string, string>([
+        ['email', 'Invalid email address'],
+        ['min', 'Value must be greater than 0'],
+        ['required', 'This field is required'],
+        ['requiredTrue', 'This field is required'],
+    ]);
+
     // #endregion private properties
     
     
@@ -24,6 +46,32 @@ export class FormService {
     // #region constructor and lifecycle hooks
     
     // #endregion constructor and lifecycle hooks
+    
+    public static addValidatorMsg(name: string, message: string) {
+        FormService._validatorMessages.set(name, message);
+    }
+
+    public static addValidatorsMsgs(validators: Record<string, string>) {
+        Object.keys(validators).forEach((name) => {
+            FormService.addValidatorMsg(name, validators[name]);
+        });
+    }
+
+    public static getValidatorMsg(name: string): string {
+        return FormService._validatorMessages.get(name) ?? '';
+    }
+
+    public static getValidatorMsgs(validators: string[]): string[] {
+        return validators.map((validator) => {
+            return FormService.getValidatorMsg(validator);
+        });
+    }
+
+    public static getValidatorMsgTooltip(control: FormControl): string {
+        const validators = Object.keys(control.errors ?? {});
+        return FormService.getValidatorMsgs(validators).join('<br>');
+    }
+
     public static getElementType(value: unknown): ElementType | undefined {
         if(exists(value)) {
             if (isString(value)) {
@@ -120,6 +168,37 @@ export class FormService {
                 target[propName] = formProp;
             }
         }
+    }
+
+    public static getValidators(validators: string[]): FormValidator[] {
+        return validators.map((validator) => {
+            return FormService._validatorsFns.get(validator) ?? Validators.nullValidator;
+        });
+    }
+
+    public static getValidator(validator: string): FormValidator {
+        return FormService._validatorsFns.get(validator) ?? Validators.nullValidator;
+    }
+
+    public static setValidators(validators: string[] | Record<string, FormValidator>, validatorFns?: FormValidator[]) {
+
+        if(isArray(validators)) {
+            validatorFns ??= [];
+            validators.forEach((name, index) => {
+                (index < validators.length && validatorFns) ? 
+                    FormService._validatorsFns.set(name, validatorFns[index]) :
+                    FormService._validatorsFns.set(name, Validators.nullValidator);
+            });
+        }
+        else {
+            Object.keys(validators).forEach((name) => {
+                FormService._validatorsFns.set(name, validators[name]);
+            });
+        }
+    }
+
+    public static setValidator(name: string, validator: FormValidator) {
+        FormService._validatorsFns.set(name, validator);
     }
 
     public static standardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {

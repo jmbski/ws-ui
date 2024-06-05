@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SelectItem } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -62,3 +63,8 @@ export const GlobalResizeObserver: BehaviorSubject<ResizeObserver | undefined> =
 export const LayoutChangeObserver$: Subject<void> = new Subject<void>();
 
 export const ComponentLogLevels: Record<string, number> = {};
+
+export const BooleanOptions: SelectItem[] = [
+    { label: 'True', value: true },
+    { label: 'False', value: false },
+];

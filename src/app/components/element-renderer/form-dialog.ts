@@ -17,7 +17,13 @@ export interface FormDialogOptions {
     [key: string]: unknown;
 }
 
-export function getFormDialog(header: string, elements: ComponentConfig[], actionMap?: FunctionMap, layoutStyles?: StyleGroup): FormDialogOptions {
+export function getFormDialog(
+    header: string, 
+    elements: ComponentConfig[], 
+    actionMap?: FunctionMap, 
+    layoutStyles?: StyleGroup,
+    dialogOptions?: ModularDialogConfig,
+): FormDialogOptions {
     const form: FormGroup = new FormGroup({});
 
     const options = {
@@ -42,6 +48,10 @@ export function getFormDialog(header: string, elements: ComponentConfig[], actio
             }
         }
     };
+
+    if(dialogOptions) {
+        Object.assign(options, dialogOptions);
+    }
 
     return { form, options };
 }

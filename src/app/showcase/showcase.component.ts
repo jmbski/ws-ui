@@ -168,11 +168,25 @@ export class ShowcaseComponent {
             },
             value: {
                 test: 'test',
+                test2: 2,
+                test3: false,
+                test4: ['test4', 'test5'],
+            },
+        },
+        /* {
+            elementType: ElementType.DICTIONARY,
+            id: 'dictionary_2',
+            hasForm: true,
+            layoutStyles: {
+                baseClass: 'col-6'
+            },
+            value: {
+                test: 'test',
                 test2: 'test2',
                 test3: 'test3',
                 test4: 'test4',
             },
-        },
+        }, */
         {
             elementType: ElementType.CLICKABLE_LIST,
             id: 'clickable_list_1',
