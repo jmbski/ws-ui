@@ -298,7 +298,9 @@ export interface ButtonConfig extends BaseComponentConfig {
 export interface PanelConfig extends BaseComponentConfig {
     elementType: ElementType.PANEL;
     options?: PrimeConfigs.PPanelConfig;
-
+    headerContent?: ComponentConfig[];
+    content?: ComponentConfig[];
+    footerContent?: ComponentConfig[];
     collapsedChangeHandler?: (event: boolean) => void;
     onBeforeToggleHandler?: (event: PanelBeforeToggleEvent) => void;
     onAfterToggleHandler?: (event: PanelAfterToggleEvent) => void;
