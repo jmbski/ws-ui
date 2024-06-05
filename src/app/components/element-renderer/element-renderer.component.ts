@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, QueryList, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, QueryList, Type, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig, NgComponentOutletRef } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
 import { CommonModule, NgComponentOutlet } from '@angular/common';
 import { IsButtonAction, isCast, isString } from 'warskald-ui/type-guards';
-import { LogLevels, NgLogService, LoggableComponent, initStyleGroups, DataService } from 'warskald-ui/services';
+import { LogLevels, NgLogService, LoggableComponent, initStyleGroups, DataService, MinifiedClassMap } from 'warskald-ui/services';
 import { nanoid } from 'nanoid';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ClassRegistry, RegisterClassType } from 'warskald-ui/services';
@@ -63,6 +63,8 @@ export class ElementRendererComponent implements ContainerConfig {
     @Input() value: unknown;
 
     @Input() hasForm = true as const;
+
+    @Input() hasFormGroup: boolean = false;
 
     @Input() form?: FormGroup | FormControl;
 
@@ -158,11 +160,23 @@ export class ElementRendererComponent implements ContainerConfig {
         initStyleGroups.bind(this)();
         this.model$.next(this.toModels(this.elements));
         this.cd.detectChanges();
+
+        console.log('minmap', MinifiedClassMap);
     }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
+
+    public isGroupClass(classType: Type<unknown>): boolean {
+        const groupClasses = [
+            ElementType.CONTAINER,
+            ElementType.PANEL,
+        ];
+
+        return groupClasses.some((groupClass) => ClassRegistry.getComponent(groupClass) === classType);
+    }
+    
 
     public toModels(elements: ComponentConfig[]): ElementModel[] {
         
@@ -183,7 +197,7 @@ export class ElementRendererComponent implements ContainerConfig {
                 };
                 
                 if(element.hasForm && this.form instanceof FormGroup) {
-                    if(classType === ElementRendererComponent) {
+                    if(classType === ElementRendererComponent || element.hasFormGroup) {
                         const subGroup = new FormGroup({});
                         this.form.addControl(model.elementId, subGroup);
                         model.config.form = subGroup;

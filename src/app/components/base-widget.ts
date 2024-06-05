@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
-import { ComponentConfig, GenericFunction, StyleGroup } from 'warskald-ui/models';
+import { ComponentConfig, FunctionMap, GenericFunction, StyleGroup } from 'warskald-ui/models';
 import { FormControl, FormGroup } from '@angular/forms';
 import { initActions, initStyleGroups } from 'warskald-ui/services';
 
@@ -32,9 +32,13 @@ export class BaseWidget<T> {
 
     @Input() hasForm = true as const;
 
+    @Input() hasFormGroup: boolean = false;
+
     @Input() label?: string;
 
     @Input() actionID?: string;
+
+    @Input() actionMap?: FunctionMap;
 
     @Input() id: string = '';
 

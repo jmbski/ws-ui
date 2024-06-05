@@ -3,7 +3,7 @@ import { ChangeDetectorRef, Component, forwardRef, Input, ViewChild } from '@ang
 import { ControlValueAccessor, FormControl, FormGroup, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { Panel, PanelAfterToggleEvent, PanelBeforeToggleEvent, PanelModule } from 'primeng/panel';
 import { ComponentConfig, PanelConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PPanelConfig } from 'warskald-ui/models';
-import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
+import { initActions, initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { BaseWidget } from '../base-widget';
 import { ElementRendererComponent } from '../element-renderer/element-renderer.component';
 
@@ -46,6 +46,12 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
     public contentType: string = 'components';
 
     public footerType: string = 'string';
+
+    public headerForm: FormGroup = new FormGroup({});
+
+    public contentForm: FormGroup = new FormGroup({});
+
+    public footerForm: FormGroup = new FormGroup({});
 
 
     [key: string]: unknown;
@@ -108,6 +114,37 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
         public cd: ChangeDetectorRef,
     ) {
         super(cd);
+    }
+
+    ngOnInit() {
+        if(this.form instanceof FormGroup) {
+            this.form.addControl('headerForm', this.headerForm);
+            this.form.addControl('contentForm', this.contentForm);
+            this.form.addControl('footerForm', this.footerForm);
+        }
+    }
+
+    override ngAfterContentInit() {
+        initStyleGroups.bind(this)();
+        initActions.bind(this)();
+        this._cd.detectChanges();
+
+        /* this.innerControl = new FormControl(this.value);
+        this.innerControl.valueChanges.subscribe((value) => {
+            if(value !== this.value) {
+                this.onChanged(value);
+                this.onTouched(value);
+                this.writeValue(value);
+            }
+        }); */
+
+        /* this.form?.valueChanges.subscribe((value) => {
+            if(value !== this.value) {
+                this.writeValue(value);
+            }
+        }); */
+
+        this.setDisabledState(this.disabled);
     }
 
     // #endregion constructor and lifecycle hooks

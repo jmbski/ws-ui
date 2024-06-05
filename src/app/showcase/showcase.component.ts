@@ -615,7 +615,8 @@ export class ShowcaseComponent {
                 toggler: 'header',
                 collapsed: true,
                 header,
-            }
+            },
+            hasFormGroup: true,
         };
     }
     public openDialog() {

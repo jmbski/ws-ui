@@ -227,6 +227,8 @@ export function buildProperty(value: unknown): PropertyDescriptor {
     };
 }
 
+export const MinifiedClassMap: Record<string, string> = {};
+
 /**
  * Decorator function for adding logging to an Angular Component class. 
  * Requires a configuration object with the desired logging options.
@@ -247,10 +249,14 @@ export function LoggableComponent<T>(config: LoggableObject) {
 
         const classProps = Object.getOwnPropertyDescriptors(_class.prototype);
 
+        MinifiedClassMap[_class.name] = config.LOCAL_ID;
+
         if(config.autoAddLogs) {
             const logFactory = Loggable();
             for(const key in classProps) {
+                
                 Object.defineProperty(_class.prototype, key, logFactory(_class.prototype, key, classProps[key]));
+                
             }
         }
             
@@ -278,13 +284,18 @@ export function LoggableClass(config: LoggableObject) {
         const logFactory = Loggable();
         const classProps = Object.getOwnPropertyDescriptors(constructor);
 
+
         for(const key in classProps) {
             // console.log('LOGGABLE:', key, classProps[key]);
             const classProp = classProps[key];
             const { value, get, set } = classProp;
+            if(key === 'name') {
+                MinifiedClassMap[value] = config.LOCAL_ID;
+            }
             if(isFunction(value) || isFunction(get) || isFunction(set)){
                 Object.defineProperty(constructor, key, logFactory(constructor, key, classProps[key]));
             }
         }
+        
     };
 }

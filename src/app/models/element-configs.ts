@@ -82,6 +82,7 @@ export interface BaseComponentConfig {
 
 export interface FormElementConfig extends BaseComponentConfig {
     hasForm: true;
+    hasFormGroup?: boolean;
     //value: unknown;
     form?: FormControl | FormGroup;
     onChanged?: GenericFunction<void>;
@@ -295,12 +296,13 @@ export interface ButtonConfig extends BaseComponentConfig {
 }
 
 
-export interface PanelConfig extends BaseComponentConfig {
+export interface PanelConfig extends FormElementConfig {
     elementType: ElementType.PANEL;
     options?: PrimeConfigs.PPanelConfig;
     headerContent?: ComponentConfig[];
     content?: ComponentConfig[];
     footerContent?: ComponentConfig[];
+    
     collapsedChangeHandler?: (event: boolean) => void;
     onBeforeToggleHandler?: (event: PanelBeforeToggleEvent) => void;
     onAfterToggleHandler?: (event: PanelAfterToggleEvent) => void;
