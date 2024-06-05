@@ -20,7 +20,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig, PanelConfig } from 'warskald-ui/models';
 import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PrimeNGConfig, SelectItem } from 'primeng/api';
@@ -601,7 +601,23 @@ export class ShowcaseComponent {
     
     
     // #region public methods
-
+    getPanelForm(header: string, id: string, elements: ComponentConfig[]): PanelConfig {
+        return {
+            elementType: ElementType.PANEL,
+            id,
+            hasForm: true,
+            content: elements,
+            layoutStyles: {
+                baseClass: 'col-12'
+            },
+            options: {
+                toggleable: true,
+                toggler: 'header',
+                collapsed: true,
+                header,
+            }
+        };
+    }
     public openDialog() {
         /* const topRefs = Array.from(this.formComponent?.componentRefs ?? []);
         topRefs.forEach((ref) => {
@@ -621,7 +637,9 @@ export class ShowcaseComponent {
                 test4: ['test4', 'test5'],
             },
         };
-        const { options, form } = getFormDialog('Test Dialog', [formElement]);
+
+        const panelForm = this.getPanelForm('Test Panel', 'panel_1', [formElement]);
+        const { options, form } = getFormDialog('Test Dialog', [panelForm]);
         options.modal = false;
         const dialogRef = this.dialogMgr.openModularDialog(options);
 

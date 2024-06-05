@@ -5,6 +5,7 @@ import { Panel, PanelAfterToggleEvent, PanelBeforeToggleEvent, PanelModule } fro
 import { ComponentConfig, PanelConfig, ElementType, GenericFunction, StyleGroup, WeakObject, PPanelConfig } from 'warskald-ui/models';
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { BaseWidget } from '../base-widget';
+import { ElementRendererComponent } from '../element-renderer/element-renderer.component';
 
 @LoggableComponent({
     LOCAL_ID: 'PanelComponent',
@@ -16,8 +17,9 @@ import { BaseWidget } from '../base-widget';
     selector: 'ws-panel',
     standalone: true,
     imports: [
-        PanelModule,
         CommonModule,
+        ElementRendererComponent,
+        PanelModule,
         ReactiveFormsModule,
     ],
     providers: [
@@ -38,6 +40,12 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
     public defaultBaseStyleClass: string = 'app-panel';
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
+
+    public headerType: string = 'string';
+
+    public contentType: string = 'components';
+
+    public footerType: string = 'string';
 
 
     [key: string]: unknown;
@@ -61,6 +69,12 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
     @Input() value: unknown = undefined;
     
     @Input() options: PPanelConfig = {};
+
+    @Input() headerContent?: ComponentConfig[];
+
+    @Input() content?: ComponentConfig[];
+
+    @Input() footerContent?: ComponentConfig[];
 
     @Input() collapsedChangeHandler(event: boolean): void {}
 

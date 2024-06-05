@@ -13,9 +13,18 @@
     (collapsedChange)="collapsedChangeHandler($event)"
     (onBeforeToggle)="onBeforeToggleHandler($event)"
     (onAfterToggle)="onAfterToggleHandler($event)">
+
     @if(!options.header) {
-        <ng-template pTemplate="header">
-            
+        @if(headerType === 'components' && headerContent) {
+            <ng-template pTemplate="header">
+                <ws-element-renderer [elements]="headerContent" [form]="form"></ws-element-renderer>
+            </ng-template>
+        }
+    }
+
+    @if(contentType === 'components' && content) {
+        <ng-template pTemplate="content">
+            <ws-element-renderer [elements]="content" [form]="form"></ws-element-renderer>
         </ng-template>
     }
 </p-panel>

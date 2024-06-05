@@ -64,7 +64,7 @@ export class ElementRendererComponent implements ContainerConfig {
 
     @Input() hasForm = true as const;
 
-    @Input() form?: FormGroup;
+    @Input() form?: FormGroup | FormControl;
 
     @Input() elementType = ElementType.COMPONENT as const;
 
@@ -182,7 +182,7 @@ export class ElementRendererComponent implements ContainerConfig {
                     config: element
                 };
                 
-                if(element.hasForm && this.form) {
+                if(element.hasForm && this.form instanceof FormGroup) {
                     if(classType === ElementRendererComponent) {
                         const subGroup = new FormGroup({});
                         this.form.addControl(model.elementId, subGroup);
