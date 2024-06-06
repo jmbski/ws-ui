@@ -100,6 +100,7 @@ export class FormService {
             }
             // Remove the glow class after the animation completes
             const timerId = nanoid();
+            console.log('starting timer', timerId, element);
             console.time(timerId);
             setTimeout(() => {
                 (<HTMLElement>element).classList.remove(animation);
