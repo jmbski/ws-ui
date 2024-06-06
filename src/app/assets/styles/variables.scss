@@ -1,6 +1,35 @@
 $surface-700: #e7ded1;
 $common-transition: all 0.3s ease;
 $base-logo-height: 6rem;
+// Create a lighter version of the color
+
+$surface-100: #161d21;
+$surface-100-lighter: lighten($surface-100, 20%);
+
+// Create a more transparent version of the lighter color
+$surface-100-lighter-transparent: rgba($surface-100-lighter, 0.7);
+$glow-1-color: rgba($surface-100-lighter, 0.2);
+$glow-2-color: rgba($surface-100-lighter, 0.25);
+$glow-3-color: rgba($surface-100-lighter, 0.4);
+$glow-4-color: rgba($surface-100-lighter, 0.5);
+
+$glow-1: 0 0 2px 2px $glow-1-color;
+$glow-1-inner: $glow-1 inset;
+$glow-1-both: $glow-1, $glow-1-inner;
+
+$glow-2: 0 0 3px 3px $glow-2-color;
+$glow-2-inner: $glow-2 inset;
+$glow-2-both: $glow-2, $glow-2-inner;
+
+$glow-3: 0 0 5px 5px $glow-3-color;
+$glow-3-inner: $glow-3 inset;
+$glow-3-both: $glow-3, $glow-3-inner;
+
+$glow-4: 0 0 10px 5px $glow-4-color;
+$glow-4-inner: $glow-4 inset;
+$glow-4-both: $glow-4, $glow-4-inner;
+
+$text-glow-1: 0 0 3px rgba(255, 255, 255, 0.8);
 
 $mw-font-family: Poppins, sans-serif;
 $mw-surface-a: #88581a;

@@ -1,0 +1,86 @@
+@use "sass:string";
+@import 'variables';
+
+/* Define the keyframes for the glow animation */
+@keyframes glow-animation {
+    0% {
+        box-shadow: $glow-1-both;
+    }
+
+    17% {
+        box-shadow: $glow-4-both;
+    }
+
+    33% {
+        box-shadow: $glow-1-both;
+    }
+
+    50% {
+        box-shadow: $glow-4-both;
+    }
+
+    67% {
+        box-shadow: $glow-1-both;
+    }
+
+    83% {
+        box-shadow: $glow-4-both;
+    }
+
+    100% {
+        box-shadow: $glow-1-both;
+    }
+}
+
+/* Apply the glow animation */
+.glowing {
+    animation: glow-animation .7s ease-in-out;
+}
+
+/* Optionally, you can add it to certain elements */
+.triggered-change {
+    animation: glow-animation 1s ease-in-out;
+}
+
+/* Define the keyframes for the reflective animation */
+@keyframes reflective {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+$reflect-duration: 1.5s;
+
+/* Apply the reflective animation */
+.reflective {
+    position: relative;
+    /* Ensure the element has a positioning context */
+    overflow: hidden;
+    /* Hide overflow to clip the pseudo-element */
+    
+    
+    content: attr(data-duration) "" + $reflect-duration;
+}
+
+
+.reflective::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200%;
+    height: 100%;
+    background: linear-gradient(-120deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0) 30%,
+            rgba(255, 255, 255, 0.6) 50%,
+            rgba(255, 255, 255, 0) 80%,
+            rgba(255, 255, 255, 0) 100%);
+    background-repeat: no-repeat;
+    background-size: 200% 100%;
+    animation: reflective $reflect-duration ease-in-out;
+}

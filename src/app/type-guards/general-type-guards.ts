@@ -249,8 +249,8 @@ export function isTypedRecordArray<T>(obj: unknown, typeGuard: (obj: unknown) =>
     return Array.isArray(obj) && obj.every(item => isTypedRecord(item, typeGuard));
 }
 
-export function isNumericString(str: string): boolean {
-    return !isNaN(Number(str));
+export function isNumericString(str: string, strict: boolean = true): boolean {
+    return (strict && !isNaN(Number(str))) || (!strict && !isNaN(parseFloat(str)));
 }
 
 export function stringToDate(dateString: string): Date | undefined {

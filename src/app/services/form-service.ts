@@ -2,7 +2,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
 import { ComponentConfig, ContainerConfig, ElementType, FormValidator, InputNumberConfig, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
-import { exists, isArray, isBoolean, isNumber, isString, isWeakObject } from 'warskald-ui/type-guards';
+import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 
 
@@ -46,6 +46,8 @@ export class FormService {
     // #region constructor and lifecycle hooks
     
     // #endregion constructor and lifecycle hooks
+
+    
     
     public static addValidatorMsg(name: string, message: string) {
         FormService._validatorMessages.set(name, message);
@@ -70,6 +72,48 @@ export class FormService {
     public static getValidatorMsgTooltip(control: FormControl): string {
         const validators = Object.keys(control.errors ?? {});
         return FormService.getValidatorMsgs(validators).join('<br>');
+    }
+    
+    public static triggerAnimation(element: HTMLElement | string, animation: string = 'glowing', duration: number = 2) {
+        if(isString(element)) {
+            const foundElement = document.getElementById(element);
+            if(foundElement) {
+                element = foundElement;
+            }
+        }
+        if(element instanceof HTMLElement) {
+
+            element.classList.add(animation);
+            
+            const computedContent = getComputedStyle(element).content;
+            const parsedContent = computedContent.replaceAll('"','');
+            const durationContent = isNumericString(parsedContent, false) ? parseFloat(parsedContent) : 0;
+
+            const computedDuration = getComputedStyle(element).animationDuration;
+            const parsedDuration = isNumericString(computedDuration, false) ? parseFloat(computedDuration) : 0;
+
+            duration = (durationContent || parsedDuration || duration) * 1000;
+
+            if(duration <= 0) {
+                duration = 2000;
+            }
+            // Remove the glow class after the animation completes
+            setTimeout(() => {
+                (<HTMLElement>element).classList.remove(animation);
+            }, duration);
+        }
+    }
+
+    public static triggerReflective() {
+        const element = document.getElementById('reflectiveElement');
+        if(element) {
+            element.classList.add('reflective');
+            
+            // Optionally, remove the class after the animation completes
+            setTimeout(() => {
+                element.classList.remove('reflective');
+            }, 1500); // Match this duration with the duration of the animation
+        }
     }
 
     public static getElementType(value: unknown): ElementType | undefined {

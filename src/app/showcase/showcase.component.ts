@@ -21,7 +21,7 @@ import {
     WsTableComponent
 } from 'warskald-ui/components';
 import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig, PanelConfig, PPanelConfig } from 'warskald-ui/models';
-import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
+import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService, ToastService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PrimeNGConfig, SelectItem } from 'primeng/api';
 import { isString } from 'lodash';
@@ -633,6 +633,9 @@ export class ShowcaseComponent {
             hasFormGroup: true,
         };
     }
+
+    triggerGlow = FormService.triggerAnimation;
+      
     public openDialog() {
         /* const topRefs = Array.from(this.formComponent?.componentRefs ?? []);
         topRefs.forEach((ref) => {
@@ -660,6 +663,7 @@ export class ShowcaseComponent {
 
         dialogRef?.onSubmit.subscribe(() => {
             console.log('submit:', form.value);
+            ToastService.showInfo('Submitted');
         });
     }
     

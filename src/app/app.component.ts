@@ -7,7 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { AppDeviceInfo, LayoutChangeObserver$ } from 'warskald-ui/common';
 import { BlockableUiComponent, MenuBarComponent, MenuBarConfig, NavLogoComponent, NavLogoConfig, PullToRefreshComponent } from 'warskald-ui/components';
 import { PageLayoutConfig, TopNavConfig } from 'warskald-ui/models';
-import { LayoutService, LoggableComponent, LogLevels, NavigationService, WSMenuItem } from 'warskald-ui/services';
+import { LayoutService, LoggableComponent, LogLevels, NavigationService, ToastService, WSMenuItem } from 'warskald-ui/services';
 import { AppSettings } from './app.config';
 
 @LoggableComponent({
@@ -76,9 +76,11 @@ export class AppComponent {
         public router: Router,
         private primengConfig: PrimeNGConfig,
         private deviceDetector: DeviceDetectorService,
+        private messageSvc: MessageService,
     ) {
         NavigationService.initialize(router);
 
+        ToastService.messageService = this.messageSvc;
 
         AppDeviceInfo.isMobile = this.deviceDetector.isMobile();
         AppDeviceInfo.isTablet = this.deviceDetector.isTablet();
