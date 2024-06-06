@@ -15,6 +15,8 @@ import { LogLevels, LoggableClass } from './log-service/_index';
 export class ToastService {
 
     // #region public properties
+
+    public static messageService?: MessageService;
     
     // #endregion public properties
     
@@ -50,50 +52,46 @@ export class ToastService {
     
     
     // #region constructor and lifecycle hooks
-    constructor(
-        private messageService: MessageService,
-    ) {
-        
-    }
+    
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
 
-    public showToast(message: Message) {
-        this.messageService.add(message);
+    public static showToast(message: Message) {
+        this.messageService?.add(message);
     }
 
-    public showSuccess(detail: string, summary?: string, ): void {
+    public static showSuccess(detail: string, summary?: string, ): void {
 
-        this.messageService.add({
+        this.messageService?.add({
             severity: 'success',
             summary: summary ?? 'Success',
             detail,
         });
     }
 
-    public showInfo(detail: string, summary?: string, ): void {
+    public static showInfo(detail: string, summary?: string, ): void {
 
-        this.messageService.add({
+        this.messageService?.add({
             severity: 'info',
             summary: summary ?? 'Info',
             detail,
         });
     }
 
-    public showWarn(detail: string, summary?: string, ): void {
+    public static showWarn(detail: string, summary?: string, ): void {
 
-        this.messageService.add({
+        this.messageService?.add({
             severity: 'warn',
             summary: summary ?? 'Warning',
             detail,
         });
     }
 
-    public showError(detail: string, summary?: string, ): void {
+    public static showError(detail: string, summary?: string, ): void {
         
-        this.messageService.add({
+        this.messageService?.add({
             severity: 'error',
             summary: summary ?? 'Error',
             detail,
