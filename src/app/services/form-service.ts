@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ComponentConfig, ContainerConfig, ElementType, FormValidator, InputNumberConfig, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
+import { nanoid } from 'nanoid';
 
 
 @LoggableClass({
@@ -98,8 +99,11 @@ export class FormService {
                 duration = 2000;
             }
             // Remove the glow class after the animation completes
+            const timerId = nanoid();
+            console.time(timerId);
             setTimeout(() => {
                 (<HTMLElement>element).classList.remove(animation);
+                console.timeEnd(timerId);
             }, duration);
         }
     }

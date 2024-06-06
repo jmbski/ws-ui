@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, Input, QueryList, Type, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, ElementRef, Input, QueryList, Type, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig, NgComponentOutletRef } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
@@ -126,7 +126,8 @@ export class ElementRendererComponent implements ContainerConfig {
     
     // #region constructor and lifecycle hooks
     constructor(
-        public cd: ChangeDetectorRef
+        public cd: ChangeDetectorRef,
+        public el: ElementRef
     ) {
         
     }
