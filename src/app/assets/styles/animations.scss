@@ -67,7 +67,7 @@ $reflect-duration: 1.5s;
 }
 
 
-.reflective::before {
+.reflective::after {
     content: '';
     position: absolute;
     top: 0;
