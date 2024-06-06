@@ -20,7 +20,7 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig, PanelConfig } from 'warskald-ui/models';
+import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig, PanelConfig, PPanelConfig } from 'warskald-ui/models';
 import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService } from 'warskald-ui/services';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { PrimeNGConfig, SelectItem } from 'primeng/api';
@@ -172,6 +172,20 @@ export class ShowcaseComponent {
                 test3: false,
                 test4: ['test4', 'test5'],
             },
+            keyLabel: 'Syllable',
+            valueLabel: 'Weight',
+            keyTooltip: 'Grouping of orthographic characters',
+            valueTooltip: 'The weight of the syllable\'s occurrence. Higher weights are more likely to be selected.',
+            usePanel: true,
+            options: {
+                header: 'Dictionary',
+                collapsed: false,
+                toggleable: true,
+                toggler: 'header',
+            },
+            enableEdit: true,
+            enableNewKeys: true,
+            initialType: 'number',
         },
         /* {
             elementType: ElementType.DICTIONARY,

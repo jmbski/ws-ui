@@ -1,111 +1,134 @@
-
-<div 
-    [class]="baseStyleClasses"
-    [style]="baseStyles?.style">
-
-    <!-- <ng-template #newKeyTooltip>
-        <div class="ws-dict-tooltip">
-            @if(newKeyControl.valid) {
-                <p>Enter a unique key to add to the object</p>
-            }
-            @else {
-
+<ng-template #formTemplate>
+    
+    <div 
+        [class]="baseStyleClasses"
+        [style]="baseStyles?.style">
+    
+        @if(enableNewKeys) {
+            <div [class]="headerStyleClasses" [style]="headerStyles?.style">
+                <p-inputGroup class="col-6">
+                    <p-inputGroupAddon>Value Type:</p-inputGroupAddon>
+                    <p-dropdown 
+                        [options]="typeOptions" 
+                        appendTo="body"
+                        [formControl]="typesControl"
+                        styleClass="w-full border-noround-left"
+                        [showClear]="true" 
+                        [placeholder]="'Select Type'">
+                    </p-dropdown>
+                </p-inputGroup>
+                <p-inputGroup class="col-6">
+                    <p-inputGroupAddon>{{keyLabel}}:</p-inputGroupAddon>
+                    <input pInputText [formControl]="newKeyControl" class="ws-dict-input" [pTooltip]="newKeyTooltip" [tooltipOptions]="tooltipOptions">
+                    <p-button 
+                        icon="pi pi-plus" 
+                        styleClass="ws-dict-btn-end" 
+                        (click)="addItem()"
+                        pTooltip="Add property">
+                    </p-button>
+                </p-inputGroup>
+            </div>
+        }
+    
+        <div [class]="bodyStyleClasses" [style]="bodyStyles?.style">
+            @for(item of items; track item.key) {
+    
+                <p-inputGroup class="ws-dict-field">
+                    <p-inputGroupAddon>{{keyLabel}}:</p-inputGroupAddon>
+                    <input #keyInput 
+                        pInputText 
+                        [formControl]="item.keyControl" 
+                        [pTooltip]="item.tooltip"
+                        [tooltipOptions]="tooltipOptions"
+                        class="ws-dict-input"
+                    >
+                    @if(enableEdit) {
+                        @if(item.keyControl.disabled) {
+                            <!-- <input pInputText [disabled]="true" [value]="item.key" class="ws-dict-input"> -->
+                            <p-button icon="pi pi-pencil" styleClass="ws-dict-btn-end" (click)="editItem(item, true)"></p-button>
+                        }
+                        @else {
+                            <p-button icon="pi pi-check" styleClass="ws-dict-btn" (click)="updateItem(item, true)"></p-button>
+                            <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, true)"></p-button>
+                        }
+                    }
+                </p-inputGroup>
+    
+                <p-inputGroup class="ws-dict-field" [pTooltip]="valueTooltip" [tooltipOptions]="tooltipOptions" >
+                    <p-inputGroupAddon>{{valueLabel}}:</p-inputGroupAddon>
+                    @switch(item.type) {
+                        @case('string') {
+                            <input #valueInput
+                                pInputText 
+                                class="ws-dict-input"
+                                [formControl]="item.valueControl"
+                            >
+                        }
+                        @case('number') {
+                            <p-inputNumber 
+                                [formControl]="item.valueControl"
+                                inputStyleClass="ws-dict-input"
+                            >
+                            </p-inputNumber>
+                        }
+                        @case('boolean') {
+                            <p-dropdown
+                                [options]="booleanOptions"
+                                appendTo="body"
+                                [formControl]="item.valueControl"
+                                styleClass="w-full border-noround"
+                                (onChange)="updateItem(item)"
+                                >
+                            </p-dropdown>
+                        }
+                        @case ('string[]') {
+                            <p-chips
+                                [formControl]="item.valueControl"
+                                styleClass="w-full"
+                                inputStyleClass="ws-dict-input"
+                            ></p-chips>
+                        }
+    
+                    }
+                    @if(enableEdit) {
+                        @if(item.valueControl.disabled) {
+                            <p-button icon="pi pi-pencil" styleClass="ws-dict-btn-end" (click)="editItem(item, false)"></p-button>
+                        }
+                        @else {
+                            <p-button icon="pi pi-check" styleClass="ws-dict-btn" (click)="updateItem(item)"></p-button>
+                            <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, false)"></p-button>
+                        }
+                    }
+                    <!-- <p-button icon="pi pi-trash" (click)="deleteItem(item)"></p-button> -->
+                </p-inputGroup>
+                
             }
         </div>
-    </ng-template> -->
-
-    <div [class]="headerStyleClasses" [style]="headerStyles?.style">
-        <p-inputGroup class="col-6">
-            <p-inputGroupAddon>Value Type:</p-inputGroupAddon>
-            <p-dropdown 
-                [options]="typeOptions" 
-                appendTo="body"
-                [formControl]="typesControl"
-                styleClass="w-full border-noround-left"
-                [showClear]="true" 
-                [placeholder]="'Select Type'">
-            </p-dropdown>
-        </p-inputGroup>
-        <p-inputGroup class="col-6">
-            <p-inputGroupAddon>Key:</p-inputGroupAddon>
-            <input pInputText [formControl]="newKeyControl" class="ws-dict-input" [pTooltip]="newKeyTooltip" [tooltipOptions]="tooltipOptions">
-            <p-button 
-                icon="pi pi-plus" 
-                styleClass="ws-dict-btn-end" 
-                (click)="addItem()"
-                pTooltip="Add property">
-            </p-button>
-        </p-inputGroup>
     </div>
+</ng-template>
 
-    <div [class]="bodyStyleClasses" [style]="bodyStyles?.style">
-        @for(item of items; track item.key) {
-
-            <p-inputGroup class="ws-dict-field">
-                <p-inputGroupAddon>Key:</p-inputGroupAddon>
-                <input #keyInput 
-                    pInputText 
-                    [formControl]="item.keyControl" 
-                    [pTooltip]="item.tooltip"
-                    [tooltipOptions]="tooltipOptions"
-                    class="ws-dict-input"
-                >
-                @if(item.keyControl.disabled) {
-                    <!-- <input pInputText [disabled]="true" [value]="item.key" class="ws-dict-input"> -->
-                    <p-button icon="pi pi-pencil" styleClass="ws-dict-btn-end" (click)="editItem(item, true)"></p-button>
-                }
-                @else {
-                    <p-button icon="pi pi-check" styleClass="ws-dict-btn" (click)="updateItem(item, true)"></p-button>
-                    <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, true)"></p-button>
-                }
-            </p-inputGroup>
-
-            <p-inputGroup class="ws-dict-field" >
-                <p-inputGroupAddon>Value:</p-inputGroupAddon>
-                @switch(item.type) {
-                    @case('string') {
-                        <input #valueInput
-                            pInputText 
-                            class="ws-dict-input"
-                            [formControl]="item.valueControl"
-                        >
-                    }
-                    @case('number') {
-                        <p-inputNumber 
-                            [formControl]="item.valueControl"
-                            inputStyleClass="ws-dict-input"
-                        >
-                        </p-inputNumber>
-                    }
-                    @case('boolean') {
-                        <p-dropdown
-                            [options]="booleanOptions"
-                            appendTo="body"
-                            [formControl]="item.valueControl"
-                            styleClass="w-full border-noround"
-                            (onChange)="updateItem(item)"
-                            >
-                        </p-dropdown>
-                    }
-                    @case ('string[]') {
-                        <p-chips
-                            [formControl]="item.valueControl"
-                            styleClass="w-full"
-                            inputStyleClass="ws-dict-input"
-                        ></p-chips>
-                    }
-
-                }
-                @if(item.valueControl.disabled) {
-                    <p-button icon="pi pi-pencil" styleClass="ws-dict-btn-end" (click)="editItem(item, false)"></p-button>
-                }
-                @else {
-                    <p-button icon="pi pi-check" styleClass="ws-dict-btn" (click)="updateItem(item)"></p-button>
-                    <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, false)"></p-button>
-                }
-                <!-- <p-button icon="pi pi-trash" (click)="deleteItem(item)"></p-button> -->
-            </p-inputGroup>
-            
-        }
-    </div>
-</div>
+@if(usePanel) {
+    <p-panel
+        [toggleable]="options.toggleable ?? true"
+        [header]="options.header"
+        [collapsed]="options.collapsed"
+        [style]="options.style"
+        [styleClass]="options.styleClass"
+        [iconPos]="options.iconPos ?? 'end'"
+        [expandIcon]="options.expandIcon"
+        [collapseIcon]="options.collapseIcon"
+        [showHeader]="options.showHeader ?? true"
+        [toggler]="options.toggler ?? 'header'"
+        [transitionOptions]="options.transitionOptions ?? '400ms cubic-bezier(0.86, 0, 0.07, 1)'"
+        (collapsedChange)="collapsedChangeHandler($event)"
+        (onBeforeToggle)="onBeforeToggleHandler($event)"
+        (onAfterToggle)="onAfterToggleHandler($event)"
+        >
+        <ng-template pTemplate="body">
+            <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+        </ng-template>
+    </p-panel>
+}
+@else {
+    <ng-container *ngTemplateOutlet="formTemplate"></ng-container>
+}

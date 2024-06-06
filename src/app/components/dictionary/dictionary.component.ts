@@ -23,6 +23,7 @@ import { BooleanOptions } from 'warskald-ui/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { ChipsModule } from 'primeng/chips';
 import { KeyFilterModule } from 'primeng/keyfilter';
+import { PanelAfterToggleEvent, PanelBeforeToggleEvent, PanelModule } from 'primeng/panel';
 
 @LoggableComponent({
     LOCAL_ID: 'DictionaryComponent',
@@ -46,6 +47,7 @@ import { KeyFilterModule } from 'primeng/keyfilter';
         InputTextModule,
         KeyFilterModule,
         OverlayPanelModule,
+        PanelModule,
         ReactiveFormsModule,
         SelectButtonModule,
         ToggleButtonModule,
@@ -125,12 +127,73 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
     @Input() bodyStyles?: StyleGroup = {};
 
     @Input() value: WeakObject = {};
+
+    @Input() options: PPanelConfig = {};
+
+    @Input() keyLabel: string = 'Key';
+
+    @Input() valueLabel: string = 'Value';
+
+    @Input() keyTooltip: string = 'Enter a unique key for the property';
+
+    @Input() valueTooltip: string = 'Enter a value for the property';
+
+    @Input() usePanel?: boolean = false;
+
+    @Input() panelOptions?: PPanelConfig = {};
+    
+    @Input() enableNewKeys: boolean = true;
+
+    @Input() enableTypeSelection: boolean = true;
+
+    @Input() enableEdit: boolean = true;
+
+    @Input() collapsedChangeHandler(event: boolean): void {}
+
+    @Input() onBeforeToggleHandler(event: PanelBeforeToggleEvent): void {}
+
+    @Input() onAfterToggleHandler(event: PanelAfterToggleEvent): void {}
+
     
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
+
+    private _validTypeOptions?: DictionaryType[];
+    @Input()
+    get validTypeOptions(): DictionaryType[] | undefined {
+        return this._validTypeOptions;
+    }
+    set validTypeOptions(value: DictionaryType[] | undefined) {
+        this._validTypeOptions = value;
+        if(value) {
+            this.typeOptions = this.typeOptions.filter((type) => value.includes(type.value));
+            if(value.length === 1) {
+                this.typesControl.disable();
+            }
+        }
+        else {
+            this.typeOptions = DictionaryTypes;
+        }
+    }
+
+    private _initialType?: DictionaryType;
+    @Input()
+    get initialType(): DictionaryType | undefined {
+        return this._initialType;
+    }
+    set initialType(value: DictionaryType | undefined) {
+        this._initialType = value;
+        if(value) {
+
+            if(!this.validTypeOptions || this.validTypeOptions.includes(value)) {
+                this.currentType = value;
+                this.typesControl.setValue(value);
+            }
+        }
+    }
     
     // #endregion get/set inputs
     
@@ -182,14 +245,13 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
     }
 
     public addItem() {
-        console.log(this.newKeyControl.errors);
-        /* if(this.newKeyControl.valid && this.newKeyControl.value) {
+        if(this.newKeyControl.valid && this.newKeyControl.value) {
             const defaultValue = DictionaryDefaults[this.currentType];
     
             this.addDictItem(this.newKeyControl.value, defaultValue, true);
     
             this.newKeyControl.reset('');
-        } */
+        }
     }
 
     public updateItem(item: DictionaryItem, isKey: boolean = false) {
@@ -264,7 +326,7 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
             type,
             keyControl,
             valueControl,
-            tooltip: '',
+            tooltip: this.keyTooltip,
         };
 
         keyControl.statusChanges.subscribe(() => {
@@ -272,7 +334,7 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
                 dictItem.tooltip = FormService.getValidatorMsgTooltip(keyControl);
             }
             else {
-                dictItem.tooltip = '';
+                dictItem.tooltip = this.keyTooltip;
             }
         });
 

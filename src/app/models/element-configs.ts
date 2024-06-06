@@ -11,7 +11,7 @@ import { SelectButtonChangeEvent, SelectButtonOptionClickEvent } from 'primeng/s
 import { SliderChangeEvent, SliderSlideEndEvent } from 'primeng/slider';
 import { ToggleButtonChangeEvent } from 'primeng/togglebutton';
 import { ElementType } from './element-types';
-import { ButtonAction, DictionaryItem, FunctionMap, GenericFunction, WeakObject } from './general';
+import { ButtonAction, DictionaryItem, DictionaryType, FunctionMap, GenericFunction, WeakObject } from './general';
 import * as PrimeConfigs from './prime_configs/_index';
 import { StyleGroup } from './style-types';
 import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
@@ -395,10 +395,20 @@ export interface StepperConfig extends BaseComponentConfig {
 
 export interface DictionaryConfig extends FormElementConfig {
     elementType: ElementType.DICTIONARY;
-    //items?: DictionaryItem[];
     value?: WeakObject;
     headerStyles?: StyleGroup;
     bodyStyles?: StyleGroup;
+    keyLabel?: string;
+    valueLabel?: string;
+    keyTooltip?: string;
+    valueTooltip?: string;
+    usePanel?: boolean;
+    options?: PrimeConfigs.PPanelConfig;
+    validTypeOptions?: DictionaryType[];
+    enableNewKeys?: boolean;
+    enableTypeSelection?: boolean;
+    initialType?: DictionaryType;
+    enableEdit?: boolean;
 }
 
 /**
