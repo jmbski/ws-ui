@@ -34,7 +34,6 @@
 
 /* Apply the glow animation */
 .glowing {
-    z-index: 1000000;
     animation: glow-animation .7s ease-in-out;
 }
 
