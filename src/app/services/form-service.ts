@@ -301,6 +301,9 @@ export class FormService {
             labelStyles: {
                 baseClass: 'p-3 label-centered',
             },
+            options: {
+                header: label,
+            }
         };
 
         if(options) {
