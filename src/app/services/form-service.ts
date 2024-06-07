@@ -301,14 +301,21 @@ export class FormService {
             labelStyles: {
                 baseClass: 'p-3 label-centered',
             },
-            options: {
-                header: label,
-            }
         };
 
-        if(options) {
-            Object.assign(config, options);
+        options ??= {};
+
+        if(label) {
+            if(options.usePanel) {
+                options.options ??= {};
+                options.options.header = label;
+            }
+            else {
+                config.label = label;
+            }
         }
+
+        Object.assign(config, options);
 
         return config;
     }
