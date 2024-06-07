@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { ButtonConfig, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, GenericFunction, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
+import { ButtonConfig, CharMap, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, GenericFunction, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
@@ -348,10 +348,18 @@ export class FormService {
     
     }
 
-    public static getCustomKeysElement(id: string, attachTo: string, layoutStyleClass: string = 'col-2'): CustomKeysConfig {
+    public static objToCharMap(obj: WeakObject): CharMap[] {
+        return Object.keys(obj).map((char) => <CharMap>{char});
+    }
+
+    public static getCustomKeysElement(id: string, attachTo: string, charMap?: WeakObject | CharMap[], layoutStyleClass: string = 'col-2'): CustomKeysConfig {
+        if(isWeakObject(charMap)) {
+            charMap = FormService.objToCharMap(charMap);
+        }
         return {
             elementType: ElementType.CUSTOM_KEYS,
             id,
+            charMap,
             layoutStyles: {
                 baseClass: layoutStyleClass
             },
