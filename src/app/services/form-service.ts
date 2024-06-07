@@ -283,10 +283,6 @@ export class FormService {
         value: WeakObject, 
         label?: string, 
         id?: string, 
-        keyLabel?: string, 
-        valueLabel?: string,
-        keyTooltip?: string,
-        valueTooltip?: string,
         options?: Partial<DictionaryConfig>
     ): DictionaryConfig {
         const config: DictionaryConfig = {
@@ -297,10 +293,6 @@ export class FormService {
                 baseClass: 'col-12'
             },
             value,
-            keyLabel,
-            keyTooltip,
-            valueLabel,
-            valueTooltip,
             labelStyles: {
                 baseClass: 'p-3 label-centered',
             },

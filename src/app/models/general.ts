@@ -122,3 +122,9 @@ export interface DictionaryItem {
 }
 
 export type FormValidator = ValidatorFn | AsyncValidatorFn;
+
+export interface FormValidatorConfig {
+    validator: FormValidator;
+    message?: string;
+    id?: string;
+}

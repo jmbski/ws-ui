@@ -143,6 +143,14 @@ export class ModularDialogRef {
         this._onCancel.next(args);
     }
 
+    /**
+     * Callback to invoke on dialog is touched.
+     * @group Method
+     */
+    touch() {
+        this._OnTouch.next();
+    }
+
     private readonly _onClose = new Subject<unknown>();
     /**
      * Event triggered on dialog is closed.
@@ -247,5 +255,12 @@ export class ModularDialogRef {
      * @group Events
      */
     onCancel: Observable<unknown | undefined> = this._onCancel.asObservable();
+
+    private readonly _OnTouch = new Subject<void>();
+    /**
+     * Event triggered on touch.
+     * @group Events
+     */
+    onTouch: Observable<void> = this._OnTouch.asObservable();
     
 }

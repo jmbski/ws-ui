@@ -1,7 +1,7 @@
 <p-panel #panelRef
     [toggleable]="options.toggleable"
     [header]="options.header"
-    [collapsed]="options.collapsed"
+    [collapsed]="options.collapsed ?? true"
     [style]="options.style"
     [styleClass]="options.styleClass"
     [iconPos]="options.iconPos ?? 'end'"

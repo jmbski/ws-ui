@@ -48,7 +48,16 @@
                             <p-button icon="pi pi-pencil" styleClass="ws-dict-btn-end" (click)="editItem(item, true)"></p-button>
                         }
                         @else {
-                            <p-button icon="pi pi-check" styleClass="ws-dict-btn" (click)="updateItem(item, true)"></p-button>
+                            <div [pTooltip]="item.keyControl.invalid ? 'Invalid input' : ''">
+                                <p-button 
+                                    icon="pi pi-check" 
+                                    styleClass="ws-dict-btn" 
+                                    (click)="updateItem(item, true)" 
+                                    [disabled]="item.keyControl.invalid"
+                                    [pTooltip]="item.keyControl.invalid ? 'Invalid input' : ''"
+                                    >
+                                </p-button>
+                            </div>
                             <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, true)"></p-button>
                         }
                     }
@@ -95,7 +104,16 @@
                             <p-button icon="pi pi-pencil" styleClass="ws-dict-btn-end" (click)="editItem(item, false)"></p-button>
                         }
                         @else {
-                            <p-button icon="pi pi-check" styleClass="ws-dict-btn" (click)="updateItem(item)"></p-button>
+                            
+                            <div class="w-full" [pTooltip]="item.valueControl.invalid ? 'Invalid input' : ''">
+                                <p-button 
+                                    icon="pi pi-check" 
+                                    styleClass="ws-dict-btn" 
+                                    (click)="updateItem(item, false)" 
+                                    [disabled]="item.valueControl.invalid"
+                                >
+                                </p-button>
+                            </div>
                             <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, false)"></p-button>
                         }
                     }

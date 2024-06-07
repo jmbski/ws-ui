@@ -4,7 +4,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { BaseWidget } from '../base-widget';
-import { DictionaryType, DictionaryTypes, ElementType, PPanelConfig, DictionaryItem, StyleGroup, WeakObject, DictionaryDefaults } from 'warskald-ui/models';
+import { DictionaryType, DictionaryTypes, ElementType, PPanelConfig, DictionaryItem, StyleGroup, WeakObject, DictionaryDefaults, DictionaryConfig, FormValidator, FormValidatorConfig } from 'warskald-ui/models';
 import { BehaviorSubject, debounceTime } from 'rxjs';
 import { AbstractControl, FormControl, FormGroup, FormRecord, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
@@ -56,7 +56,7 @@ import { PanelAfterToggleEvent, PanelBeforeToggleEvent, PanelModule } from 'prim
     templateUrl: './dictionary.component.html',
     styleUrl: './dictionary.component.scss'
 })
-export class DictionaryComponent extends BaseWidget<WeakObject[]> {
+export class DictionaryComponent extends BaseWidget<WeakObject[]> implements DictionaryConfig {
 
     // #region public properties
 
@@ -132,11 +132,15 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
 
     @Input() keyLabel: string = 'Key';
 
-    @Input() valueLabel: string = 'Value';
-
     @Input() keyTooltip: string = 'Enter a unique key for the property';
 
+    @Input() keyValidators?: FormValidatorConfig[];
+    
+    @Input() valueLabel: string = 'Value';
+    
     @Input() valueTooltip: string = 'Enter a value for the property';
+
+    @Input() valueValidators?: FormValidatorConfig[];
 
     @Input() usePanel?: boolean = false;
 
@@ -219,6 +223,20 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
         this.typesControl.valueChanges.subscribe((value: unknown) => {
             this.currentType = value as DictionaryType;
             
+        });
+
+        this.keyValidators?.forEach((validatorCfg) => {
+            const {id, message } = validatorCfg;
+            if(id && message) {
+                FormService.addValidatorMsg(id, message);
+            }
+        });
+
+        this.valueValidators?.forEach((validatorCfg) => {
+            const {id, message } = validatorCfg;
+            if(id && message) {
+                FormService.addValidatorMsg(id, message);
+            }
         });
 
         FormService.addValidatorMsg('keyInUse', 'Key is already in use');

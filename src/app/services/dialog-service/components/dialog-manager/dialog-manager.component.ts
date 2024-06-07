@@ -1,11 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, Input, ViewChild } from '@angular/core';
-import { MenuItem } from 'primeng/api';
 import { Dock, DockModule } from 'primeng/dock';
 import { ModularDialogConfig } from '../../models/modular-dialog.config';
 import { ModularDialogComponent } from '../modular-dialog/modular-dialog.component';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
-import { DialogManagerService } from '../../dialog-manager.service';
 import { isEqual } from 'lodash';
 import { RippleModule } from 'primeng/ripple';
 import { ModularDialogRef } from '../../models/modular-dialog-ref';
@@ -73,17 +71,17 @@ export class DialogManagerComponent {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
-        private managerSvc: DialogManagerService,
+        // private managerSvc: DialogManagerService,
     ) {
         
     }
 
     ngAfterViewInit() {
-        this.managerSvc.dialogManager = this;
+        /* this.managerSvc.dialogManager = this;
         this.managerSvc.dockedDialogs$.subscribe(dialogs => {
             this.dockedDialogs = dialogs;
             this.dockDetectChanges();
-        });
+        }); */
     }
     // #endregion constructor and lifecycle hooks
     

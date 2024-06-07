@@ -641,20 +641,21 @@ export class ShowcaseComponent {
         topRefs.forEach((ref) => {
             console.log('ref:', ref._componentRef.changeDetectorRef);
         }); */
-        const formElement: DictionaryConfig = {
-            elementType: ElementType.DICTIONARY,
-            id: 'dictionary_1',
-            hasForm: true,
-            layoutStyles: {
-                baseClass: 'col-12'
-            },
-            value: {
-                test: 'test',
-                test2: 2,
-                test3: false,
-                test4: ['test4', 'test5'],
-            },
+        const value = {
+            test: 'test',
+            test2: 2,
+            test3: false,
+            test4: ['test4', 'test5'],
         };
+
+        const formElement: DictionaryConfig = FormService.getDictionaryForm(value, 'Test Dictionary', 'dictionary_1', {
+            keyLabel: 'Syllable',
+            valueLabel: 'Weight',
+            keyTooltip: 'Grouping of orthographic characters',
+            valueTooltip: 'The weight of the syllable\'s occurrence. Higher weights are more likely to be selected.',
+            initialType: 'number',
+        
+        });
 
         const panelForm = this.getPanelForm('Test Panel', 'panel_1', [formElement]);
         const { options, form } = getFormDialog('Test Dialog', [panelForm]);

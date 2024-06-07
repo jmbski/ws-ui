@@ -1,15 +1,15 @@
 
-import { ApplicationRef, ChangeDetectorRef, ComponentRef, createComponent, ElementRef, EmbeddedViewRef, Injectable, Injector } from '@angular/core';
-import { MenuItem, PrimeNGConfig } from 'primeng/api';
-import { DynamicInjector } from 'warskald-ui/models';
-import { Subscription, BehaviorSubject } from 'rxjs';
-import { LoggableClass, LoggableComponent, LogLevels } from '../log-service/_index';
-import { ModularDialogConfig, ModularDialogRef } from './models/_index';
-import { DialogManagerComponent, ModularDialogComponent } from './components/_index';
+import { ApplicationRef, ComponentRef, createComponent, ElementRef, EmbeddedViewRef, Injectable, Injector } from '@angular/core';
 import { isEqual } from 'lodash';
 import { nanoid } from 'nanoid';
+import { PrimeNGConfig } from 'primeng/api';
 import { Dock } from 'primeng/dock';
 import { DomHandler } from 'primeng/dom';
+import { BehaviorSubject, Subscription } from 'rxjs';
+import { DynamicInjector } from 'warskald-ui/models';
+import { LoggableComponent, LogLevels } from '../log-service/_index';
+import { DialogManagerComponent, ModularDialogComponent } from './components/_index';
+import { ModularDialogConfig, ModularDialogRef } from './models/_index';
 
 @LoggableComponent({
     LOCAL_ID: 'DialogManagerService',
@@ -281,6 +281,10 @@ export class DialogManagerService {
         subs.push(dialogRef.onMaximize.subscribe(() => {
             //this.dialogComponentRefMap.get(dialogRef)?.instance.maximize();
             /** @todo implement maximize */
+        }));
+
+        subs.push(dialogRef.onTouch.subscribe(() => {
+            this.moveDialogToTopZIndex(dialogRef);
         }));
 
         subs.push(dialogRef.onRestore.subscribe(() => {

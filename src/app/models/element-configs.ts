@@ -11,7 +11,7 @@ import { SelectButtonChangeEvent, SelectButtonOptionClickEvent } from 'primeng/s
 import { SliderChangeEvent, SliderSlideEndEvent } from 'primeng/slider';
 import { ToggleButtonChangeEvent } from 'primeng/togglebutton';
 import { ElementType } from './element-types';
-import { ButtonAction, DictionaryItem, DictionaryType, FunctionMap, GenericFunction, WeakObject } from './general';
+import { ButtonAction, DictionaryItem, DictionaryType, FormValidator, FormValidatorConfig, FunctionMap, GenericFunction, WeakObject } from './general';
 import * as PrimeConfigs from './prime_configs/_index';
 import { StyleGroup } from './style-types';
 import { TreeFilterEvent, TreeNodeUnSelectEvent, TreeNodeSelectEvent } from 'primeng/tree';
@@ -398,17 +398,24 @@ export interface DictionaryConfig extends FormElementConfig {
     value?: WeakObject;
     headerStyles?: StyleGroup;
     bodyStyles?: StyleGroup;
+
     keyLabel?: string;
-    valueLabel?: string;
     keyTooltip?: string;
+    keyValidators?: FormValidatorConfig[];
+
+    valueLabel?: string;
     valueTooltip?: string;
-    usePanel?: boolean;
-    options?: PrimeConfigs.PPanelConfig;
+    valueValidators?: FormValidatorConfig[];
+
+    initialType?: DictionaryType;
     validTypeOptions?: DictionaryType[];
+    
     enableNewKeys?: boolean;
     enableTypeSelection?: boolean;
-    initialType?: DictionaryType;
     enableEdit?: boolean;
+    
+    usePanel?: boolean;
+    options?: PrimeConfigs.PPanelConfig;
 }
 
 /**
