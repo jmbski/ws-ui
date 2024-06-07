@@ -352,7 +352,14 @@ export class FormService {
         return Object.keys(obj).map((char) => <CharMap>{char});
     }
 
-    public static getCustomKeysElement(id: string, attachTo: string, charMap?: WeakObject | CharMap[], layoutStyleClass: string = 'col-2'): CustomKeysConfig {
+    public static getCustomKeysElement(
+        id: string, 
+        attachTo: string, 
+        charMap?: WeakObject | CharMap[],
+        label?: string,
+        icon?: string, 
+        layoutStyleClass: string = 'col-2'
+    ): CustomKeysConfig {
         if(isWeakObject(charMap)) {
             charMap = FormService.objToCharMap(charMap);
         }
@@ -365,7 +372,9 @@ export class FormService {
             },
             attachTo,
             options: {
-                styleClass: 'p-button-text'
+                styleClass: 'p-button-text',
+                icon,
+                label,
             },
             hasForm: true
         };
