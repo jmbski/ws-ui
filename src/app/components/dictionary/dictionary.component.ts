@@ -285,7 +285,7 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> {
 
     public cancelEdit(item: DictionaryItem, isKey: boolean = false) {
         if(isKey) {
-            item.keyControl.reset(item.value);
+            item.keyControl.reset(item.key);
             item.keyControl.disable();
         }
         else {
