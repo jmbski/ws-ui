@@ -371,10 +371,10 @@ export class FormService {
                 baseClass: layoutStyleClass
             },
             attachTo,
+            icon,
+            label,
             options: {
                 styleClass: 'p-button-text',
-                icon,
-                label,
             },
             hasForm: true
         };

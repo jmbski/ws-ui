@@ -159,6 +159,7 @@ export class ShowcaseComponent {
     public textListener$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
     public formComponents: ComponentConfig[] = [
+        FormService.getCustomKeysElement('custom-keys', 'text_area_1', {t: 't', v: 'v', c: 'c'}, '', 'fa-solid fa-keyboard'),
         {
             elementType: ElementType.DICTIONARY,
             id: 'dictionary_1',

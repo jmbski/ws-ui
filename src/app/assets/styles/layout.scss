@@ -67,7 +67,6 @@
 
 @keyframes p-component-overlay-enter-animation {
 	from {
-		background-color: transparent;
 	}
 
 	to {
@@ -79,7 +78,6 @@
 	}
 
 	to {
-		background-color: transparent;
 	}
 }
 
@@ -141,7 +139,6 @@
 	margin: 0 0 4px 0;
 	padding: 0.5rem 1rem;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 	border-radius: 6px;
 }
@@ -150,7 +147,6 @@
 
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-empty-message {
 	padding: 0.5rem 1rem;
-	background: transparent;
 }
 
 .p-autocomplete-panel .p-autocomplete-items .p-autocomplete-item-group {
@@ -200,7 +196,6 @@ p-autocomplete.p-autocomplete-clearable .p-autocomplete-dd .p-autocomplete-clear
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -267,7 +262,6 @@ p-autocomplete.p-autocomplete-clearable .p-autocomplete-dd .p-autocomplete-clear
 }
 
 .p-datepicker table td.p-datepicker-today > span {
-	background: transparent;
 	border-color: transparent;
 }
 
@@ -290,7 +284,6 @@ p-autocomplete.p-autocomplete-clearable .p-autocomplete-dd .p-autocomplete-clear
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -414,7 +407,6 @@ p-calendar.p-calendar-clearable.p-calendar-w-btn .p-calendar-clear-icon {
 }
 
 .p-cascadeselect .p-cascadeselect-label {
-	background: transparent;
 	border: 0 none;
 	padding: 0.5rem 0.75rem;
 }
@@ -426,7 +418,6 @@ p-calendar.p-calendar-clearable.p-calendar-w-btn .p-calendar-clear-icon {
 }
 
 .p-cascadeselect .p-cascadeselect-trigger {
-	background: transparent;
 	width: 2.857rem;
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
@@ -446,7 +437,6 @@ p-calendar.p-calendar-clearable.p-calendar-w-btn .p-calendar-clear-icon {
 .p-cascadeselect-panel .p-cascadeselect-items .p-cascadeselect-item {
 	margin: 0 0 4px 0;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 	border-radius: 6px;
 }
@@ -620,7 +610,6 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 }
 
 .p-dropdown .p-dropdown-label {
-	background: transparent;
 	border: 0 none;
 }
 
@@ -631,7 +620,6 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 }
 
 .p-dropdown .p-dropdown-trigger {
-	background: transparent;
 	width: 2.857rem;
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
@@ -673,7 +661,6 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 	margin: 0 0 4px 0;
 	padding: 0.5rem 1rem;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 	border-radius: 6px;
 }
@@ -682,21 +669,12 @@ p-chips.p-chips-clearable .p-chips-clear-icon {
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-empty-message {
 	padding: 0.5rem 1rem;
-	background: transparent;
 }
 
 .p-dropdown-panel .p-dropdown-items .p-dropdown-item-group {
 	margin: 0;
 	padding: 0.75rem 1rem;
 	font-weight: 600;
-}
-
-
-
-
-
-.p-input-filled .p-dropdown:not(.p-disabled).p-focus .p-inputtext {
-	background-color: transparent;
 }
 
 .p-editor-container .p-editor-toolbar {
@@ -1067,7 +1045,6 @@ p-inputnumber.p-inputnumber-clearable .p-inputnumber-buttons-horizontal .p-input
 
 .p-listbox .p-listbox-list .p-listbox-empty-message {
 	padding: 0.5rem 1rem;
-	background: transparent;
 }
 
 
@@ -1106,7 +1083,6 @@ p-inputnumber.p-inputnumber-clearable .p-inputnumber-buttons-horizontal .p-input
 }
 
 .p-multiselect .p-multiselect-trigger {
-	background: transparent;
 	width: 2.857rem;
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
@@ -1148,7 +1124,6 @@ p-inputnumber.p-inputnumber-clearable .p-inputnumber-buttons-horizontal .p-input
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -1171,7 +1146,6 @@ p-inputnumber.p-inputnumber-clearable .p-inputnumber-buttons-horizontal .p-input
 	margin: 0 0 4px 0;
 	padding: 0.5rem 1rem;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 	border-radius: 6px;
 }
@@ -1196,7 +1170,6 @@ p-inputnumber.p-inputnumber-clearable .p-inputnumber-buttons-horizontal .p-input
 
 .p-multiselect-panel .p-multiselect-items .p-multiselect-empty-message {
 	padding: 0.5rem 1rem;
-	background: transparent;
 }
 
 
@@ -1407,7 +1380,6 @@ p-password.p-password-clearable.p-password-mask .p-password-clear-icon {
 }
 
 .p-treeselect .p-treeselect-trigger {
-	background: transparent;
 	width: 2.857rem;
 	border-top-right-radius: 6px;
 	border-bottom-right-radius: 6px;
@@ -1463,7 +1435,6 @@ p-password.p-password-clearable.p-password-mask .p-password-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -1484,7 +1455,6 @@ p-password.p-password-clearable.p-password-mask .p-password-clear-icon {
 
 .p-treeselect-panel .p-treeselect-items-wrapper .p-treeselect-empty-message {
 	padding: 0.5rem 1rem;
-	background: transparent;
 }
 
 
@@ -1508,7 +1478,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1524,7 +1493,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 
 .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1642,7 +1610,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-secondary.p-button-outlined,
 .p-buttonset.p-button-secondary > .p-button.p-button-outlined,
 .p-splitbutton.p-button-secondary > .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1661,7 +1628,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-secondary.p-button-text,
 .p-buttonset.p-button-secondary > .p-button.p-button-text,
 .p-splitbutton.p-button-secondary > .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1681,7 +1647,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-info.p-button-outlined,
 .p-buttonset.p-button-info > .p-button.p-button-outlined,
 .p-splitbutton.p-button-info > .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1700,7 +1665,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-info.p-button-text,
 .p-buttonset.p-button-info > .p-button.p-button-text,
 .p-splitbutton.p-button-info > .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1721,7 +1685,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-success.p-button-outlined,
 .p-buttonset.p-button-success > .p-button.p-button-outlined,
 .p-splitbutton.p-button-success > .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1740,7 +1703,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-success.p-button-text,
 .p-buttonset.p-button-success > .p-button.p-button-text,
 .p-splitbutton.p-button-success > .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1759,7 +1721,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-warning.p-button-outlined,
 .p-buttonset.p-button-warning > .p-button.p-button-outlined,
 .p-splitbutton.p-button-warning > .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1778,7 +1739,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-warning.p-button-text,
 .p-buttonset.p-button-warning > .p-button.p-button-text,
 .p-splitbutton.p-button-warning > .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1797,7 +1757,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-help.p-button-outlined,
 .p-buttonset.p-button-help > .p-button.p-button-outlined,
 .p-splitbutton.p-button-help > .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1816,7 +1775,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-help.p-button-text,
 .p-buttonset.p-button-help > .p-button.p-button-text,
 .p-splitbutton.p-button-help > .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1835,7 +1793,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-danger.p-button-outlined,
 .p-buttonset.p-button-danger > .p-button.p-button-outlined,
 .p-splitbutton.p-button-danger > .p-button.p-button-outlined {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -1854,7 +1811,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-button.p-button-danger.p-button-text,
 .p-buttonset.p-button-danger > .p-button.p-button-text,
 .p-splitbutton.p-button-danger > .p-button.p-button-text {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -1871,12 +1827,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-button.p-button-link {
-	background: transparent;
 	border: transparent;
 }
 
 .p-button.p-button-link:enabled:hover {
-	background: transparent;
 	border-color: transparent;
 }
 
@@ -1885,13 +1839,11 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-button.p-button-link:enabled:focus {
-	background: transparent;
 	box-shadow: 0 0 0 1px var(--border-focus-glow-1);
 	border-color: transparent;
 }
 
 .p-button.p-button-link:enabled:active {
-	background: transparent;
 	border-color: transparent;
 }
 
@@ -1968,12 +1920,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
 .p-splitbutton.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2019,12 +1969,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-secondary.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
 .p-splitbutton.p-button-secondary.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2039,12 +1987,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-info.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
 .p-splitbutton.p-button-info.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2059,12 +2005,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-success.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
 .p-splitbutton.p-button-success.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2079,7 +2023,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-warning.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
@@ -2088,7 +2031,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-splitbutton.p-button-warning.p-button-outlined > .p-button:enabled:active,
 
 .p-splitbutton.p-button-warning.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2103,13 +2045,11 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-help.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
 
 .p-splitbutton.p-button-help.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2124,12 +2064,10 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-splitbutton.p-button-danger.p-button-outlined > .p-button {
-	background-color: transparent;
 	border: 2px solid;
 }
 
 .p-splitbutton.p-button-danger.p-button-text > .p-button {
-	background-color: transparent;
 	border-color: transparent;
 }
 
@@ -2148,7 +2086,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 	margin: 0.5rem;
@@ -2271,7 +2208,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -2494,7 +2430,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -2513,7 +2448,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -2544,7 +2478,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	margin: 0 0 4px 0;
 	padding: 0.5rem 1rem;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 	border-radius: 6px;
 }
@@ -2721,7 +2654,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -2881,7 +2813,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	padding: 0.5rem 1rem;
 	margin: 0 0 4px 0;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 }
 
@@ -2946,7 +2877,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-paginator .p-paginator-prev,
 .p-paginator .p-paginator-next,
 .p-paginator .p-paginator-last {
-	background-color: transparent;
 	border: 0 none;
 	min-width: 2.857rem;
 	height: 2.857rem;
@@ -2992,7 +2922,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-paginator .p-paginator-current {
-	background-color: transparent;
 	border: 0 none;
 	min-width: 2.857rem;
 	height: 2.857rem;
@@ -3001,7 +2930,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-paginator .p-paginator-pages .p-paginator-page {
-	background-color: transparent;
 	border: 0 none;
 	min-width: 2.857rem;
 	height: 2.857rem;
@@ -3063,7 +2991,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	padding: 0.5rem 1rem;
 	margin: 0 0 4px 0;
 	border: 0 none;
-	background: transparent;
 	transition: box-shadow 0.3s;
 }
 
@@ -3137,7 +3064,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -3308,7 +3234,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 	margin-right: 0.5rem;
@@ -3632,7 +3557,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -3700,7 +3624,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 
 .p-tabview .p-tabview-nav {
-	background: transparent;
 	border-width: 1px;
 	border-style: solid;
 	border-width: 0 0 2px 0;
@@ -3846,7 +3769,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 	margin-right: 0.5rem;
@@ -3950,7 +3872,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border: 0 none;
-	background: transparent;
 	border-radius: 50%;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
@@ -4822,16 +4743,13 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-steps .p-steps-item .p-menuitem-link {
-	background: transparent;
 	transition: box-shadow 0.3s;
 	border-radius: 6px;
-	background: transparent;
 }
 
 .p-steps .p-steps-item .p-menuitem-link .p-steps-number {
 	border-width: 2px;
 	border-style: solid;
-	background: transparent;
 	min-width: 2rem;
 	height: 2rem;
 	line-height: 2rem;
@@ -4867,7 +4785,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-tabmenu .p-tabmenu-nav {
-	background: transparent;
 	border-width: 1px;
 	border-style: solid;
 	border-width: 0 0 2px 0;
@@ -5068,7 +4985,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border-radius: 50%;
-	background: transparent;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
@@ -5166,7 +5082,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 	width: 2rem;
 	height: 2rem;
 	border-radius: 50%;
-	background: transparent;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
@@ -5195,7 +5110,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 .p-galleria .p-galleria-close {
 	margin: 0.5rem;
-	background: transparent;
 	width: 4rem;
 	height: 4rem;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
@@ -5213,7 +5127,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 
 
 .p-galleria .p-galleria-item-nav {
-	background: transparent;
 	width: 4rem;
 	height: 4rem;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
@@ -5270,7 +5183,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 .p-galleria .p-galleria-thumbnail-container .p-galleria-thumbnail-prev,
 .p-galleria .p-galleria-thumbnail-container .p-galleria-thumbnail-next {
 	margin: 0.5rem;
-	background-color: transparent;
 	width: 2rem;
 	height: 2rem;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
@@ -5286,7 +5198,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-image-preview-indicator {
-	background-color: transparent;
 	transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 
@@ -5296,7 +5207,6 @@ p-treeselect.p-treeselect-clearable .p-treeselect-clear-icon {
 }
 
 .p-image-action.p-link {
-	background-color: transparent;
 	width: 3rem;
 	height: 3rem;
 	border-radius: 50%;
