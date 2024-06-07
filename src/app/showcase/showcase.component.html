@@ -1,5 +1,6 @@
 <ws-page-layout #pageLayout [config]="pageLayoutConfig">
     <p-button label="Test Dialog" (onClick)="openDialog()"></p-button>
+    <p-button label="Animate" (onClick)="triggerGlow(changedElement, 'reflective')"></p-button>
     <form [formGroup]="formGroup" #changedElement id="reflectiveElement">
         <ws-element-renderer #formComponent 
             [actionMap]="actionMap"

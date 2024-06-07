@@ -5,6 +5,7 @@ import { ComponentConfig, ContainerConfig, DictionaryConfig, ElementType, FormVa
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
+import { NgZone } from '@angular/core';
 
 
 @LoggableClass({
@@ -21,6 +22,8 @@ export class FormService {
     
     
     // #region private properties
+
+    private static _ngZone: NgZone = new NgZone({enableLongStackTrace: true});
     
     private static _validatorsFns: Map<string, FormValidator> = new Map<string, FormValidator>([
         ['email', Validators.email],
@@ -76,37 +79,39 @@ export class FormService {
     }
     
     public static triggerAnimation(element: HTMLElement | string, animation: string = 'glowing', duration: number = 2) {
-        if(isString(element)) {
-            const foundElement = document.getElementById(element);
-            if(foundElement) {
-                element = foundElement;
+        FormService._ngZone.runOutsideAngular(() => {
+            if(isString(element)) {
+                const foundElement = document.getElementById(element);
+                if(foundElement) {
+                    element = foundElement;
+                }
             }
-        }
-        if(element instanceof HTMLElement) {
-
-            element.classList.add(animation);
-            
-            const computedContent = getComputedStyle(element).content;
-            const parsedContent = computedContent.replaceAll('"','');
-            const durationContent = isNumericString(parsedContent, false) ? parseFloat(parsedContent) : 0;
-
-            const computedDuration = getComputedStyle(element).animationDuration;
-            const parsedDuration = isNumericString(computedDuration, false) ? parseFloat(computedDuration) : 0;
-
-            duration = (durationContent || parsedDuration || duration) * 1000;
-
-            if(duration <= 0) {
-                duration = 2000;
+            if(element instanceof HTMLElement) {
+    
+                element.classList.add(animation);
+                
+                const computedContent = getComputedStyle(element).content;
+                const parsedContent = computedContent.replaceAll('"','');
+                const durationContent = isNumericString(parsedContent, false) ? parseFloat(parsedContent) : 0;
+    
+                const computedDuration = getComputedStyle(element).animationDuration;
+                const parsedDuration = isNumericString(computedDuration, false) ? parseFloat(computedDuration) : 0;
+    
+                duration = (durationContent || parsedDuration || duration) * 1000;
+    
+                if(duration <= 0) {
+                    duration = 2000;
+                }
+                // Remove the glow class after the animation completes
+                const timerId = nanoid();
+                console.log('starting timer', timerId, element);
+                console.time(timerId);
+                setTimeout(() => {
+                    (<HTMLElement>element).classList.remove(animation);
+                    console.timeEnd(timerId);
+                }, duration);
             }
-            // Remove the glow class after the animation completes
-            const timerId = nanoid();
-            console.log('starting timer', timerId, element);
-            console.time(timerId);
-            setTimeout(() => {
-                (<HTMLElement>element).classList.remove(animation);
-                console.timeEnd(timerId);
-            }, duration);
-        }
+        });
     }
 
     public static triggerReflective() {
