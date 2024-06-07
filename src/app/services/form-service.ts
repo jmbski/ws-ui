@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { ComponentConfig, ContainerConfig, DictionaryConfig, ElementType, FormValidator, InputNumberConfig, InputTextConfig, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
+import { ButtonConfig, ComponentConfig, ContainerConfig, DictionaryConfig, ElementType, FormValidator, GenericFunction, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
@@ -52,6 +52,9 @@ export class FormService {
     // #endregion constructor and lifecycle hooks
 
     
+    
+    
+    // #region public methods
     
     public static addValidatorMsg(name: string, message: string) {
         FormService._validatorMessages.set(name, message);
@@ -193,9 +196,7 @@ export class FormService {
         return (labelElement && element) ? [labelElement, element] : undefined;
         
     }
-    
-    
-    // #region public methods
+
     public static objToElements(obj: WeakObject)  {
         const elements: ComponentConfig[] = [];
         for(const propName in obj) {
@@ -345,6 +346,21 @@ export class FormService {
             disabled,
         };
     
+    }
+
+    public static getIconButton(id: string, icon: string, layoutStyleClass?: string, onClickHandler?: MouseEventHandler): ButtonConfig {
+        return {
+            elementType: ElementType.BUTTON,
+            id,
+            options: {
+                icon,
+                styleClass: 'p-button-text',
+            },
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            },
+            onClickHandler,
+        };
     }
 
     public static getNumberElement(

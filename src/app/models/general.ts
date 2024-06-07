@@ -41,6 +41,16 @@ export type WSParams = TypedRecord<unknown>;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type GenericFunction<T> = (...args: any[]) => T;
 
+export type MouseEventHandler = (event: MouseEvent) => void;
+
+export type ChangeHandler = (event: Event) => void;
+
+export type KeyHandler = (event: KeyboardEvent) => void;
+
+export type ValueChangeHandler<T> = (value: T) => void;
+
+export type TouchEventHandler = (event: TouchEvent) => void;
+
 export interface SelectButtonItem {
     label: string;
     value: string;
