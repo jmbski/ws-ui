@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { ComponentConfig, ContainerConfig, ElementType, FormValidator, InputNumberConfig, InputTextConfig, ObjectOf, WeakObject } from 'warskald-ui/models';
+import { ComponentConfig, ContainerConfig, DictionaryConfig, ElementType, FormValidator, InputNumberConfig, InputTextConfig, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
@@ -279,6 +279,40 @@ export class FormService {
         };
     }
 
+    public static getDictionaryForm(
+        value: WeakObject, 
+        label?: string, 
+        id?: string, 
+        keyLabel?: string, 
+        valueLabel?: string,
+        keyTooltip?: string,
+        valueTooltip?: string,
+        options?: Partial<DictionaryConfig>
+    ): DictionaryConfig {
+        const config: DictionaryConfig = {
+            elementType: ElementType.DICTIONARY,
+            id: id ?? label ?? nanoid(),
+            hasForm: true,
+            layoutStyles: {
+                baseClass: 'col-12'
+            },
+            value,
+            keyLabel,
+            keyTooltip,
+            valueLabel,
+            valueTooltip,
+            labelStyles: {
+                baseClass: 'p-3 label-centered',
+            },
+        };
+
+        if(options) {
+            Object.assign(config, options);
+        }
+
+        return config;
+    }
+
     public static getTextElement(
         propName: string,
         value: string,
@@ -332,6 +366,37 @@ export class FormService {
             disabled,
         };
     
+    }
+
+    public static getPanelForm(
+        header: string, 
+        id: string, 
+        elements: ComponentConfig[], 
+        options?: Partial<PanelConfig>
+    ): PanelConfig {
+        const config: PanelConfig = {
+            elementType: ElementType.PANEL,
+            id,
+            hasForm: true,
+            hasFormGroup: true,
+            content: elements,
+            layoutStyles: {
+                baseClass: 'col-12'
+            },
+            options: {
+                toggleable: true,
+                toggler: 'header',
+                collapsed: true,
+                header,
+                
+            }
+        };
+
+        if(options) {
+            Object.assign(config, options);
+        }
+
+        return config;
     }
     
     // #endregion public methods
