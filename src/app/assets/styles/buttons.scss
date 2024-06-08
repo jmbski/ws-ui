@@ -1,5 +1,4 @@
-@import 'primeflex/primeflex.scss';
-@import './z-index.scss';
+//@use 'primeflex/primeflex.scss' as *;
 
 .ws-element-border {
     border-color: var(--surface-d) !important;
@@ -19,26 +18,40 @@
 
 .ws {
     &-button {
-        //z-index: var(--bz-button);
+        background-color: var(--surface-e);
+        color: var(--primary-color-text);
+        border: none;
+        transition: all 0.5s ease;
 
         &:hover {
-            //z-index: var(--bz-button-hover);
+            background-color: var(--primary-color);
+            color: var(--primary-color-text);
+            box-shadow: var(--primary-glow);
         }
 
         &-scroll {
             @extend .ws-button;
+            background-color: var(--surface-400);
+            color: var(--text-color);
 
             min-width: 6rem;
+
+            &:hover {
+                background-color: var(--surface-600);
+                color: white;
+                text-shadow: 0 0 4px RGBA(0, 0, 0, 0.5);
+            }
 
         }
     }
 
 
     &-dict-btn {
-        @include styleclass('border-noround');
+        border-radius: 0 !important;
 
         &-end {
-            @extend .border-noround-left;
+            border-top-left-radius: 0 !important;
+            border-bottom-left-radius: 0 !important;
         }
     }
 }

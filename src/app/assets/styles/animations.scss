@@ -1,43 +1,51 @@
 @use "sass:string";
-@import 'variables';
+@use 'vars/glow' as glow;
 
 /* Define the keyframes for the glow animation */
 @keyframes glow-animation {
     0% {
-        box-shadow: $glow-1-both;
+        box-shadow: glow.$glow-1-both;
     }
 
     17% {
-        box-shadow: $glow-4-both;
+        box-shadow: glow.$glow-4-both;
     }
 
     33% {
-        box-shadow: $glow-1-both;
+        box-shadow: glow.$glow-1-both;
     }
 
     50% {
-        box-shadow: $glow-4-both;
+        box-shadow: glow.$glow-4-both;
     }
 
     67% {
-        box-shadow: $glow-1-both;
+        box-shadow: glow.$glow-1-both;
     }
 
     83% {
-        box-shadow: $glow-4-both;
+        box-shadow: glow.$glow-4-both;
     }
 
     100% {
-        box-shadow: $glow-1-both;
+        box-shadow: glow.$glow-1-both;
     }
 }
 
 /* Apply the glow animation */
+@mixin glowing  {
+	@extend .glowing ;
+}
+
 .glowing {
     animation: glow-animation .7s ease-in-out;
 }
 
 /* Optionally, you can add it to certain elements */
+@mixin triggered-change  {
+	@extend .triggered-change ;
+}
+
 .triggered-change {
     animation: glow-animation 1s ease-in-out;
 }
@@ -56,6 +64,10 @@
 $reflect-duration: 1.5s;
 
 /* Apply the reflective animation */
+@mixin reflective  {
+	@extend .reflective ;
+}
+
 .reflective {
     position: relative;
     /* Ensure the element has a positioning context */
@@ -65,7 +77,6 @@ $reflect-duration: 1.5s;
     
     content: attr(data-duration) "" + $reflect-duration;
 }
-
 
 .reflective::after {
     content: '';

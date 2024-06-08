@@ -5,7 +5,7 @@ $menu-base-zindex: 2001;
     &-button {
         &-scroll {
             height: 2rem;
-            font-family: MiddleAges;
+            // font-family: MiddleAges;
             font-size: 1.25rem;
             width: 100%;
             z-index: calc($menu-base-zindex + 1);
@@ -58,7 +58,7 @@ $menu-base-zindex: 2001;
                 padding: .5rem;
                 background-color: var(--surface-700);
                 text-align: center;
-                font-family: MiddleAges;
+                // font-family: MiddleAges;
                 transition: all 0.5s ease;
                 z-index: calc($menu-base-zindex + 3);
                 //max-width: 200px;

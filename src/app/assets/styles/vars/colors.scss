@@ -1,0 +1,5 @@
+$surface-700: #c2c2c2;
+
+$surface-100: #161d21;
+$surface-100-lighter: lighten($surface-100, 20%);
+$surface-100-lighter-transparent: rgba($surface-100-lighter, 0.7);

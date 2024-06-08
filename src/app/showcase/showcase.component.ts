@@ -30,6 +30,7 @@ import { CustomKeysComponent } from '../components/custom-keys/custom-keys.compo
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject } from 'rxjs';
 import { getFormDialog } from '../components/element-renderer/form-dialog';
+import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
 
 const { 
     BUTTON_GROUP,
@@ -158,7 +159,37 @@ export class ShowcaseComponent {
 
     public textListener$: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
+    public autoCompleteData: SelectItem[] = [
+        { label: 'Test 1', value: 'test1' },
+        { label: 'Test 2', value: 'test2' },
+        { label: 'Test 3', value: 'test3' },
+        { label: 'Test 4', value: 'test4' },
+        { label: 'Test 5', value: 'test5' },
+    ];
+
+    public autoSuggestions: SelectItem[] = [];
+
     public formComponents: ComponentConfig[] = [
+        FormService.getStandardContainer('Showcase Components', 'container_1', [
+            FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
+        ]),
+    ];
+
+    /* public formComponents: ComponentConfig[] = [
+        {
+            elementType: ElementType.AUTO_COMPLETE,
+            id: 'auto_complete_1',
+            hasForm: true,
+            data: this.autoCompleteData,
+            options: {
+                dropdown: true,
+                
+            }
+        },
+        FormService.getButtonElement('button_add_test', 'Add', undefined, () => {
+            const dataLength = this.autoCompleteData.length;
+            this.autoCompleteData.push({ label: `Test ${dataLength + 1}`, value: `test${dataLength + 1}` });
+        }),
         FormService.getCustomKeysElement('custom-keys', 'text_area_1', {t: 't', v: 'v', c: 'c'}, '', 'fa-solid fa-keyboard'),
         {
             elementType: ElementType.DICTIONARY,
@@ -188,20 +219,6 @@ export class ShowcaseComponent {
             enableNewKeys: true,
             initialType: 'number',
         },
-        /* {
-            elementType: ElementType.DICTIONARY,
-            id: 'dictionary_2',
-            hasForm: true,
-            layoutStyles: {
-                baseClass: 'col-6'
-            },
-            value: {
-                test: 'test',
-                test2: 'test2',
-                test3: 'test3',
-                test4: 'test4',
-            },
-        }, */
         {
             elementType: ElementType.CLICKABLE_LIST,
             id: 'clickable_list_1',
@@ -250,9 +267,6 @@ export class ShowcaseComponent {
         {
             elementType: ElementType.BUTTON,
             id: 'button__1',
-            /* action: {
-                name: 'submitWord',
-            }, */
             options: {
                 label: 'Test'
             },
@@ -450,7 +464,7 @@ export class ShowcaseComponent {
                 },
             ]
         }
-    ];
+    ]; */
     
     // #endregion public properties
     
@@ -495,118 +509,18 @@ export class ShowcaseComponent {
         private dialogMgr: DialogManagerService,
     ) {
 
-        interface test {
-            test: number;
-            test2?: string;
-            test3?: string;
-        }
-
-        const test: test = {
-            test: 5,
-        };
-
-        console.log('PROTO',Object.getPrototypeOf(test));
     }
 
     ngOnInit() {
-        NgLogService.customKeyListeners['5'] = () => {
-            console.log(this.formGroup.value);
-        };
 
-        //this.formComponents = FormService.objToElements(this.testObj);
         this.formGroup.valueChanges.subscribe(changes => {
             FormService.patchValues(changes, this.testObj);
-            //console.log(this.testObj);
         });
 
-        ThemeService.switchTheme('viva-dark', 'secondary-theme');
-
         this.cd.detectChanges();
+
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
         
-
-        this.elements = [
-            {
-                elementType: TEXT_BLOCK,
-                id: nanoid(),
-                value: 'Welcome to the home of La Compagnie du Griffon Doré!',
-                layoutStyles: {
-                    baseClass: 'w-full'
-                },
-                baseStyles: {
-                    style: {
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }
-                },
-                bodyStyles: {
-                    style: {
-                        fontSize: '3em',
-                        textAlign: 'center',
-                        width: '100%',
-                        fontWeight: 'bold',
-
-                    },
-                    baseClass: 'black-castle '
-                }
-            },
-            {
-                elementType: TEXT_BLOCK,
-                id: nanoid(),
-                escapeHTML: true,
-                value: 'Ferrum Omnia Regit - Iron rules Everything',
-                layoutStyles: {
-                    baseClass: 'w-full'
-                },
-                baseStyles: {
-                    style: {
-                        display: 'flex',
-                        justifyContent: 'center',
-                    }
-                },
-                bodyStyles: {
-                    style: {
-                        fontSize: '1.5em',
-                        textAlign: 'center',
-                        width: '100%',
-                    },
-                    baseClass: 'black-castle '
-                }
-            },
-        ];
-        /* this.borderClasses.forEach((borderClass, borderIndex) => {
-            this.charClasses.forEach((charClass, index) => {
-                const text = this.lorem.generateParagraphs(1);
-                const newElements: BaseComponentConfig[] = [];
-
-                const newElement: BaseComponentConfig = {
-                    elementType: ElementType.TEXT_BLOCK, 
-                    content: text,
-                    illuminated: index % 2 === 0,
-                    illuminatedColor: charClass,
-                    illuminatedBorder: borderClass,
-                    id: `text-block-${index + borderIndex * 7}`,
-                };
-
-                newElements.push(newElement);
-
-                if(!newElement.illuminated) {
-                    newElements.push({
-                        elementType: ElementType.IMAGE,
-                        src: 'app/assets/images/wulfgard-ermine-alpha.png',
-                        baseStyles: {
-                            style: {
-                                width: '150px',
-                                float: 'right',
-                            }
-                        },
-                        id: `image-${index + borderIndex * 7}`,
-                    });
-                }
-
-                this.elements.push(...newElements);
-            });
-        }); */
     }
 
     ngAfterViewInit() {

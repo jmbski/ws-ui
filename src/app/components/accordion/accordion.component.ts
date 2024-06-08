@@ -6,6 +6,9 @@ import { ComponentConfig, AccordionConfig, ElementType, GenericFunction, StyleGr
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { BaseWidget } from '../base-widget';
 
+/**
+ * Widget that implements a PrimeNG Accordion component.
+ */
 @LoggableComponent({
     LOCAL_ID: 'AccordionComponent',
     autoAddLogs: true,
@@ -26,9 +29,14 @@ export class AccordionComponent extends BaseWidget<unknown> implements Accordion
 
     // #region public properties
 
-
+    /**
+     * The default base style class for the component. This gets merged with incoming style classes.
+     */
     public defaultBaseStyleClass: string = 'app-accordion';
 
+    /**
+     * The combined base style classes for the component.
+     */
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
     
 
@@ -48,14 +56,36 @@ export class AccordionComponent extends BaseWidget<unknown> implements Accordion
 
 
     // #region standard inputs
+
+    /**
+     * The type of element to render.
+     */
     @Input() elementType = ElementType.ACCORDION as const;
 
+    /**
+     * Value input to keep ngComponentOutlet happy
+     */
     @Input() value: unknown = undefined;
     
+    /**
+     * The configuration object for the component.
+     */
     @Input() options: PAccordionConfig = {};
 
+    /**
+     * Provided function to handle when a tab closes.
+     * 
+     * @param event - The event object for the close event. 
+     * @see {@link AccordionTabCloseEvent}
+     */
     @Input() onCloseHandler(event: AccordionTabCloseEvent): void {}
 
+    /**
+     * Provided function to handle when a tab opens.
+     * 
+     * @param event - The event object for the open event. 
+     * @see {@link AccordionTabOpenEvent}
+     */
     @Input() onOpenHandler(event: AccordionTabOpenEvent): void {}
 
 
@@ -74,6 +104,9 @@ export class AccordionComponent extends BaseWidget<unknown> implements Accordion
 
     // #region viewchildren and contentchildren
     
+    /**
+     * Reference to the accordion component.
+     */
     @ViewChild('accordionRef') accordionRef?: Accordion;
 
     // #endregion viewchildren and contentchildren

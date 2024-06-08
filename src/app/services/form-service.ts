@@ -256,7 +256,7 @@ export class FormService {
         FormService._validatorsFns.set(name, validator);
     }
 
-    public static standardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {
+    public static getStandardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {
         return {
             elementType: ElementType.CONTAINER,
             id,
@@ -321,6 +321,16 @@ export class FormService {
         return config;
     }
 
+    public static getGeneralElement(text: string, layoutStyleClass: string = 'col-12', id?: string): ComponentConfig {
+        return {
+            elementType: ElementType.GENERAL,
+            id: id ?? nanoid(),
+            value: text,
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            }
+        };
+    }
     public static getTextElement(
         propName: string,
         value: string,
@@ -380,7 +390,7 @@ export class FormService {
         };
     }
 
-    public static getIconButton(id: string, icon: string, layoutStyleClass?: string, onClickHandler?: MouseEventHandler): ButtonConfig {
+    public static getIconButton(id: string, icon: string, layoutStyleClass: string = 'col-1', onClickHandler?: MouseEventHandler): ButtonConfig {
         return {
             elementType: ElementType.BUTTON,
             id,
@@ -393,6 +403,32 @@ export class FormService {
             },
             onClickHandler,
         };
+    }
+
+    public static getButtonElement(
+        id: string, 
+        label: string, 
+        layoutStyleClass: string = 'col-1', 
+        onClickHandler?: MouseEventHandler, 
+        additionalOptions?: Partial<ButtonConfig>
+    ): ButtonConfig {
+        const config: ButtonConfig = {
+            elementType: ElementType.BUTTON,
+            id,
+            options: {
+                label,
+            },
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            },
+            onClickHandler,
+        };
+
+        if(additionalOptions) {
+            Object.assign(config, additionalOptions);
+        }
+
+        return config;
     }
 
     public static getNumberElement(

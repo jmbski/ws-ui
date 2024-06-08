@@ -6,6 +6,9 @@ import { ComponentConfig, CheckboxConfig, ElementType, GenericFunction, StyleGro
 import { LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { BaseWidget } from '../base-widget';
 
+/**
+ * Widget that implements a PrimeNG Checkbox component.
+ */
 @LoggableComponent({
     LOCAL_ID: 'CheckboxComponent',
     autoAddLogs: true,

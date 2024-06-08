@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
 import { ComponentConfig, FunctionMap, GenericFunction, StyleGroup } from 'warskald-ui/models';
 import { FormControl, FormGroup } from '@angular/forms';
 import { initActions, initStyleGroups } from 'warskald-ui/services';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'ws-base-widget',
@@ -55,6 +56,8 @@ export class BaseWidget<T> {
     @Input() onChanged: GenericFunction<void> = () => {};
 
     @Input() onTouched: GenericFunction<void> = () => {};
+
+    @Input() eventRelay$?: BehaviorSubject<unknown>;
     
     // #endregion standard inputs
     
@@ -73,6 +76,7 @@ export class BaseWidget<T> {
             this.setDisabledState(value);
         }
     }
+    
     // #endregion get/set inputs
     
     

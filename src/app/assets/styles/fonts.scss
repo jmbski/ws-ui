@@ -1,9 +1,5 @@
-@import 'images';
+@use 'vars/index' as vars;
 
-$smeared-ink: 0 0 4px rgba(50,50,50,.7);
-:root {
-    --smeared-ink: 0 0 4px rgba(50,50,50,.7);
-}
 
 /* poppins-300 - latin-ext_latin */
 @font-face {
@@ -85,25 +81,49 @@ $smeared-ink: 0 0 4px rgba(50,50,50,.7);
     src: local(""), url("../fonts/BlackCastleMF.ttf") format("truetype"); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
+@mixin middle-ages  {
+	@extend .middle-ages ;
+}
+
 .middle-ages {
     font-family: "MiddleAges", sans-serif;
+}
+
+@mixin middle-ages-deco  {
+	@extend .middle-ages-deco ;
 }
 
 .middle-ages-deco {
     font-family: "MiddleAgesDeco", sans-serif;
 }
 
+@mixin ancient-medium  {
+	@extend .ancient-medium ;
+}
+
 .ancient-medium {
     font-family: "AncientMedium", sans-serif;
+}
+
+@mixin old-london  {
+	@extend .old-london ;
 }
 
 .old-london {
     font-family: "OldLondon", sans-serif;
 }
 
+@mixin old-london-alt  {
+	@extend .old-london-alt ;
+}
+
 .old-london-alt {
     font-family: "OldLondonAlt", sans-serif;
     line-height: 1.9rem;
+}
+
+@mixin black-castle  {
+	@extend .black-castle ;
 }
 
 .black-castle {
@@ -123,15 +143,23 @@ $smeared-ink: 0 0 4px rgba(50,50,50,.7);
     text-shadow: 0 0 4px rgba(50,50,50,.7);
 } */
 
+@mixin illuminated  {
+	@extend .illuminated ;
+}
+
 .illuminated {
 
     font-family: "MiddleAgesDeco", sans-serif;
     font-size: 2.5rem; 
     float: left;
     // text-shadow: 0 0 4px rgba(50,50,50,.7);
-    text-shadow: var(--smeared-ink);
+    text-shadow: vars.$smeared-ink;
     
     text-align: center;
+}
+
+@mixin illuminated-red  {
+	@extend .illuminated-red ;
 }
 
 .illuminated-red {
@@ -139,9 +167,17 @@ $smeared-ink: 0 0 4px rgba(50,50,50,.7);
     color: #cc18189d;
 }
 
+@mixin illuminated-green  {
+	@extend .illuminated-green ;
+}
+
 .illuminated-green {
     @extend .illuminated;
     color: #18c918ad;
+}
+
+@mixin illuminated-blue  {
+	@extend .illuminated-blue ;
 }
 
 .illuminated-blue {
@@ -149,14 +185,26 @@ $smeared-ink: 0 0 4px rgba(50,50,50,.7);
     color: #1010b1b9;
 }
 
+@mixin illuminated-yellow  {
+	@extend .illuminated-yellow ;
+}
+
 .illuminated-yellow {
     @extend .illuminated;
     color: #b1b117af;
 }
 
+@mixin illuminated-purple  {
+	@extend .illuminated-purple ;
+}
+
 .illuminated-purple {
     @extend .illuminated;
     color: #420868b0;
+}
+
+@mixin illuminated-cyan  {
+	@extend .illuminated-cyan ;
 }
 
 .illuminated-cyan {
@@ -165,7 +213,11 @@ $smeared-ink: 0 0 4px rgba(50,50,50,.7);
 }
 
 
+@mixin smeared-ink  {
+	@extend .smeared-ink ;
+}
+
 .smeared-ink {
-    text-shadow: $smeared-ink;
+    text-shadow: vars.$smeared-ink;
     color: rgba(0,0,0,0.7);
 }

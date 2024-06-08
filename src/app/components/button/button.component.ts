@@ -6,6 +6,9 @@ import { ComponentConfig, ButtonConfig, ElementType, GenericFunction, StyleGroup
 import { initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { BaseWidget } from '../base-widget';
 
+/**
+ * Widget that implements a PrimeNG Button component.
+ */
 @LoggableComponent({
     LOCAL_ID: 'ButtonComponent',
     autoAddLogs: true,
@@ -27,12 +30,6 @@ export class ButtonComponent extends BaseWidget<unknown> implements ButtonConfig
 
     // #region public properties
 
-
-    public defaultBaseStyleClass: string = 'app-button';
-
-    public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
-
-
     [key: string]: unknown;
 
     // #endregion public properties
@@ -49,16 +46,44 @@ export class ButtonComponent extends BaseWidget<unknown> implements ButtonConfig
 
 
     // #region standard inputs
+
+    /**
+     * The type of element to render.
+     */
     @Input() elementType = ElementType.BUTTON as const;
 
+    /**
+     * Value input to keep ngComponentOutlet happy.
+     */
     @Input() value: unknown = undefined;
     
+    /**
+     * Config options for the primeNG button.
+     */
     @Input() options: PButtonConfig = {};
 
+    /**
+     * Provided function to handle the click event.
+     * 
+     * @param event - The event object for the click event.
+     * @see {@link MouseEvent}
+     */
     @Input() onClickHandler(event: MouseEvent): void {}
 
+    /**
+     * Provided function to handle the focus event. 
+     * 
+     * @param event - The event object for the focus event.
+     * @see {@link FocusEvent}
+     */
     @Input() onFocusHandler(event: FocusEvent): void {}
 
+    /**
+     * Provided function to handle the blur event.
+     * 
+     * @param event - The event object for the blur event.
+     * @see {@link FocusEvent}
+     */
     @Input() onBlurHandler(event: FocusEvent): void {}
 
 

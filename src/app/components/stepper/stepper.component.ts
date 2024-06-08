@@ -52,7 +52,7 @@ export class StepperComponent extends BaseWidget<unknown> implements StepperConf
 
     @Input() options?: PStepperConfig;
 
-    @Input() override children?: ContainerConfig[] = [];
+    @Input() elements?: ContainerConfig[] = [];
 
     @Input() onClickHandler: GenericFunction<void> = () => {};
 

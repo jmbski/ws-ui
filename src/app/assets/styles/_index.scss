@@ -1,9 +1,10 @@
-@import './animations.scss';
-@import './buttons.scss';
-@import './extensions.scss';
-@import './fonts.scss';
-@import './icons.scss';
-@import './variables.scss';
-@import './z-index.scss';
-@import './component-backgrounds.scss';
-@import './images.scss';
+@forward 'images' as img-*;
+@forward 'z-index' as z-*;
+@forward 'extensions' as ext-*;
+@forward 'vars/index' as vars-*;
+@forward 'fonts' as font-*;
+@forward 'medieval-wood-vars/index' as mw-*;
+@forward 'animations' as anim-*;
+@forward 'buttons' as btn-*;
+
+@import 'component-backgrounds';

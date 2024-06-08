@@ -7,7 +7,7 @@ import { ToastModule } from 'primeng/toast';
 import { AppDeviceInfo, LayoutChangeObserver$ } from 'warskald-ui/common';
 import { BlockableUiComponent, MenuBarComponent, MenuBarConfig, NavLogoComponent, NavLogoConfig, PullToRefreshComponent } from 'warskald-ui/components';
 import { PageLayoutConfig, TopNavConfig } from 'warskald-ui/models';
-import { LayoutService, LoggableComponent, LogLevels, NavigationService, ToastService, WSMenuItem } from 'warskald-ui/services';
+import { LayoutService, LoggableComponent, LogLevels, NavigationService, ThemeService, ToastService, WSMenuItem } from 'warskald-ui/services';
 import { AppSettings } from './app.config';
 
 @LoggableComponent({
@@ -133,80 +133,85 @@ export class AppComponent {
         
         const menuItems: WSMenuItem[] = [
             {
-                label: 'About Us',
+                label: 'Category A',
                 items: [
                     {
-                        label: 'The Iron Lions',
+                        label: 'WS Showcase UI',
                         navAction: {
                             route: '/'
                         }
                     },
                     {
-                        label: 'Clubs',
+                        label: 'Light Mode',
+                        command: () => {
+                            ThemeService.switchTheme('viva-light', 'secondary-theme');
+                        }
                     },
                     {
-                        label: 'Partners & Sponsors',
+                        label: 'Dark Mode',
+                        icon: 'pi pi-moon',
+                        command: () => {
+                            ThemeService.switchTheme('viva-dark', 'secondary-theme');
+                        }
                     },
                 ]
             },
             {
-                label: 'Events',
+                label: 'Category B',
                 items: [
                     {
-                        label: 'Grapes of Wrath',
+                        label: 'Option 1',
                     },
                     {
-                        label: 'Event Calendar',
+                        label: 'Option 2',
                     },
                     {
-                        label: 'Upcoming Events',
-                    },
-                    {
-                        label: 'Past Events',
+                        label: 'Option 3',
                     },
                 ]
             },
             {
-                label: 'Test',
-                navAction: {
-                    route: 'test'
-                }
-            },
-            {
-                label: 'Contact Us',
+                label: 'Category C',
                 items: [
                     {
-                        label: 'Contact Information',
+                        label: 'Option 1',
                     },
                     {
-                        label: 'Books Us For An Event',
+                        label: 'Option 2',
                     },
                     {
-                        label: 'Join Our Mailing List',
-                    },
-                    {
-                        label: 'Donate',
-                    },
-                    {
-                        label: 'Harness the Roar of the Lion',
+                        label: 'Option 3',
                     },
                 ]
-
             },
         ];
 
         const pageLayoutConfig: PageLayoutConfig = {
             LOCAL_ID: 'ShowcasePageLayout',
             wsTopNavConfig: <TopNavConfig>{
-                headerText: 'Iron Lions United',
+                headerText: 'WS UI Showcase',
+                topNavStyles: {
+                    style: {
+                        backgroundColor: 'var(--bs-gray-700)',
+                    }
+                },
+                headerTextStyles: {
+                    style: {
+                        fontFamily: 'Poppins',
+                        fontSize: '4rem',
+                        fontWeight: 'bold',
+                        color: 'white',
+                        textShadow: '0px 0px 6px rgba(0,0,0,0.5)',
+                    }
+                },
                 logoDef: {
                     component: NavLogoComponent,
                     config: <NavLogoConfig>{
                         config: {
                             isLink: true,
                             linkUrl: '/',
-                            logoImage: '/app/assets/images/lions-east.webp',
-                            logoAltText: 'Iron Lions United',
+                            logoImage: '/app/assets/images/logo-no-background.png',
+                            logoAltText: 'WS UI Showcase Logo',
                             imgStyles: {
                                 optionalClass: 'p-2'
                             }
@@ -222,6 +227,7 @@ export class AppComponent {
                                 items: menuItems
                             }
                         ],
+                        usePennant: false,
                     },
                 },
             },

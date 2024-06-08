@@ -1,5 +1,5 @@
 <p-autoComplete #autoCompleteRef
-    [appendTo]="options.appendTo"
+    [appendTo]="options.appendTo ?? 'body'"
     [ariaLabel]="options.ariaLabel"
     [ariaLabelledBy]="options.ariaLabelledBy"
     [autocomplete]="options.autocomplete ?? 'off'"
@@ -58,7 +58,7 @@
     [virtualScroll]="options.virtualScroll"
     [virtualScrollItemSize]="options.virtualScrollItemSize"
     [virtualScrollOptions]="options.virtualScrollOptions"
-    (completeMethod)="completeMethodHandler($event)"
+    (completeMethod)="completeHandler($event)"
     (onBlur)="onBlurHandler($event)"
     (onDropdownClick)="onDropdownClickHandler($event)"
     (onFocus)="onFocusHandler($event)"

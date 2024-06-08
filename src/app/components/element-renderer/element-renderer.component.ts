@@ -34,15 +34,38 @@ export class ElementRendererComponent implements ContainerConfig {
     // #region public properties
 
 
-    /** @todo convert to using ComponentDef so templates can be passed in */
+    /**
+     * {@link BehaviorSubject} that emits the current model of the component. BehaviorSubject
+     * is used to trigger change detection with OnPush change detection strategy. 
+     * 
+     * @todo convert to using ComponentDef so templates can be passed in 
+     * Maybe? Not sure anymore. The current configuration of using ComponentConfig works
+     * very well. It's a bit more verbose, but it's very clear what's going on.
+    */
     public model$: BehaviorSubject<ElementModel[]> = new BehaviorSubject<ElementModel[]>([]);
+    
+    /**
+     * The default base style class for the component. This gets merged with incoming style classes.
+     * This provides a style that wraps the renderer component. Can be overridden
+     * by the {@link StyleGroup} overrideDefault property
+     */
+    public defaultBaseStyleClass = 'grid';
 
-    public defaultBaseStyleClass = 'grid grid-nogutter';
-
+    /**
+     * The default layout style class for the component. This gets merged with incoming style classes.
+     * This provides a style that wraps the renderer component. Can be overridden
+     * by the {@link StyleGroup} overrideDefault property
+     */
     public defaultLayoutClass = 'col';
 
+    /**
+     * The combined base style classes for the component. Assigned to the renderer component.
+     */
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
+    /**
+     * The combined layout style classes for the component. Assigned to the renderer component.
+     */
     public layoutClasses: string[] = [this.defaultLayoutClass];
 
     [key: string]: unknown;
@@ -60,53 +83,79 @@ export class ElementRendererComponent implements ContainerConfig {
     
     
     // #region standard inputs
+    
+    /**
+     * Value input to keep ngComponentOutlet happy.
+     */
     @Input() value: unknown;
 
+    /**
+     * Const value that informs the renderer to add a {@link FormGroup}/{@link FormControl} to the element.
+     */
     @Input() hasForm = true as const;
 
-    @Input() hasFormGroup: boolean = false;
+    /**
+     * Flag to inform the renderer that the form for the element is a {@link FormGroup}.
+     */
+    @Input() hasFormGroup: boolean = true;
 
+    /**
+     * The form to add the elements to. This can be a {@link FormGroup} or {@link FormControl}.
+     */
     @Input() form?: FormGroup | FormControl;
 
+    /**
+     * The type of element to render. This property is used to identify the {@link ComponentConfig} type.
+     */
     @Input() elementType = ElementType.COMPONENT as const;
 
+    /**
+     * The unique ID of the element.
+     */
     @Input() id: string = nanoid();
     
+    /**
+     * The base styles for the component. These are the styles that are applied to the renderer component.
+     */
     @Input() baseStyles?: StyleGroup = {};
     
-    @Input() styleClass?: string | undefined;
-    
+    /**
+     * The configuration options for the component. Not used by the renderer, just here to keep ngComponentOutlet happy.
+     */
     @Input() options?: WeakObject | undefined;
     
-    @Input() children?: ComponentConfig[] | undefined;
-    
+    /**
+     * The layout styles for the component. These are the styles that are applied to the renderer component.
+     */
     @Input() layoutStyles?: StyleGroup = {};
 
+    /**
+     * The label for the element.
+     */
     @Input() label?: string = '';
 
+    /**
+     * Action map for the element. This is a map of functions that are called when an action is triggered.
+     * The key is the action name and the value is the function to call.
+     */
     @Input() actionMap?: FunctionMap;
 
+    /**
+     * The element ID of the {@link ElementRendererComponent} that will receive the action data.
+     * This is only generated in the root element renderer component.
+     */
     @Input() actionID?: string;
-
-    @Input() elementMap: Map<string, unknown> = new Map();
     
     
     // #endregion standard inputs
     
     
     // #region get/set inputs
-
-
-    /* private _elements: ComponentConfig[] = [];
-    @Input()
-    get elements(): ComponentConfig[] {
-        return this._elements;
-    }
-    set elements(value: ComponentConfig[]) {
-        this._elements = value;
-        this.model$.next(this.toModels(value));
-        this.cd.detectChanges();
-    } */
+    
+    /**
+     * The elements to render in the component.
+     * @see {@link ComponentConfig}
+     */
     @Input() elements: ComponentConfig[] = [];
 
     // #endregion get/set inputs
@@ -118,8 +167,6 @@ export class ElementRendererComponent implements ContainerConfig {
     
     
     // #region viewchildren and contentchildren
-
-    @ViewChildren(NgComponentOutlet) componentRefs?: QueryList<NgComponentOutletRef>;
     
     // #endregion viewchildren and contentchildren
     
@@ -134,8 +181,10 @@ export class ElementRendererComponent implements ContainerConfig {
 
     ngOnInit() {
         if(this.actionMap) {
+            // Add a unique logging ID for the component
             NgLogService.updateLocalLogSettings(this, {LOCAL_ID: `ElementRendererComponent_${this.id}`});
 
+            // Register the action data source for the component
             this.actionID = `${this.id}_Actions`;
             DataService.registerDataSource({
                 id: this.actionID,
@@ -143,6 +192,7 @@ export class ElementRendererComponent implements ContainerConfig {
                 value: '',
             });
 
+            // Subscribe to the data source to handle events
             if(isCast<LocalObject>(this)) {
                 DataService.subscribeToDataSource(this.actionID, this, (message: unknown) => {
                     if(IsButtonAction(message)) {
@@ -158,27 +208,24 @@ export class ElementRendererComponent implements ContainerConfig {
     }
 
     ngAfterViewInit() {
+        // Initialize the style groups
         initStyleGroups.bind(this)();
+
+        // Convert the elements to models
         this.model$.next(this.toModels(this.elements));
         this.cd.detectChanges();
-
-        console.log('minmap', MinifiedClassMap);
     }
     // #endregion constructor and lifecycle hooks
     
     
     // #region public methods
 
-    public isGroupClass(classType: Type<unknown>): boolean {
-        const groupClasses = [
-            ElementType.CONTAINER,
-            ElementType.PANEL,
-        ];
-
-        return groupClasses.some((groupClass) => ClassRegistry.getComponent(groupClass) === classType);
-    }
-    
-
+    /**
+     * Converts the {@link ComponentConfig} elements to {@link ElementModel} models.
+     * 
+     * @param elements - The elements to convert to models.
+     * @returns The converted models.
+     */
     public toModels(elements: ComponentConfig[]): ElementModel[] {
         
         const elementModels = elements.map((element: ComponentConfig) => {
@@ -188,7 +235,9 @@ export class ElementRendererComponent implements ContainerConfig {
             if(isString(elementType)) {
                 NgLogService.debug(this, 'fn:toModels', `type: ${elementType}`);
                 
+                // Get the class type for the element using the {@link ClassRegistry}
                 const classType = ClassRegistry.getComponent(elementType) ?? GeneralComponent;
+
                 element.actionID = this.actionID;
 
                 const model: ElementModel = {
@@ -197,6 +246,14 @@ export class ElementRendererComponent implements ContainerConfig {
                     config: element
                 };
                 
+                /**
+                 * If the element has a form, add the form control to the form group.
+                 * If the element is a {@link ElementRendererComponent} or has a form group, add a form group.
+                 * The idea here is that if the element is a container, it should have a form group. And
+                 * the initial form group should be provided as an input, so that the form group can be
+                 * passed down to the children as well as referenced externally in the component that
+                 * uses the renderer.
+                 */
                 if(element.hasForm && this.form instanceof FormGroup) {
                     if(classType === ElementRendererComponent || element.hasFormGroup) {
                         const subGroup = new FormGroup({});

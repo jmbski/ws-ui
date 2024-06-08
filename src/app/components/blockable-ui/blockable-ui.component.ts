@@ -3,6 +3,9 @@ import { nanoid } from 'nanoid';
 import { BlockableUI } from 'primeng/api';
 import { LogLevels, NgLogService, LoggableComponent, RegisterClassType } from 'warskald-ui/services';
 
+/**
+ * Component that implements a blockable UI component.
+ */
 @RegisterClassType('BlockableUiComponent')
 @LoggableComponent({
     LOCAL_ID: 'BlockableUiComponent',
@@ -24,6 +27,11 @@ export class BlockableUiComponent implements BlockableUI  {
         NgLogService.debug(this, 'constructed', el);
     }
 
+    /**
+     * Inherited from BlockableUI.
+     * 
+     * @returns the first child element of the component.
+     */
     getBlockableElement(): HTMLElement {
         const element = this.el?.nativeElement.children[0];
         

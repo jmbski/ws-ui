@@ -70,11 +70,6 @@ export interface BaseComponentConfig {
      */
     options?: WeakObject;
 
-    /**
-     * The children of the element
-     */
-    children?: ComponentConfig[];
-
     disabled?: boolean;
 
     [key: string]: unknown;
@@ -170,7 +165,7 @@ export interface MultiSelectConfig extends FormElementConfig {
 export interface AutoCompleteConfig extends FormElementConfig {
     elementType: ElementType.AUTO_COMPLETE;
     options?: PrimeConfigs.PAutoCompleteConfig;
-
+    data?: WeakObject[];
 }
 
 
@@ -390,7 +385,7 @@ export interface StepperConfig extends BaseComponentConfig {
     options?: PrimeConfigs.PStepperConfig;
     onClickHandler?: GenericFunction<void>;
     activeStepChangeHandler?: GenericFunction<void>;
-    children?: ContainerConfig[];
+    elements?: ContainerConfig[];
 }
 
 export interface DictionaryConfig extends FormElementConfig {
