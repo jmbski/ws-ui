@@ -71,6 +71,26 @@
                                 "input": "src/app/assets/styles/layout.scss",
                                 "bundleName": "layout",
                                 "inject": false
+                            },
+                            {
+                                "input": "src/app/assets/styles/themes/viva-dark.scss",
+                                "bundleName": "viva-dark",
+                                "inject": false
+                            },
+                            {
+                                "input": "src/app/assets/styles/themes/viva-light.scss",
+                                "bundleName": "viva-light",
+                                "inject": false
+                            },
+                            {
+                                "input": "src/app/assets/styles/themes/medieval-wood.scss",
+                                "bundleName": "medieval-wood",
+                                "inject": false
+                            },
+                            {
+                                "input": "src/app/assets/styles/themes/blank-theme.css",
+                                "bundleName": "blank",
+                                "inject": false
                             }
                         ],
                         "stylePreprocessorOptions": {
