@@ -7,13 +7,13 @@
 @forward 'animations' as anim-*;
 @forward 'buttons' as btn-*;
 
-@import 'bootstrap/scss/bootstrap';
 @import './animations.scss';
 @import './buttons.scss';
 @import './extensions.scss';
 @import './fonts.scss';
 @import './icons.scss';
 @import './vars/index';
+@import './medieval-wood-vars/index';
 @import './z-index.scss';
 @import './component-backgrounds.scss';
 @import './images.scss';
