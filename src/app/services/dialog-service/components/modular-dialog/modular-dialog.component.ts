@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { PrimeNGConfig } from 'primeng/api';
 import { ZIndexUtils } from 'primeng/utils';
+import { GlobalResizeObserver, LayoutChangeObserver$ } from 'warskald-ui/common';
 
 
 
@@ -256,6 +257,25 @@ export class ModularDialogComponent {
 
     public isString = isString;
 
+    public resetMaximizableBounds() {
+
+        if(this.maximizable) {
+            this.maximizeBounds = new DialogBounds(this.dialogElement, this.navBoundaryElement, false);
+            this.maximizeBounds.constrainToViewport = true;
+            const { offsetHeight, offsetWidth } = document.body;
+            this.maximizeBounds.setBounds({
+                top: 0,
+                left: 0,
+                width: offsetWidth,
+                height: offsetHeight
+            });
+
+            if(this.maximized) {
+                this.maximizeBounds.updateElement(['top', 'left', 'width', 'height'], true);
+            }
+        }
+    }
+
     // #endregion public methods
 
 
@@ -287,6 +307,9 @@ export class ModularDialogComponent {
         this.dialogContentElement = this.pDialog?.el.nativeElement.querySelector('.p-dialog-content') as HTMLElement;
         this.maskElement = this.pDialog?.el.nativeElement.querySelector('.p-dialog-mask') as HTMLElement;
 
+        LayoutChangeObserver$.subscribe(() => {
+            this.resetMaximizableBounds();
+        });
         
         this._setNavBoundary();
 
@@ -303,18 +326,7 @@ export class ModularDialogComponent {
                 this.openBounds = new DialogBounds(this.dialogElement, this.navBoundaryElement);
                 this.openBounds.updateElement(['top','left', 'width']);
 
-                if(this.maximizable) {
-                    this.maximizeBounds = new DialogBounds(this.dialogElement, this.navBoundaryElement, false);
-                    this.maximizeBounds.constrainToViewport = true;
-                    const { offsetHeight, offsetWidth } = document.body;
-                    this.maximizeBounds.setBounds({
-                        top: 0,
-                        left: 0,
-                        width: offsetWidth,
-                        height: offsetHeight
-                    });
-                }
-
+                this.resetMaximizableBounds();
                 if(this.headerElement) {
                     this.closedBounds = new DialogBounds(this.dialogElement, this.headerElement);
                     
