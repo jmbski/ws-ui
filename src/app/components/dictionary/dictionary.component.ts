@@ -312,12 +312,12 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
         }
     }
 
-    public deleteItem(item: DictionaryItem) {
-        this.items = this.items.filter((item) => item.key !== item.key);
-        this.items$.next(this.items);
+    public deleteItem(dictItem: DictionaryItem) {
+        const items = this.items$.getValue().filter((item) => item.key !== dictItem.key);
+        this.items$.next(items);
 
-        delete this.value[item.key];
-        this.mappedKeys.delete(item.key);
+        delete this.value[dictItem.key];
+        this.mappedKeys.delete(dictItem.key);
         this.form?.patchValue(this.value);
     }
 

@@ -31,7 +31,7 @@
         }
     
         <div [class]="bodyStyleClasses" [style]="bodyStyles?.style">
-            @for(item of items; track item.key) {
+            @for(item of items$ | async; track item.key) {
     
                 <p-inputGroup class="ws-dict-field">
                     <p-inputGroupAddon>{{keyLabel}}:</p-inputGroupAddon>
@@ -117,7 +117,7 @@
                             <p-button icon="pi pi-times" styleClass="ws-dict-btn-end" (click)="cancelEdit(item, false)"></p-button>
                         }
                     }
-                    <!-- <p-button icon="pi pi-trash" (click)="deleteItem(item)"></p-button> -->
+                    <p-button icon="pi pi-trash" (click)="deleteItem(item)"></p-button>
                 </p-inputGroup>
                 
             }
