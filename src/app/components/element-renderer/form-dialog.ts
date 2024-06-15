@@ -43,7 +43,7 @@ export function getFormDialog(
     elements: ComponentConfig[], 
     actionMap?: FunctionMap, 
     layoutStyles?: StyleGroup,
-    dialogOptions?: ModularDialogConfig,
+    dialogOptions?: Partial<ModularDialogConfig>,
 ): FormDialogOptions {
     const form: FormGroup = new FormGroup({});
 
