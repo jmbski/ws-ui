@@ -8,6 +8,7 @@ import { isEqual } from 'lodash';
 import { RippleModule } from 'primeng/ripple';
 import { ModularDialogRef } from '../../models/modular-dialog-ref';
 import { ButtonModule } from 'primeng/button';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
     selector: 'ws-dialog-manager',
@@ -71,6 +72,7 @@ export class DialogManagerComponent {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
+        public dockedDialogs$: BehaviorSubject<ModularDialogRef[]>,
         // private managerSvc: DialogManagerService,
     ) {
         

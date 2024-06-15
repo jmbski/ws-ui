@@ -173,6 +173,7 @@ export class ShowcaseComponent {
         FormService.getStandardContainer('Showcase Components', 'container_1', [
             FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
         ]),
+        FormService.getButtonElement('button_dlg', 'Open Dialog', 'col-2', () => this.openDialog()),
     ];
 
     /* public formComponents: ComponentConfig[] = [

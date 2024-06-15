@@ -3,6 +3,7 @@
 import { TemplateRef } from '@angular/core';
 
 import { WeakObject, GenericFunction, DialogComponentType , StyleGroup, HTMLRef } from 'warskald-ui/models';
+import { DialogBounds } from './dialog-bounds';
 
 
 

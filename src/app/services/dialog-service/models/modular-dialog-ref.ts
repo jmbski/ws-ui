@@ -71,8 +71,8 @@ export class ModularDialogRef {
      * @param {*} value - Size value.
      * @group Method
      */
-    maximize(value: unknown) {
-        this._onMaximize.next(value);
+    maximize() {
+        this._onMaximize.next();
     }
 
     /**
@@ -197,13 +197,13 @@ export class ModularDialogRef {
      */
     onResizeEnd: Observable<unknown> = this._onResizeEnd.asObservable();
 
-    private readonly _onMaximize = new Subject<unknown>();
+    private readonly _onMaximize = new Subject<void>();
     /**
      * Event triggered on resize end.
      * @param {*} value - Size value.
      * @group Events
      */
-    onMaximize: Observable<unknown> = this._onMaximize.asObservable();
+    onMaximize: Observable<void> = this._onMaximize.asObservable();
 
     private readonly _onMinimize = new Subject<unknown>();
     /**

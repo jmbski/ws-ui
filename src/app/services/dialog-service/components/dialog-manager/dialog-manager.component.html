@@ -1,5 +1,5 @@
 <div class="ws-dialog-mgr-dock">
-    @for(item of dockedDialogs; track item.dialogID ) {
+    @for(item of dockedDialogs$ | async; track item.dialogID ) {
         <div class="ws-dialog-mgr-dock-item">
             <span class="mr-2">{{item.title}}</span>
             <div class="ws-dialog-mgr-icons">

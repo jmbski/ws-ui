@@ -47,9 +47,10 @@ export function getFormDialog(
 ): FormDialogOptions {
     const form: FormGroup = new FormGroup({});
 
-    const options = {
+    const options: ModularDialogConfig = {
         dialogID: `${toCamelCase(header)}FormDialog`,
         header,
+        navBoundaryElementRef: '.app-top-nav',
         content: ElementRendererComponent,
         contentData: <ContainerConfig>{
             elementType: ElementType.CONTAINER,

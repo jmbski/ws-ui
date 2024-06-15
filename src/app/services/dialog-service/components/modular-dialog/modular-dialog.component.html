@@ -44,6 +44,14 @@
                             (onClick)="toggleCollapse()">
                         </p-button>
                     }
+                    @if(maximizable) {
+                        <p-button
+                            [icon]="maximized ? 'pi pi-window-minimize' : 'pi pi-window-maximize'"
+                            styleClass="p-dialog-header-icon"
+                            class="float-right"
+                            (onClick)="maximized ? restore() : maximize()"
+                        ></p-button>
+                    }
                     @if(closable) {
                         <p-button
                             icon="pi pi-times" 

@@ -111,6 +111,15 @@ export class DialogManagerService {
 
     // #region public methods
 
+    public maximizeDialog(dialogRef: ModularDialogRef) {
+        const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
+        if(dialog) {
+            dialog.animateMaximize();
+            this.removeDialogFromDock(dialogRef);
+            this.dialogManager?.cd.detectChanges();
+        }
+    }
+
     public minimizeDialog(dialogRef: ModularDialogRef) {
         
         const dialog = this.dialogComponentRefMap.get(dialogRef)?.instance;
@@ -229,6 +238,7 @@ export class DialogManagerService {
             const map = new WeakMap();
     
             map.set(Dock, options);
+            map.set(BehaviorSubject<ModularDialogRef[]>, this.dockedDialogs$);
     
             const componentRef: ComponentRef<DialogManagerComponent> = createComponent(DialogManagerComponent, { 
                 environmentInjector: this.appRef.injector, 
@@ -279,8 +289,7 @@ export class DialogManagerService {
         }));
 
         subs.push(dialogRef.onMaximize.subscribe(() => {
-            //this.dialogComponentRefMap.get(dialogRef)?.instance.maximize();
-            /** @todo implement maximize */
+            this.maximizeDialog(dialogRef);
         }));
 
         subs.push(dialogRef.onTouch.subscribe(() => {

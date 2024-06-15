@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ComponentRef, EventEmitter, Output, QueryList, TemplateRef, Type, ViewChild, ViewChildren } from '@angular/core';
 import { ComponentType, DialogComponentType, GenericFunction, HTMLRef, StyleGroup, WeakObject } from 'warskald-ui/models';
-import { DialogBounds } from '../../models/dialog-bounds';
+import { DialogBoundaryStates, DialogBounds } from '../../models/dialog-bounds';
 import { Dialog, DialogModule } from 'primeng/dialog';
 import { DialogManagerService } from '../../dialog-manager.service';
 import { ModularDialogRef } from '../../models/modular-dialog-ref';
@@ -13,13 +13,7 @@ import { PrimeNGConfig } from 'primeng/api';
 import { ZIndexUtils } from 'primeng/utils';
 
 
-/* function moveOnTop(this: Dialog) {
-    if (this.autoZIndex) {
-        console.log(this.container, this.baseZIndex, this.config.zIndex.modal);
-        ZIndexUtils.set('modal', this.container, this.baseZIndex + this.config.zIndex.modal);
-        (this.wrapper as HTMLElement).style.zIndex = String(parseInt((this.container as HTMLDivElement).style.zIndex, 10) - 1);
-    }
-} */
+
 @Component({
     selector: 'ws-modular-dialog',
     standalone: true,
@@ -56,6 +50,9 @@ export class ModularDialogComponent {
 
     public minimizable: boolean = true;
     public minimized: boolean = false;
+
+    public maximizable: boolean = true;
+    public maximized: boolean = false;
 
     public collapsible: boolean = true;
     public collapsed: boolean = false;
@@ -94,6 +91,9 @@ export class ModularDialogComponent {
 
     public contentBoundsOpen: DialogBounds = new DialogBounds();
     public contentBoundsClosed: DialogBounds = new DialogBounds();
+
+    public maximizeBounds!: DialogBounds;
+    public maximizeContentBounds: DialogBounds = new DialogBounds();
 
     public config?: WeakObject;
 
@@ -189,16 +189,30 @@ export class ModularDialogComponent {
         this.dialogRef.minimize();
     }
 
+    public animateMaximize() {
+        this.setAnimationTimer();
+        this.openBounds.updateBounds();
+        this.maximized = true;
+        this.maximizeBounds.updateElement(['top', 'left', 'width', 'height'], true);
+    }
+
+    public maximize() {
+        this.dialogRef.maximize();
+    }
+
     public animateRestore() {
         this.setAnimationTimer();
         this.minimized = false;
-        if(this.dialogElement) {
+        this.maximized = false;
+        this.openBounds.updateElement(['top', 'left', 'width',], false, ['height']);
+        // this.contentBoundsOpen.updateElement();
+        /* if(this.dialogElement) {
             const insetValues = {
                 top: this.topWhenOpen,
                 left: this.leftWhenOpen
             };
             Object.assign(this.dialogElement.style, insetValues);
-        }
+        } */
     }
 
     public restore() {
@@ -286,10 +300,23 @@ export class ModularDialogComponent {
     private _initializeInsetValues() {
         setTimeout(() => {
             if(this.dialogElement) {
-                this.openBounds = new DialogBounds(this.dialogElement, undefined, this.navBoundaryElement);
+                this.openBounds = new DialogBounds(this.dialogElement, this.navBoundaryElement);
                 this.openBounds.updateElement(['top','left', 'width']);
+
+                if(this.maximizable) {
+                    this.maximizeBounds = new DialogBounds(this.dialogElement, this.navBoundaryElement, false);
+                    this.maximizeBounds.constrainToViewport = true;
+                    const { offsetHeight, offsetWidth } = document.body;
+                    this.maximizeBounds.setBounds({
+                        top: 0,
+                        left: 0,
+                        width: offsetWidth,
+                        height: offsetHeight
+                    });
+                }
+
                 if(this.headerElement) {
-                    this.closedBounds = new DialogBounds(this.dialogElement, this.headerElement.getBoundingClientRect());
+                    this.closedBounds = new DialogBounds(this.dialogElement, this.headerElement);
                     
                 }
             }
