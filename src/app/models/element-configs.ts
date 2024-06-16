@@ -411,6 +411,8 @@ export interface DictionaryConfig extends FormElementConfig {
     
     usePanel?: boolean;
     options?: PrimeConfigs.PPanelConfig;
+    useSortByValues?: boolean;
+    reverseSort?: boolean;
 }
 
 /**

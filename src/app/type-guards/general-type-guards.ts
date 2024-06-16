@@ -149,6 +149,10 @@ export function isUndefined(value: unknown): value is undefined {
     return value === undefined;
 }
 
+export function isComparableType(value: unknown): value is number | string | Date | boolean {
+    return isNumeric(value) || isString(value) || isDate(value) || isBoolean(value);
+}
+
 export type TypeGuard<T> = (input: unknown) => input is T;
 
 export interface PropertyTypeGuard {

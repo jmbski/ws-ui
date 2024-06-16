@@ -9,7 +9,7 @@ import { BehaviorSubject, debounceTime } from 'rxjs';
 import { AbstractControl, FormControl, FormGroup, FormRecord, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { DropdownModule } from 'primeng/dropdown';
-import { isBoolean, isNumberArray, isString, isStringArray } from 'warskald-ui/type-guards';
+import { exists, isBoolean, isComparableType, isNumberArray, isString, isStringArray } from 'warskald-ui/type-guards';
 import { isNumber } from 'lodash';
 import { FormService, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { InputNumberModule } from 'primeng/inputnumber';
@@ -97,7 +97,7 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
 
     public booleanOptions = BooleanOptions;
 
-    public items: DictionaryItem[] = [];
+    // public items: DictionaryItem[] = [];
     
     public mappedKeys: Set<string> = new Set();
 
@@ -151,6 +151,10 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
     @Input() enableTypeSelection: boolean = true;
 
     @Input() enableEdit: boolean = true;
+
+    @Input() useSortByValues: boolean = false;
+
+    @Input() reverseSort: boolean = false;
 
     @Input() collapsedChangeHandler(event: boolean): void {}
 
@@ -272,6 +276,31 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
         }
     }
 
+    public sortByValues() {
+        const modifier = this.reverseSort ? -1 : 1;
+        if(this.useSortByValues) {
+            const items = this.items$.getValue().sort((a, b) => {
+                if(exists(a.value) && !exists(b.value)) {
+                    return -1 * modifier;
+                }
+                else if(!exists(a.value) && exists(b.value)) {
+                    return 1 * modifier;
+                }
+                else if(isComparableType(a.value) && isComparableType(b.value)) {
+                    return a.value > b.value ? 1 * modifier : -1 * modifier;
+                }
+                else {
+                    return 0;
+                }
+            });
+            this.items$.next(items);
+        }
+    }
+
+    public updateItemSubject() {
+        // this.items$.next(this.items);
+    }
+
     public updateItem(item: DictionaryItem, isKey: boolean = false) {
         const { keyControl, valueControl, key } = item;
 
@@ -284,7 +313,7 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
                 delete this.value[key];
                 this.value[newKey] = item.value;
                 this.form?.patchValue(this.value);
-                this.items$.next(this.items);
+                //this.items$.next(this.items);
             }
             else {
                 keyControl.reset(key);
@@ -298,6 +327,10 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
             this.form?.patchValue(this.value);
             
             valueControl.disable();
+
+            if(this.useSortByValues) {
+                this.sortByValues();
+            }
         }
     }
 
@@ -358,10 +391,11 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
 
         if(!this.mappedKeys.has(key)) {
             this.mappedKeys.add(key);
-            this.items.push(dictItem);
+            const items = this.items$.getValue();
+            items.push(dictItem);
 
             if(emit) {
-                this.items$.next(this.items);
+                this.items$.next(items);
             }
         }
 
@@ -379,18 +413,13 @@ export class DictionaryComponent extends BaseWidget<WeakObject[]> implements Dic
     // #region private methods
 
     private _updateObjectForm() {
-        this.items = [];
-        this.objectForm = new FormRecord({});
-        
         Object.entries(this.value).forEach(([key, value]) => {
             this.addDictItem(key, value);
         });
 
-        this.items$.next(this.items);
-
-        /* this.objectForm.valueChanges.subscribe((value) => {
-            console.log('valueChanges', value);
-        }); */
+        if(this.useSortByValues) {
+            this.sortByValues();
+        }
     }
 
     private _formValueToObject(valueObject: WeakObject): WeakObject {

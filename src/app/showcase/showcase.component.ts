@@ -558,10 +558,10 @@ export class ShowcaseComponent {
             console.log('ref:', ref._componentRef.changeDetectorRef);
         }); */
         const value = {
-            test: 'test',
+            test: 5,
             test2: 2,
-            test3: false,
-            test4: ['test4', 'test5'],
+            test3: 3,
+            test4: 1,
         };
 
         const formElement: DictionaryConfig = FormService.getDictionaryForm(value, 'Test Dictionary', 'dictionary_1', {
@@ -570,7 +570,8 @@ export class ShowcaseComponent {
             keyTooltip: 'Grouping of orthographic characters',
             valueTooltip: 'The weight of the syllable\'s occurrence. Higher weights are more likely to be selected.',
             initialType: 'number',
-        
+            useSortByValues: true,
+            reverseSort: true,
         });
 
         const panelForm = this.getPanelForm('Test Panel', 'panel_1', [formElement]);
