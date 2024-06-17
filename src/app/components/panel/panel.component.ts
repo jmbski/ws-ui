@@ -41,12 +41,6 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
 
     public baseStyleClasses: string[] = [this.defaultBaseStyleClass];
 
-    public headerType: string = 'string';
-
-    public contentType: string = 'components';
-
-    public footerType: string = 'string';
-
     public headerForm: FormGroup = new FormGroup({});
 
     public contentForm: FormGroup = new FormGroup({});
@@ -81,6 +75,12 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
     @Input() content?: ComponentConfig[];
 
     @Input() footerContent?: ComponentConfig[];
+
+    @Input() headerType: string = 'string';
+
+    @Input() contentType: string = 'components';
+
+    @Input() footerType: string = 'string';
 
     @Input() collapsedChangeHandler(event: boolean): void {}
 

@@ -558,7 +558,7 @@ export class ShowcaseComponent {
             console.log('ref:', ref._componentRef.changeDetectorRef);
         }); */
         const value = {
-            test: 5,
+            test: ['a', 'b', 'c'],
             test2: 2,
             test3: 3,
             test4: 1,

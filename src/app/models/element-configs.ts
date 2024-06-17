@@ -297,6 +297,9 @@ export interface PanelConfig extends FormElementConfig {
     headerContent?: ComponentConfig[];
     content?: ComponentConfig[];
     footerContent?: ComponentConfig[];
+    headerType?: string;
+    contentType?: string;
+    footerType?: string;
     
     collapsedChangeHandler?: (event: boolean) => void;
     onBeforeToggleHandler?: (event: PanelBeforeToggleEvent) => void;
