@@ -295,6 +295,7 @@ export interface PanelConfig extends FormElementConfig {
     elementType: ElementType.PANEL;
     options?: PrimeConfigs.PPanelConfig;
     headerContent?: ComponentConfig[];
+    header?: string;
     content?: ComponentConfig[];
     footerContent?: ComponentConfig[];
     headerType?: string;

@@ -1,6 +1,5 @@
 <p-panel #panelRef
     [toggleable]="options.toggleable"
-    [header]="options.header"
     [collapsed]="options.collapsed ?? true"
     [style]="options.style"
     [styleClass]="options.styleClass"
@@ -14,13 +13,21 @@
     (onBeforeToggle)="onBeforeToggleHandler($event)"
     (onAfterToggle)="onAfterToggleHandler($event)">
 
-    @if(!options.header) {
-        @if(headerType === 'components' && headerContent) {
-            <ng-template pTemplate="header">
-                <ws-element-renderer #headerRenderer [elements]="headerContent" [form]="headerForm"></ws-element-renderer>
-            </ng-template>
-        }
+    
+    @if(header != null || headerContent != null) {
+        <ng-template pTemplate="header">
+            <div [class]="headerStyleClasses" [style]="headerStyles.style">
+                <span class="app-panel-title">
+                    {{header ?? options.header}}
+                </span>
+                    
+                @if(headerContent != null) {
+                    <ws-element-renderer #headerRenderer [elements]="headerContent" [form]="headerForm"></ws-element-renderer>
+                }
+            </div>
+        </ng-template>
     }
+    
 
     @if(contentType === 'components' && content) {
         <ng-template pTemplate="content">

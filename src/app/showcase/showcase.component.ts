@@ -169,11 +169,19 @@ export class ShowcaseComponent {
 
     public autoSuggestions: SelectItem[] = [];
 
+    public testButton = FormService.getButtonElement('button_test', 'Test Button', 'col-2', () => {
+        console.log('test button clicked');
+    });
+
     public formComponents: ComponentConfig[] = [
         FormService.getStandardContainer('Showcase Components', 'container_1', [
             FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
         ]),
         FormService.getButtonElement('button_dlg', 'Open Dialog', 'col-2', () => this.openDialog()),
+        FormService.getPanelForm('test panel', 'panel_1', [this.testButton], {
+            headerContent: [this.testButton],
+            headerType: 'components',
+        }),
     ];
 
     /* public formComponents: ComponentConfig[] = [
