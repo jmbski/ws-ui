@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, ElementRef, Input, QueryList, Type, ViewChildren } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentRef, ElementRef, Input, IterableChangeRecord, IterableDiffer, IterableDiffers, QueryList, Type, ViewChildren } from '@angular/core';
 import { ViewContainerRefDirective } from 'warskald-ui/directives';
 import { BaseComponentConfig, ElementModel, ElementType, WeakObject, StyleGroup, FormElementConfig, ComponentConfig, FunctionMap, LocalObject, ContainerConfig, NgComponentOutletRef } from 'warskald-ui/models';
 import { BehaviorSubject } from 'rxjs';
@@ -167,6 +167,7 @@ export class ElementRendererComponent implements ContainerConfig {
     
     
     // #region viewchildren and contentchildren
+    private iterableDiffer: IterableDiffer<ComponentConfig> | null;
     
     // #endregion viewchildren and contentchildren
     
@@ -174,9 +175,10 @@ export class ElementRendererComponent implements ContainerConfig {
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
-        public el: ElementRef
+        public el: ElementRef,
+        private iterable: IterableDiffers
     ) {
-        
+        this.iterableDiffer = this.iterable.find(this.elements).create();
     }
 
     ngOnInit() {
@@ -210,10 +212,19 @@ export class ElementRendererComponent implements ContainerConfig {
     ngAfterViewInit() {
         // Initialize the style groups
         initStyleGroups.bind(this)();
-
+        
         // Convert the elements to models
         this.model$.next(this.toModels(this.elements));
         this.cd.detectChanges();
+    }
+    
+    ngDoCheck() {
+        const elementsChanges = this.iterableDiffer?.diff(this.elements);
+    
+        if (elementsChanges) {
+            this.model$.next(this.toModels(this.elements));
+            this.cd.detectChanges();
+        }
     }
     // #endregion constructor and lifecycle hooks
     

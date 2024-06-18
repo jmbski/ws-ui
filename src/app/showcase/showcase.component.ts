@@ -169,8 +169,16 @@ export class ShowcaseComponent {
 
     public autoSuggestions: SelectItem[] = [];
 
-    public testButton = FormService.getButtonElement('button_test', 'Test Button', 'col-2', () => {
-        console.log('test button clicked');
+    public panelElements: ComponentConfig[] = [
+        FormService.getButtonElement('button_test', 'Test Button', 'col-2', () => {console.log('test button clicked');}),
+    ];
+
+    public panelChanges$: BehaviorSubject<ComponentConfig[]> = new BehaviorSubject<ComponentConfig[]>(this.panelElements);
+
+    public testButton = FormService.getButtonElement('button_test', 'Test Button', 'col-2', (event: MouseEvent) => {
+        event.stopPropagation();
+        this.panelElements.push(FormService.getButtonElement('button_test', 'Test Button', 'col-2', () => {}));
+        this.panelChanges$.next(this.panelElements);
     });
 
     public formComponents: ComponentConfig[] = [
@@ -181,6 +189,7 @@ export class ShowcaseComponent {
         FormService.getPanelForm('test panel', 'panel_1', [this.testButton], {
             headerContent: [this.testButton],
             headerType: 'components',
+            contentChanges$: this.panelChanges$,
         }),
     ];
 

@@ -6,6 +6,8 @@ import { ComponentConfig, PanelConfig, ElementType, GenericFunction, StyleGroup,
 import { initActions, initStyleGroups, LoggableComponent, LogLevels } from 'warskald-ui/services';
 import { BaseWidget } from '../base-widget';
 import { ElementRendererComponent } from '../element-renderer/element-renderer.component';
+import { BehaviorSubject } from 'rxjs';
+import { isEqual } from 'lodash';
 
 @LoggableComponent({
     LOCAL_ID: 'PanelComponent',
@@ -90,6 +92,8 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
 
     @Input() headerStyles: StyleGroup = {};
 
+    
+
     @Input() collapsedChangeHandler(event: boolean): void {}
 
     @Input() onBeforeToggleHandler(event: PanelBeforeToggleEvent): void {}
@@ -101,6 +105,19 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
 
 
     // #region get/set inputs
+    private _contentChanges$: BehaviorSubject<ComponentConfig[]> = new BehaviorSubject<ComponentConfig[]>(this.content ?? []);
+    @Input()
+    get contentChanges$(): BehaviorSubject<ComponentConfig[]> {
+        return this._contentChanges$;
+    }
+    set contentChanges$(value: BehaviorSubject<ComponentConfig[]>) {
+        this._contentChanges$?.unsubscribe();
+        this._contentChanges$ = value;
+        this._contentChanges$.subscribe((value) => {
+            this.content = value;
+            this._cd.detectChanges();
+        });
+    }
 
     // #endregion get/set inputs
 
@@ -136,21 +153,6 @@ export class PanelComponent extends BaseWidget<unknown> implements PanelConfig, 
         initStyleGroups.bind(this)();
         initActions.bind(this)();
         this._cd.detectChanges();
-
-        /* this.innerControl = new FormControl(this.value);
-        this.innerControl.valueChanges.subscribe((value) => {
-            if(value !== this.value) {
-                this.onChanged(value);
-                this.onTouched(value);
-                this.writeValue(value);
-            }
-        }); */
-
-        /* this.form?.valueChanges.subscribe((value) => {
-            if(value !== this.value) {
-                this.writeValue(value);
-            }
-        }); */
 
         this.setDisabledState(this.disabled);
     }

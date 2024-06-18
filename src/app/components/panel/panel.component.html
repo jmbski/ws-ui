@@ -29,7 +29,7 @@
     }
     
 
-    @if(contentType === 'components' && content) {
+    @if(content) {
         <ng-template pTemplate="content">
             <ws-element-renderer #contentRenderer [elements]="content" [form]="contentForm"></ws-element-renderer>
         </ng-template>
