@@ -20,9 +20,3 @@
         }
     }
 }
-
-:host ::ng-deep {
-    ws-element-renderer {
-        width: inherit;
-    }
-}
