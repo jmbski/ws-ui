@@ -359,6 +359,9 @@ export interface ClickableListConfig extends BaseComponentConfig {
     useRipple?: boolean;
     clickHandler?: GenericFunction<void>;
     orientation?: 'horizontal' | 'vertical';
+    listStyles?: StyleGroup;
+    itemStyles?: StyleGroup;
+    itemSpanStyles?: StyleGroup;
 }
 
 export interface CharMap {
