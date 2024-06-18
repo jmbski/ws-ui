@@ -177,7 +177,11 @@ export class ShowcaseComponent {
 
     public testButton = FormService.getButtonElement('button_test', 'Test Button', 'col-2', (event: MouseEvent) => {
         event.stopPropagation();
-        this.panelElements.push(FormService.getButtonElement('button_test', 'Test Button', 'col-2', () => {}));
+        const labels = ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5'];
+        this.panelElements = labels.map(label => {
+            const id = nanoid();
+            return FormService.getButtonElement(id, label + id, 'col-2', () => {});
+        });
         this.panelChanges$.next(this.panelElements);
     });
 
@@ -186,7 +190,7 @@ export class ShowcaseComponent {
             FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
         ]),
         FormService.getButtonElement('button_dlg', 'Open Dialog', 'col-2', () => this.openDialog()),
-        FormService.getPanelForm('test panel', 'panel_1', [this.testButton], {
+        FormService.getPanelForm('test panel', 'panel_1', [], {
             headerContent: [this.testButton],
             headerType: 'components',
             contentChanges$: this.panelChanges$,
