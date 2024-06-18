@@ -1,5 +1,5 @@
 <div [class]="baseStyleClasses" [style]="baseStyles?.style">
-        @for(element of model$ | async; track elementId) {
+        @for(element of model$ | async; track id) {
             @if(element.config && element.classType != null) {
                 <div [class]="element.config.layoutStyles?.baseClass ?? 'col-12'" [style]="layoutStyles?.style">
                     @if(element.config.label) {
