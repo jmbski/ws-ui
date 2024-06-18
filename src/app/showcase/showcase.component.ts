@@ -177,15 +177,37 @@ export class ShowcaseComponent {
 
     public testButton = FormService.getButtonElement('button_test', 'Test Button', 'col-2', (event: MouseEvent) => {
         event.stopPropagation();
-        const labels = ['Test 1', 'Test 2', 'Test 3', 'Test 4', 'Test 5'];
-        this.panelElements = labels.map(label => {
-            const id = nanoid();
-            return FormService.getButtonElement(id, label + id, 'col-2', () => {});
-        });
+        const longStrList = Array.from({ length: 40 }, (_, i) => `Test ${i + 1}`);
+        this.panelElements = [FormService.getListElement('Test', longStrList, {
+            listStyles: {
+                style: {
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                    gap: '16px',
+                    maxHeight: '300px',
+                    overflow: 'hidden',
+                }
+            }
+        })];
         this.panelChanges$.next(this.panelElements);
     });
 
     public formComponents: ComponentConfig[] = [
+        FormService.getTextElement('Test', 'test', 'col-12', false, 'Test'),
+        {
+            elementType: ElementType.BUTTON_GROUP,
+            id: 'button_group_1',
+            buttons: [
+                {
+                    id: 'button_1',
+                    label: 'Submit',
+                    action: {
+                        name: 'submit',
+                        data: { id: 'test' }
+                    }
+                }
+            ]
+        },
         FormService.getStandardContainer('Showcase Components', 'container_1', [
             FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
         ]),

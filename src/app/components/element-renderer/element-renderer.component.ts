@@ -214,8 +214,8 @@ export class ElementRendererComponent implements ContainerConfig {
         initStyleGroups.bind(this)();
         
         // Convert the elements to models
-        this.model$.next(this.toModels(this.elements));
-        this.cd.detectChanges();
+        /* this.model$.next(this.toModels(this.elements));
+        this.cd.detectChanges(); */
     }
     
     ngDoCheck() {

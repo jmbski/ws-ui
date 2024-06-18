@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { RippleModule } from 'primeng/ripple';
 import { ClickableListConfig, ComponentConfig, ElementType, GenericFunction, PButtonConfig, StyleGroup } from 'warskald-ui/models';
@@ -102,8 +102,13 @@ export class ClickableListComponent extends BaseWidget<unknown> implements Click
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
+        public el: ElementRef,
     ) {
         super(cd);
+    }
+
+    ngOnInit() {
+        console.log(this.el.nativeElement);
     }
     
     // #endregion constructor and lifecycle hooks

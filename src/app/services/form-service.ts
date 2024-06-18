@@ -1,8 +1,8 @@
 import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { ButtonConfig, CharMap, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, GenericFunction, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
-import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isWeakObject } from 'warskald-ui/type-guards';
+import { ButtonConfig, CharMap, ClickableListConfig, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, GenericFunction, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
+import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isStringArray, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
 import { NgZone } from '@angular/core';
@@ -488,6 +488,27 @@ export class FormService {
         }
 
         return config;
+    }
+
+    public static getListElement(label: string, value: string[], options?: Partial<ClickableListConfig>) {
+        //const propValue = this[propName];
+        const elements: ComponentConfig[] = [];
+        if(isStringArray(value)) {
+            const clickableList: ClickableListConfig = {
+                elementType: ElementType.CLICKABLE_LIST,
+                id: label,
+                hasForm: true,
+                value: value,
+                orientation: 'vertical'
+            };
+            if(options) {
+                Object.assign(clickableList, options);
+            }
+            elements.push(clickableList);
+        }
+    
+        return FormService.getStandardContainer(label.toFormat('label'), label, elements);
+    
     }
     
     // #endregion public methods
