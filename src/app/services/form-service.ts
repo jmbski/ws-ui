@@ -6,6 +6,7 @@ import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isStri
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
 import { NgZone } from '@angular/core';
+import { FSStdConParms, FSLabelParms, FSDictParms, FSButtonParms } from '../models/funct-params/form-service.parms';
 
 
 @LoggableClass({
@@ -256,8 +257,8 @@ export class FormService {
         FormService._validatorsFns.set(name, validator);
     }
 
-    public static getStandardContainer(label: string, id: string, elements: ComponentConfig[]): ContainerConfig {
-        return {
+    public static getStandardContainer({label, id, elements, options}: FSStdConParms): ContainerConfig {
+        const element: ContainerConfig = {
             elementType: ElementType.CONTAINER,
             id,
             label,
@@ -271,9 +272,15 @@ export class FormService {
                 overrideDefault: true
             }
         };
+
+        if(options) {
+            Object.assign(element, options);
+        }
+
+        return element;
     }
 
-    public static labelElement(label: string, id?: string, layoutStyleClass: string = 'col-3'): ComponentConfig {
+    public static getLabelElement({label, id, layoutStyleClass = 'col-3'}: FSLabelParms): ComponentConfig {
         id ??= `${label.toFormat('label')}-label`;
         return {
             elementType: ElementType.GENERAL,
@@ -285,12 +292,7 @@ export class FormService {
         };
     }
 
-    public static getDictionaryForm(
-        value: WeakObject, 
-        label?: string, 
-        id?: string, 
-        options?: Partial<DictionaryConfig>
-    ): DictionaryConfig {
+    public static getDictionaryForm({value, label, id, options}: FSDictParms): DictionaryConfig {
         const config: DictionaryConfig = {
             elementType: ElementType.DICTIONARY,
             id: id ?? label ?? nanoid(),
@@ -405,27 +407,31 @@ export class FormService {
         };
     }
 
-    public static getButtonElement(
-        id: string, 
-        label: string, 
-        layoutStyleClass: string = 'col-1', 
-        onClickHandler?: MouseEventHandler, 
-        additionalOptions?: Partial<ButtonConfig>
-    ): ButtonConfig {
+    public static getButtonElement({
+        id,
+        label,
+        icon,
+        styleClass = 'p-button-text',
+        layoutClass = 'col-1',
+        handler,
+        options
+    }: FSButtonParms): ButtonConfig {
         const config: ButtonConfig = {
             elementType: ElementType.BUTTON,
             id,
             options: {
                 label,
+                icon,
+                styleClass,
             },
             layoutStyles: {
-                baseClass: layoutStyleClass
+                baseClass: layoutClass
             },
-            onClickHandler,
+            onClickHandler: handler ?? (() => {}),
         };
 
-        if(additionalOptions) {
-            Object.assign(config, additionalOptions);
+        if(options) {
+            Object.assign(config, options);
         }
 
         return config;
@@ -507,7 +513,7 @@ export class FormService {
             elements.push(clickableList);
         }
     
-        return FormService.getStandardContainer(label.toFormat('label'), label, elements);
+        return FormService.getStandardContainer({label: label.toFormat('label'), id: label, elements});
     
     }
     

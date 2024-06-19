@@ -170,26 +170,30 @@ export class ShowcaseComponent {
     public autoSuggestions: SelectItem[] = [];
 
     public panelElements: ComponentConfig[] = [
-        FormService.getButtonElement('button_test', 'Test Button', 'col-2', () => {console.log('test button clicked');}),
+        FormService.getButtonElement({id: 'button_test', label: 'Test Button', layoutClass: 'col-2', 
+            handler: () => {console.log('test button clicked');}}),
+        
     ];
 
     public panelChanges$: BehaviorSubject<ComponentConfig[]> = new BehaviorSubject<ComponentConfig[]>(this.panelElements);
 
-    public testButton = FormService.getButtonElement('button_test', 'Test Button', 'col-2', (event: MouseEvent) => {
-        event.stopPropagation();
-        const longStrList = Array.from({ length: 40 }, (_, i) => `Test ${i + 1}`);
-        this.panelElements = [FormService.getListElement('Test', longStrList, {
-            listStyles: {
-                style: {
-                    display: 'grid',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
-                    gap: '16px',
-                    maxHeight: '300px',
-                    overflow: 'hidden',
+    public testButton = FormService.getButtonElement({id: 'button_test', label: 'Test Button', layoutClass: 'col-2', 
+        handler: (event: MouseEvent) => {
+            event.stopPropagation();
+            const longStrList = Array.from({ length: 40 }, (_, i) => `Test ${i + 1}`);
+            this.panelElements = [FormService.getListElement('Test', longStrList, {
+                listStyles: {
+                    style: {
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))',
+                        gap: '16px',
+                        maxHeight: '300px',
+                        overflow: 'hidden',
+                    }
                 }
-            }
-        })];
-        this.panelChanges$.next(this.panelElements);
+            })];
+            this.panelChanges$.next(this.panelElements);
+        }
     });
 
     public formComponents: ComponentConfig[] = [
@@ -208,10 +212,10 @@ export class ShowcaseComponent {
                 }
             ]
         },
-        FormService.getStandardContainer('Showcase Components', 'container_1', [
+        FormService.getStandardContainer({label:'Showcase Components', id: 'container_1', elements: [
             FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
-        ]),
-        FormService.getButtonElement('button_dlg', 'Open Dialog', 'col-2', () => this.openDialog()),
+        ]}),
+        FormService.getButtonElement({id:'button_dlg', label:'Open Dialog', layoutClass: 'col-2', handler: () => this.openDialog()}),
         FormService.getPanelForm('test panel', 'panel_1', [], {
             headerContent: [this.testButton],
             headerType: 'components',
@@ -606,15 +610,17 @@ export class ShowcaseComponent {
             test3: 3,
             test4: 1,
         };
-
-        const formElement: DictionaryConfig = FormService.getDictionaryForm(value, 'Test Dictionary', 'dictionary_1', {
-            keyLabel: 'Syllable',
-            valueLabel: 'Weight',
-            keyTooltip: 'Grouping of orthographic characters',
-            valueTooltip: 'The weight of the syllable\'s occurrence. Higher weights are more likely to be selected.',
-            initialType: 'number',
-            useSortByValues: true,
-            reverseSort: true,
+        
+        const formElement = FormService.getDictionaryForm({ value, label: 'Test Dictionary', id: 'dictionary_1', 
+            options: {
+                keyLabel: 'Syllable',
+                valueLabel: 'Weight',
+                keyTooltip: 'Grouping of orthographic characters',
+                valueTooltip: 'The weight of the syllable\'s occurrence. Higher weights are more likely to be selected.',
+                initialType: 'number',
+                useSortByValues: true,
+                reverseSort: true,
+            }
         });
 
         const panelForm = this.getPanelForm('Test Panel', 'panel_1', [formElement]);
