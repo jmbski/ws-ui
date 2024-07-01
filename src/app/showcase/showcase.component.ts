@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { LoremIpsum } from 'lorem-ipsum';
-import { nanoid } from 'nanoid';
 import { ToastModule } from 'primeng/toast';
 import { 
     BlockableUiComponent, 
@@ -20,17 +19,16 @@ import {
     TopNavComponent,
     WsTableComponent
 } from 'warskald-ui/components';
-import { ElementType, BaseComponentConfig, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PMultiSelectConfig, ButtonAction, ContainerConfig, DictionaryConfig, PanelConfig, PPanelConfig } from 'warskald-ui/models';
-import { DialogManagerService, FormService, LayoutService, LoggableComponent, LogLevels, NgLogService, ThemeService, ToastService } from 'warskald-ui/services';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { PrimeNGConfig, SelectItem } from 'primeng/api';
+import { ElementType, PageLayoutConfig, ComponentConfig, WeakObject, FunctionMap, PanelConfig } from 'warskald-ui/models';
+import { DialogManagerService, FilterService, FormService, LayoutService, LoggableComponent, LogLevels, ToastService } from 'warskald-ui/services';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { isString } from 'lodash';
-import { IsButtonAction } from '../type-guards/page-type-guards';
+import { SelectItem } from 'primeng/api';
 import { CustomKeysComponent } from '../components/custom-keys/custom-keys.component';
 import { ButtonModule } from 'primeng/button';
 import { BehaviorSubject } from 'rxjs';
 import { getFormDialog } from '../components/element-renderer/form-dialog';
-import { AutoCompleteCompleteEvent } from 'primeng/autocomplete';
+import { FilterService as PrimeFilterService } from 'primeng/api';
 
 const { 
     BUTTON_GROUP,
@@ -555,8 +553,13 @@ export class ShowcaseComponent {
     constructor(
         public cd: ChangeDetectorRef,
         private dialogMgr: DialogManagerService,
+        private pFilter: PrimeFilterService,
     ) {
-
+        const arr = ['a', 'b', 'c'];
+        const test = '[124, 45]';
+        
+        const result = FilterService.checkFilter(test, isString, 'is');
+        console.log('result:', result);
     }
 
     ngOnInit() {

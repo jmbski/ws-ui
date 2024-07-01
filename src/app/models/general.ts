@@ -77,7 +77,7 @@ export interface BaseComponentClass extends Record<string, unknown> {
     canLog?: boolean;
     cd: ChangeDetectorRef;
 }
-export type FunctionMap = Record<string, GenericFunction<unknown>>;
+export type FunctionMap<T = unknown> = Record<string, GenericFunction<T>>;
 
 export type KeyOf<T> = Extract<keyof T, string>;
 

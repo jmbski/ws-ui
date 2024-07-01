@@ -153,7 +153,7 @@ export function isComparableType(value: unknown): value is number | string | Dat
     return isNumeric(value) || isString(value) || isDate(value) || isBoolean(value);
 }
 
-export type TypeGuard<T> = (input: unknown) => input is T;
+export type TypeGuard<T> = (input: unknown,... args: unknown[]) => input is T;
 
 export interface PropertyTypeGuard {
     predicate: TypeGuard<unknown>;
@@ -200,6 +200,7 @@ export function stringUnionGuardFactory(...types: string[]): TypeGuard<UnionType
 }
 
 export type TypeMapping<T> = Record<keyof T, PropertyTypeGuard>;
+export type WeakTypeMapping = Record<string, PropertyTypeGuard>;
 
 export const OptionalStringProp: PropertyTypeGuard = { predicate: isString, optional: true };
 export const OptionalNumberProp: PropertyTypeGuard = { predicate: isNumber, optional: true };

@@ -332,6 +332,7 @@ export class FormService {
             }
         };
     }
+    
     public static getTextElement(
         propName: string,
         value: string,

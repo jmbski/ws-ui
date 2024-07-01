@@ -137,6 +137,7 @@ export class AppComponent {
                 items: [
                     {
                         label: 'WS Showcase UI',
+                        icon: 'pi pi-times',
                         navAction: {
                             route: '/'
                         }

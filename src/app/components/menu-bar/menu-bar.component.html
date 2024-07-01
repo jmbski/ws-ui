@@ -13,6 +13,9 @@
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                 >
+                    @if(item.icon) {
+                        <i [class]="item.icon"></i>
+                    }
                     {{item.label}}
                 </button>
     
@@ -25,6 +28,10 @@
                                 [style]="subMenuItemStyles?.style"
                                 (click)="handleItemClick($event, subItem)"
                             >
+
+                                @if(subItem.icon) {
+                                    <i [class]="subItem.icon"></i>
+                                }
                                 {{subItem.label}}
                             </span>
                         }
@@ -54,6 +61,10 @@
                     aria-controls="collapseBasic"
                     (click)="handleItemClick($event, item)"
                 >
+
+                    @if(item.icon) {
+                        <i [class]="item.icon"></i>
+                    }
                     {{item.label}}
                 </button>
     
@@ -68,6 +79,10 @@
                                     aria-controls="collapseBasicSub"
                                     (click)="handleItemClick($event, menuItem)"
                                 >
+
+                                    @if(menuItem.icon) {
+                                        <i [class]="menuItem.icon"></i>
+                                    }
                                     {{menuItem.label}}
                                 </span>
     
@@ -80,6 +95,10 @@
                                                 [style]="mobileItemStyles?.style"
                                                 (click)="handleItemClick($event, subItem)"
                                             >
+
+                                                @if(subItem.icon) {
+                                                    <i [class]="subItem.icon"></i>
+                                                }
                                                 {{subItem.label}}
                                             </span>
                                         }
