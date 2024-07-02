@@ -56,7 +56,7 @@ $menu-base-zindex: 3201;
             &-item {
                 min-height: 2rem;
                 padding: .5rem;
-                background-color: var(--surface-700);
+                background-color: var(--surface-600);
                 text-align: center;
                 // font-family: MiddleAges;
                 transition: all 0.5s ease;
@@ -91,14 +91,14 @@ $menu-base-zindex: 3201;
     height: 120px;
     border-left: calc(calc(50vw - var(--scrollbar-width)) - 1rem) solid transparent; /* left side of triangle */
     border-right: calc(calc(50vw - var(--scrollbar-width)) - 1rem) solid transparent; /* right side of triangle */
-    border-top: 100px solid var(--surface-700); /* bottom - triangle's point */
+    border-top: 100px solid var(--surface-600); /* bottom - triangle's point */
     z-index: calc($menu-base-zindex + 6);
 }
 
 .spacer {
     height: 2rem;
     width: 100%;
-    background-color: var(--surface-700);
+    background-color: var(--surface-600);
     z-index: calc($menu-base-zindex + 6);
 }
 
