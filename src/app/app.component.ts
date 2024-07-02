@@ -134,6 +134,8 @@ export class AppComponent {
         const menuItems: WSMenuItem[] = [
             {
                 label: 'Category A',
+                icon: 'pi pi-home',
+                isExpanded: true,
                 items: [
                     {
                         label: 'WS Showcase UI',
@@ -173,12 +175,14 @@ export class AppComponent {
             },
             {
                 label: 'Category C',
+                icon: 'pi pi-user',
                 items: [
                     {
                         label: 'Option 1',
                     },
                     {
                         label: 'Option 2',
+                        icon: 'pi pi-times',
                     },
                     {
                         label: 'Option 3',
@@ -225,7 +229,9 @@ export class AppComponent {
                         model: [
                             {
                                 label: 'Menu',
-                                items: menuItems
+                                items: menuItems,
+                                isExpanded: true,
+                                icon: 'pi pi-bars',
                             }
                         ],
                         usePennant: false,

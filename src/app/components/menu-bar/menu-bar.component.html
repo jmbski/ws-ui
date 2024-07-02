@@ -7,16 +7,20 @@
             <div [class]="menuItemStyleClasses" [style]="menuItemStyles?.style">
                 <button 
                     type="button" 
-                    [class]="menuBarButtonStyleClasses"
+                    [ngClass]="menuBarButtonStyleClasses"
+                    
                     [style]="menuBarButtonStyles?.style"
                     (click)="handleItemClick($event, item)"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
                 >
                     @if(item.icon) {
-                        <i [class]="item.icon"></i>
+                        <!-- <span class="col-2"></span> -->
+                        <i [class]="item.icon" ></i>
                     }
-                    {{item.label}}
+                    <span class="pl-2">
+                        {{item.label}}
+                    </span>
                 </button>
     
                 <div id="collapseBasic" [collapse]="!item.isExpanded" [isAnimated]="true">
@@ -24,15 +28,19 @@
                         
                         @for(subItem of item.items; track subItem.label) {
                             <span 
-                                [class]="subMenuItemStyleClasses" 
+                                [ngClass]="subMenuItemStyleClasses" 
                                 [style]="subMenuItemStyles?.style"
+                                [class]="hasIcons(item.items) ? 'grid grid-nogutter align-items-center' : ''"
                                 (click)="handleItemClick($event, subItem)"
                             >
 
-                                @if(subItem.icon) {
-                                    <i [class]="subItem.icon"></i>
+                                @if(hasIcons(item.items)) {
+                                    <!-- <span class="col-3"></span> -->
+                                    <i [class]="subItem.icon" class="col-3 text-right"></i>
                                 }
-                                {{subItem.label}}
+                                <span [class]="hasIcons(item.items) ? 'col-6' : 'col-9'">
+                                    {{subItem.label}}
+                                </span>
                             </span>
                         }
                         
@@ -55,7 +63,7 @@
             <div #topMenuItem [class]="menuItemStyleClasses" [style]="menuItemStyles?.style">
                 <button 
                     type="button" 
-                    [class]="menuBarButtonStyleClasses"
+                    [ngClass]="menuBarButtonStyleClasses"
                     [style]="menuBarButtonStyles?.style"
                     [attr.aria-expanded]="item.isExpanded"
                     aria-controls="collapseBasic"
@@ -65,7 +73,9 @@
                     @if(item.icon) {
                         <i [class]="item.icon"></i>
                     }
-                    {{item.label}}
+                    <span [class]="item.icon ? 'pl-2' : ''">
+                        {{item.label}}
+                    </span>
                 </button>
     
                 <div [class]="subMenuMobileWrapperStyleClasses" [style]="subMenuMobileWrapperStyles?.style">
@@ -74,16 +84,18 @@
                             
                             @for(menuItem of item.items; track menuItem.label) {
                                 <span #subMenuItem
-                                    [class]="subMenuItemStyleClasses"
+                                    [ngClass]="subMenuItemStyleClasses"
                                     [style]="subMenuItemStyles?.style"
                                     aria-controls="collapseBasicSub"
                                     (click)="handleItemClick($event, menuItem)"
                                 >
 
                                     @if(menuItem.icon) {
-                                        <i [class]="menuItem.icon"></i>
+                                        <i [class]="menuItem.icon" ></i>
                                     }
-                                    {{menuItem.label}}
+                                    <span [class]="menuItem.icon ? 'pl-2' : ''">
+                                        {{menuItem.label}}
+                                    </span>
                                 </span>
     
                                 <div id="collapseBasicSub" [collapse]="!menuItem.isExpanded" [isAnimated]="true">
@@ -91,15 +103,18 @@
                                         
                                         @for(subItem of menuItem.items; track subItem.label) {
                                             <span 
-                                                [class]="mobileItemStyleClasses"
+                                                [ngClass]="mobileItemStyleClasses"
                                                 [style]="mobileItemStyles?.style"
+                                                [class]="hasIcons(menuItem.items) ? 'grid grid-nogutter align-items-center' : ''"
                                                 (click)="handleItemClick($event, subItem)"
                                             >
 
-                                                @if(subItem.icon) {
-                                                    <i [class]="subItem.icon"></i>
+                                                @if(hasIcons(menuItem.items)) {
+                                                    <i [class]="subItem.icon" class="col-3"></i>
                                                 }
-                                                {{subItem.label}}
+                                                <span [class]="hasIcons(menuItem.items) ? 'col-9 text-left' : ''">
+                                                    {{subItem.label}}
+                                                </span>
                                             </span>
                                         }
                                         

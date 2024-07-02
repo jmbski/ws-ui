@@ -83,6 +83,8 @@ export class MenuBarComponent implements WeakObject {
     public subMenuMobileWrapperStyleClasses: string[] = [this.defaultSubMenuMobileWrapperClass];
 
     public mobileItemStyleClasses: string[] = [this.defaultMobileItemStyleClass];
+    
+    public hasIconsMap: WeakMap<WSMenuItem[], boolean> = new WeakMap();
 
     [key: string]: unknown;
 
@@ -142,6 +144,8 @@ export class MenuBarComponent implements WeakObject {
         this.stdMenuItems = input[0]?.items || [];
         
         this.model$.next(this.model);
+        this.hasIconsMap = new WeakMap();
+        this.checkMenuItems(this.model);
     }
     
     // #endregion get/set inputs
@@ -335,6 +339,25 @@ export class MenuBarComponent implements WeakObject {
             NavigationService.navigate(model.navAction);
         }
         this.cd.detectChanges();
+    }
+
+    public checkMenuItems(items: WSMenuItem[]): void {
+        let hasIcons = false;
+        for (const item of items) {
+            if (item.icon) {
+                hasIcons = true;
+            }
+    
+            if (item.items) {
+                this.checkMenuItems(item.items);
+            }
+        }
+    
+        this.hasIconsMap.set(items, hasIcons);
+    }
+
+    public hasIcons(items?: WSMenuItem[]): boolean {
+        return this.hasIconsMap.get(items ?? []) ?? false;
     }
     
     // #endregion public methods
