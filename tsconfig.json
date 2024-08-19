@@ -26,7 +26,6 @@
         "baseUrl": "./",
         "noUnusedLocals": false,
         "noUnusedParameters": false,
-        "allowSyntheticDefaultImports": true,
         "paths": {
             "warskald-ui/*": [
                 "src/app/*/_index.ts"
