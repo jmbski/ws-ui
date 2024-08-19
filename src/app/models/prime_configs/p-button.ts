@@ -13,7 +13,7 @@ export interface PButtonConfig {
     rounded?: boolean;
     text?: boolean;
     plain?: boolean;
-    severity?: 'secondary' | 'success' | 'info' | 'warning' | 'help' | 'danger' | 'contrast' | string | undefined;
+    severity?: 'info' | 'success' | 'warning' | 'danger' | 'help' | 'primary' | 'secondary' | 'contrast' | null | undefined;//'secondary' | 'success' | 'info' | 'warning' | 'help' | 'danger' | 'contrast' | string | undefined;
     outlined?: boolean;
     link?: boolean;
     tabindex?: number | undefined;

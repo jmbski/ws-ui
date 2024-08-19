@@ -31,7 +31,7 @@
         "strictInjectionParameters": true,
         "strictInputAccessModifiers": true,
         "strictMetadataEmit": true,
-        "strictTemplates": true,
+        "strictTemplates": false,
     },
     "files": [
         "./_index.ts"

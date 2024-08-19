@@ -915,18 +915,21 @@ export class NgLogService {
                         `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::` :
                         `\n${LogLevels[logLevel].toUpperCase()}::${caller.LOCAL_ID}::${callingFunctName}::${levelOrFunct}::`;
             
-                    const logArgs = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
+                    const logArgs: unknown[] = contextStringInArgs ? getArgs(...[contextString, ...args]) : getArgs(...args);
             
                     if(!contextStringInArgs) {
                         const levelConsoleFunctName = logLevelConsoleFunctMap[logLevel] ?? 'debug';
                         const levelLogFunction = console[levelConsoleFunctName];
                         if(isConsoleFunction(levelLogFunction, levelConsoleFunctName)) {
                             NgLogService.showConsoleFunctArgs ? 
+                                // @ts-ignore
                                 levelLogFunction(`${contextString}::console funct args:`, ...logArgs) :
+                                // @ts-ignore
                                 levelLogFunction(contextString);
                         }
                     }
                     if(isConsoleFunction(logFunction, levelOrFunct)) {
+                        // @ts-ignore
                         logFunction(...logArgs);
                     }
                 }

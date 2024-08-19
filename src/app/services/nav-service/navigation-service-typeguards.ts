@@ -22,7 +22,8 @@ const navigationExtrasTypeMap: TypeMapping<NavigationExtras> = {
         predicate: stringUnionGuardFactory('reload', 'ignore'),
         optional: true
     },
-    replaceUrl: OptionalBooleanProp
+    replaceUrl: OptionalBooleanProp,
+    browserUrl: OptionalStringProp
 };
 
 export function isNavigationExtras(obj: unknown): obj is NavigationExtras {
