@@ -203,16 +203,20 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
     public completeHandler(event: AutoCompleteCompleteEvent) {
         const { query } = event;
 
-        const optionValue = this.options?.optionValue || 'value';
+        const optionValueKey = this.options?.optionValue || 'value';
+        const optionLabelKey = this.options?.optionLabel || 'label';
 
         this.suggestions = this.data.filter((item) => {
-            const key = isString(optionValue) ? optionValue : optionValue(item);
-            const value = item[key];
             if (this.customFilter) {
                 return this.customFilter(query, item);
             }
-            console.log('query', query, 'key', key, 'value', value);
-            return (isString(value) && value.toLowerCase().includes(query.toLowerCase())) || key.toLowerCase().includes(query.toLowerCase());
+            const optionValue = isString(optionValueKey) ? optionValueKey : optionValueKey(item);
+            const optionLabel = isString(optionLabelKey) ? optionLabelKey : optionLabelKey(item);
+
+            const value = item[optionValue];
+            const label = item[optionLabel];
+
+            return (isString(value) && value.toLowerCase().includes(query.toLowerCase())) || (isString(label) && label.toLowerCase().includes(query.toLowerCase()));
         });
 
     }
