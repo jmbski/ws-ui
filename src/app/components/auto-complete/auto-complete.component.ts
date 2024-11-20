@@ -47,6 +47,8 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      */
     public suggestions: WeakObject[] = [];
 
+    public customFilter?: (query: string, item: WeakObject) => boolean;
+
 
     [key: string]: unknown;
 
@@ -74,7 +76,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * Value input to keep ngComponentOutlet happy
      */
     @Input() value: unknown = undefined;
-    
+
     /**
      * The configuration object for the component.
      */
@@ -88,7 +90,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the complete event. 
      * @see {@link AutoCompleteCompleteEvent}
      */
-    @Input() completeMethodHandler(event: AutoCompleteCompleteEvent): void {}
+    @Input() completeMethodHandler(event: AutoCompleteCompleteEvent): void { }
 
     /**
      * Provided function to handle the select event.
@@ -96,7 +98,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the select event. 
      * @see {@link AutoCompleteSelectEvent}
      */
-    @Input() onSelectHandler(event: AutoCompleteSelectEvent): void {}
+    @Input() onSelectHandler(event: AutoCompleteSelectEvent): void { }
 
     /**
      * Provided function to handle the unselect event.
@@ -104,7 +106,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the unselect event.
      * @see {@link AutoCompleteUnselectEvent}
      */
-    @Input() onUnselectHandler(event: AutoCompleteUnselectEvent): void {}
+    @Input() onUnselectHandler(event: AutoCompleteUnselectEvent): void { }
 
     /**
      * Provided function to handle the focus event.
@@ -112,7 +114,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the focus event.
      * @see {@link Event}
      */
-    @Input() onFocusHandler(event: Event): void {}
+    @Input() onFocusHandler(event: Event): void { }
 
     /**
      * Provided function to handle the blur event.
@@ -120,7 +122,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the blur event.
      * @see {@link Event}
      */
-    @Input() onBlurHandler(event: Event): void {}
+    @Input() onBlurHandler(event: Event): void { }
 
     /**
      * Provided function to handle the dropdown click event.
@@ -128,7 +130,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the dropdown click event.
      * @see {@link AutoCompleteDropdownClickEvent}
      */
-    @Input() onDropdownClickHandler(event: AutoCompleteDropdownClickEvent): void {}
+    @Input() onDropdownClickHandler(event: AutoCompleteDropdownClickEvent): void { }
 
     /**
      * Provided function to handle the key up event.
@@ -136,7 +138,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object for the key up event.
      * @see {@link KeyboardEvent}
      */
-    @Input() onKeyUpHandler(event: KeyboardEvent): void {}
+    @Input() onKeyUpHandler(event: KeyboardEvent): void { }
 
     /**
      * Provided function to handle when the overlay panel is shown.
@@ -144,7 +146,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object passed by the onShow event.
      * @see {@link Event}
      */
-    @Input() onShowHandler(event: Event): void {}
+    @Input() onShowHandler(event: Event): void { }
 
     /**
      * Provided function to handle when the overlay panel is hidden.
@@ -152,7 +154,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object passed by the onHide event.
      * @see {@link Event}
      */
-    @Input() onHideHandler(event: Event): void {}
+    @Input() onHideHandler(event: Event): void { }
 
     /**
      * Provided function to handle when lazy loading data.
@@ -160,7 +162,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
      * @param event - The event object passed when using lazy loading.
      * @see {@link AutoCompleteLazyLoadEvent}
      */
-    @Input() onLazyLoadHandler(event: AutoCompleteLazyLoadEvent): void {}
+    @Input() onLazyLoadHandler(event: AutoCompleteLazyLoadEvent): void { }
 
 
     // #endregion standard inputs
@@ -177,7 +179,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
 
 
     // #region viewchildren and contentchildren
-    
+
     /**
      * Reference to the autocomplete component.
      */
@@ -202,13 +204,16 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
         const { query } = event;
 
         const optionValue = this.options?.optionValue || 'value';
-        
+
         this.suggestions = this.data.filter((item) => {
             const key = isString(optionValue) ? optionValue : optionValue(item);
             const value = item[key];
-            return isString(value) && value.toLowerCase().includes(query.toLowerCase());
+            if (this.customFilter) {
+                return this.customFilter(query, item);
+            }
+            return (isString(value) && value.toLowerCase().includes(query.toLowerCase())) || key.toLowerCase().includes(query.toLowerCase());
         });
-        
+
     }
 
     // #endregion public methods
