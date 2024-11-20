@@ -279,7 +279,8 @@ export interface CalendarConfig extends FormElementConfig {
     onMonthChangeHandler?: (event: CalendarMonthChangeEvent) => void;
     onYearChangeHandler?: (event: CalendarYearChangeEvent) => void;
     onClickOutsideHandler?: (event: unknown) => void;
-    onShowHandler?: (event: unknown) => void;}
+    onShowHandler?: (event: unknown) => void;
+}
 
 export interface ButtonConfig extends BaseComponentConfig {
     elementType: ElementType.BUTTON;
@@ -302,7 +303,7 @@ export interface PanelConfig extends FormElementConfig {
     contentType?: string;
     footerType?: string;
     contentChanges$?: BehaviorSubject<ComponentConfig[]>;
-    
+
     collapsedChangeHandler?: (event: boolean) => void;
     onBeforeToggleHandler?: (event: PanelBeforeToggleEvent) => void;
     onAfterToggleHandler?: (event: PanelAfterToggleEvent) => void;
@@ -412,15 +413,25 @@ export interface DictionaryConfig extends FormElementConfig {
 
     initialType?: DictionaryType;
     validTypeOptions?: DictionaryType[];
-    
+
     enableNewKeys?: boolean;
     enableTypeSelection?: boolean;
     enableEdit?: boolean;
-    
+
     usePanel?: boolean;
     options?: PrimeConfigs.PPanelConfig;
     useSortByValues?: boolean;
     reverseSort?: boolean;
+}
+
+
+export interface InputPasswordConfig extends BaseComponentConfig {
+    elementType: ElementType.INPUT_PASSWORD;
+    options?: PrimeConfigs.PPasswordConfig;
+
+    onFocusHandler?: (event: Event) => void;
+    onBlurHandler?: (event: Event) => void;
+    onClearHandler?: (event: unknown) => void;
 }
 
 /**
@@ -443,6 +454,7 @@ export type ComponentConfig =
     GeneralComponentConfig |
     HtmlEditorConfig |
     InputNumberConfig |
+    InputPasswordConfig |
     InputSwitchConfig |
     InputTextConfig |
     KnobConfig |
@@ -452,6 +464,7 @@ export type ComponentConfig =
     SelectButtonConfig |
     SliderConfig |
     SplitButtonConfig |
+    StepperConfig |
     TextAreaConfig |
     TextBlockConfig |
     ToggleButtonConfig |

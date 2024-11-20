@@ -5,7 +5,10 @@ import { ButtonComponent } from './button/button.component';
 import { ButtonGroupComponent } from './button-group/button-group.component';
 import { CalendarComponent } from './calendar/calendar.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
+import { ClickableListComponent } from './clickable-list/clickable-list.component';
 import { ColorPickerComponent } from './color-picker/color-picker.component';
+import { CustomKeysComponent } from './custom-keys/custom-keys.component';
+import { DictionaryComponent } from './dictionary/dictionary.component';
 import { DropdownComponent } from './dropdown/dropdown.component';
 import { DynamicComponent } from './dynamic/dynamic.component';
 import { ElementRendererComponent } from './element-renderer/element-renderer.component';
@@ -14,6 +17,7 @@ import { GeneralComponent } from './general/general.component';
 import { HtmlEditorComponent } from './html-editor/html-editor.component';
 import { ImageComponent } from './image/image.component';
 import { InputNumberComponent } from './input-number/input-number.component';
+import { InputPasswordComponent } from './input-password/input-password.component';
 import { InputSwitchComponent } from './input-switch/input-switch.component';
 import { InputTextComponent } from './input-text/input-text.component';
 import { KnobComponent } from './knob/knob.component';
@@ -27,6 +31,7 @@ import { RadioButtonComponent } from './radio-button/radio-button.component';
 import { SelectButtonComponent } from './select-button/select-button.component';
 import { SliderComponent } from './slider/slider.component';
 import { SplitButtonComponent } from './split-button/split-button.component';
+import { StepperComponent } from './stepper/stepper.component';
 import { SvgComponent } from './svg/svg.component';
 import { TabbedResponseTableComponent } from './tabbed-response-table/tabbed-response-table.component';
 import { TextAreaComponent } from './text-area/text-area.component';
@@ -36,10 +41,6 @@ import { TopNavComponent } from './top-nav/top-nav.component';
 import { TreeSelectComponent } from './tree-select/tree-select.component';
 import { Type } from '@angular/core';
 import { WsTableComponent } from './ws-table/_index';
-import { CustomKeysComponent } from './custom-keys/custom-keys.component';
-import { ClickableListComponent } from './clickable-list/clickable-list.component';
-import { StepperComponent } from './stepper/stepper.component';
-import { DictionaryComponent } from './dictionary/dictionary.component';
 
 export * from './accordion/accordion.component';
 export * from './auto-complete/auto-complete.component';
@@ -60,6 +61,7 @@ export * from './general/general.component';
 export * from './html-editor/html-editor.component';
 export * from './image/image.component';
 export * from './input-number/input-number.component';
+export * from './input-password/input-password.component';
 export * from './input-switch/input-switch.component';
 export * from './input-text/input-text.component';
 export * from './knob/knob.component';
@@ -81,7 +83,6 @@ export * from './toggle-button/toggle-button.component';
 export * from './top-nav/top-nav.component';
 export * from './tree-select/tree-select.component';
 export * from './ws-table/_index';
-
 export const WsComponentMap: Record<string, Type<unknown>> = {
     AccordionComponent,
     AutoCompleteComponent,
@@ -101,6 +102,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     HtmlEditorComponent,
     ImageComponent,
     InputNumberComponent,
+    InputPasswordComponent,
     InputSwitchComponent,
     InputTextComponent,
     KnobComponent,
@@ -140,6 +142,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.HTML_EDITOR]: HtmlEditorComponent,
     [ElementType.IMAGE]: ImageComponent,
     [ElementType.INPUT_NUMBER]: InputNumberComponent,
+    [ElementType.INPUT_PASSWORD]: InputPasswordComponent,
     [ElementType.INPUT_SWITCH]: InputSwitchComponent,
     [ElementType.INPUT_TEXT]: InputTextComponent,
     [ElementType.KNOB]: KnobComponent,

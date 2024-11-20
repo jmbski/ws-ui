@@ -11,6 +11,7 @@ export * from './p-input-text-area';
 export * from './p-knob';
 export * from './p-multi-select-config';
 export * from './p-panel';
+export * from './p-password';
 export * from './p-radio-button';
 export * from './p-select-button';
 export * from './p-slider';
