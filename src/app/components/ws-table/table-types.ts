@@ -1,4 +1,4 @@
-import { WeakObject, TypedRecord } from 'warskald-ui/models';
+import { WeakObject, TypedRecord, CssStyleObject } from 'warskald-ui/models';
 
 export interface ColumnDefinition {
     field: string;
@@ -42,15 +42,16 @@ export interface TableConfig {
     enableResizeColumns?: boolean;
     enableReorderColumns?: boolean;
     dataKey?: string;
-    columnResizeMode?: 'fit' | 'expand' ;
+    columnResizeMode?: 'fit' | 'expand';
     useSort?: boolean;
     scrollable?: boolean;
     selectionMode?: 'single' | 'multiple';
-    tableStyle?: TypedRecord<string>;
+    tableStyle?: CssStyleObject;
     containerElement?: HTMLElement | string;
     filterFields?: string[];
     columnDefs: ColumnDefinition[];
     rowData: WeakObject[];
+    wrapperStyle: CssStyleObject;
 
     [key: string]: unknown;
 }

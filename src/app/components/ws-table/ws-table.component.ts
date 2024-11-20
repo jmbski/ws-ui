@@ -34,19 +34,19 @@ import { LogLevels, LoggableComponent, RegisterClassType } from 'warskald-ui/ser
     styleUrl: './ws-table.component.scss'
 })
 export class WsTableComponent {
-    
+
     // #region public properties
 
     public selectedRows: WeakObject[] = [];
-    
+
     // #endregion public properties
-    
-    
+
+
     // #region private properties
-    
+
     // #endregion private properties
-    
-    
+
+
     // #region getters/setters
 
     get paginatorOptions() {
@@ -92,19 +92,23 @@ export class WsTableComponent {
     get filterFields() {
         return this.tableConfig?.filterFields;
     }
-    
+
+    get wrapperStyle() {
+        return this.tableConfig?.wrapperStyle;
+    }
+
     // #endregion getters/setters
-    
-    
+
+
     // #region standard inputs
 
     @Input() columnDefs: ColumnDefinition[] = [];
 
     @Input() rowData: WeakObject[] = [];
-    
+
     // #endregion standard inputs
-    
-    
+
+
     // #region get/set inputs
 
     private _tableConfig?: TableConfig;
@@ -118,59 +122,59 @@ export class WsTableComponent {
         this.rowData = input?.rowData ?? [];
         this.cd.detectChanges();
     }
-    
+
     // #endregion get/set inputs
-    
-    
+
+
     // #region outputs, emitters, and event listeners
-    
+
     // #endregion outputs, emitters, and event listeners
-    
-    
+
+
     // #region viewchildren and contentchildren
 
     @ViewChild('tableRef') tableRef?: Table;
-    
+
     // #endregion viewchildren and contentchildren
-    
-    
+
+
     // #region constructor and lifecycle hooks
 
     constructor(
         public cd: ChangeDetectorRef,
     ) {
-        
+
     }
-    
+
     // #endregion constructor and lifecycle hooks
-    
-    
+
+
     // #region public methods
-    
+
 
     public clear(table: Table) {
         table.clear();
     }
 
     public filterInput(event: Event) {
-        
-        if(event instanceof InputEvent) {
+
+        if (event instanceof InputEvent) {
             this.tableRef?.filterGlobal((<HTMLInputElement>event.target).value, 'contains');
         }
-        
+
     }
-    
+
     // #endregion public methods
-    
-    
+
+
     // #region protected methods
-    
+
     // #endregion protected methods
-    
-    
+
+
     // #region private methods
-    
+
     // #endregion private methods
-    
-    
+
+
 }
