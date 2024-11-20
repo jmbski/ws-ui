@@ -18,6 +18,7 @@ export interface PInputmaskConfig {
     disabled?: boolean | undefined;
     readonly?: boolean | undefined;
     unmask?: boolean | undefined;
+    mask?: string;
     name?: string | undefined;
     required?: boolean | undefined;
     characterPattern?: string;

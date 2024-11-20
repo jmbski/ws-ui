@@ -365,7 +365,8 @@ export class FormService {
         value: string,
         layoutStyleClass: string = 'col-12',
         label?: string,
-        characterPattern: string = '[a-zA-Z0-9]',
+        mask: string = '(999) 999-9999',
+        characterPattern: string = '[0-9]',
         umask: boolean = false,
         disabled: boolean = false,
     ): InputMaskConfig {
@@ -388,6 +389,7 @@ export class FormService {
                 characterPattern,
                 name: propName,
                 umask,
+
                 styleClass: 'w-full'
             }
         };
