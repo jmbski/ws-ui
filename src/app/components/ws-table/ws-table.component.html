@@ -52,9 +52,18 @@
         <ng-template pTemplate="body" let-rowData let-columns="columns">
             <tr>
                 <ng-container *ngFor="let col of columns">
-                    <td *ngIf="!col.hidden">
-                        {{ rowData[col.field] }}
-                    </td>
+                    @if(!col.hidden) {
+                        @switch (col.type) {
+                            @case ('image') {
+                                <td>
+                                    <img [src]="rowData[col.field]" alt="image" />
+                                </td>
+                            }
+                            @default {
+                                <td>{{ rowData[col.field] }}</td>
+                            }
+                        }
+                    }
                 </ng-container>
             </tr>
         </ng-template>
