@@ -389,6 +389,7 @@ export class FormService {
                 disabled,
                 name: propName,
                 unmask,
+                keepBuffer: true,
                 mask,
                 placeholder: mask,
                 styleClass: 'w-full'
