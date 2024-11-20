@@ -211,6 +211,7 @@ export class AutoCompleteComponent extends BaseWidget<unknown> implements AutoCo
             if (this.customFilter) {
                 return this.customFilter(query, item);
             }
+            console.log('query', query, 'key', key, 'value', value);
             return (isString(value) && value.toLowerCase().includes(query.toLowerCase())) || key.toLowerCase().includes(query.toLowerCase());
         });
 
