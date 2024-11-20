@@ -1,6 +1,6 @@
 {
   "name": "warskald-ui",
-  "version": "0.0.217",
+  "version": "0.0.218",
   "keywords": [
     "angular"
   ],
@@ -10,7 +10,8 @@
     "@angular/core": "^17.0.0",
     "@angular/forms": "^17.0.0",
     "rxjs": "^6.0.0 || ^7.8.1",
-    "zone.js": "~0.14.3"
+    "zone.js": "~0.14.3",
+    "quill": "^2.0.1"
   },
   "exports": {
     "./assets/": "./assets/*"
@@ -18,8 +19,7 @@
   "module": "warskald-ui.js",
   "typings": "warskald-ui.d.ts",
   "dependencies": {
-    "tslib": "^2.3.0",
-    "quill": "^2.0.1"
+    "tslib": "^2.3.0"
   },
   "sideEffects": false
 }
