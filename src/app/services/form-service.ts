@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { ButtonConfig, CharMap, ClickableListConfig, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, FSButtonParms, FSDictParms, FSLabelParms, FSStdConParms, GenericFunction, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
+import { ButtonConfig, CharMap, ClickableListConfig, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, FSButtonParms, FSDictParms, FSLabelParms, FSStdConParms, GenericFunction, InputMaskConfig, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isStringArray, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
@@ -17,14 +17,14 @@ import { NgZone } from '@angular/core';
 export class FormService {
     // #region public properties
     public control: FormControl = new FormControl('', Validators.required);
-    
+
     // #endregion public properties
-    
-    
+
+
     // #region private properties
 
-    private static _ngZone: NgZone = new NgZone({enableLongStackTrace: true});
-    
+    private static _ngZone: NgZone = new NgZone({ enableLongStackTrace: true });
+
     private static _validatorsFns: Map<string, FormValidator> = new Map<string, FormValidator>([
         ['email', Validators.email],
         ['min', Validators.min(1)],
@@ -40,22 +40,22 @@ export class FormService {
     ]);
 
     // #endregion private properties
-    
-    
+
+
     // #region getters/setters
-    
+
     // #endregion getters/setters
-    
-    
+
+
     // #region constructor and lifecycle hooks
-    
+
     // #endregion constructor and lifecycle hooks
 
-    
-    
-    
+
+
+
     // #region public methods
-    
+
     public static addValidatorMsg(name: string, message: string) {
         FormService._validatorMessages.set(name, message);
     }
@@ -80,29 +80,29 @@ export class FormService {
         const validators = Object.keys(control.errors ?? {});
         return FormService.getValidatorMsgs(validators).join('<br>');
     }
-    
+
     public static triggerAnimation(element: HTMLElement | string, animation: string = 'glowing', duration: number = 2) {
         FormService._ngZone.runOutsideAngular(() => {
-            if(isString(element)) {
+            if (isString(element)) {
                 const foundElement = document.getElementById(element);
-                if(foundElement) {
+                if (foundElement) {
                     element = foundElement;
                 }
             }
-            if(element instanceof HTMLElement) {
-    
+            if (element instanceof HTMLElement) {
+
                 element.classList.add(animation);
-                
+
                 const computedContent = getComputedStyle(element).content;
-                const parsedContent = computedContent.replaceAll('"','');
+                const parsedContent = computedContent.replaceAll('"', '');
                 const durationContent = isNumericString(parsedContent, false) ? parseFloat(parsedContent) : 0;
-    
+
                 const computedDuration = getComputedStyle(element).animationDuration;
                 const parsedDuration = isNumericString(computedDuration, false) ? parseFloat(computedDuration) : 0;
-    
+
                 duration = (durationContent || parsedDuration || duration) * 1000;
-    
-                if(duration <= 0) {
+
+                if (duration <= 0) {
                     duration = 2000;
                 }
                 // Remove the glow class after the animation completes
@@ -119,9 +119,9 @@ export class FormService {
 
     public static triggerReflective() {
         const element = document.getElementById('reflectiveElement');
-        if(element) {
+        if (element) {
             element.classList.add('reflective');
-            
+
             // Optionally, remove the class after the animation completes
             setTimeout(() => {
                 element.classList.remove('reflective');
@@ -130,7 +130,7 @@ export class FormService {
     }
 
     public static getElementType(value: unknown): ElementType | undefined {
-        if(exists(value)) {
+        if (exists(value)) {
             if (isString(value)) {
                 return ElementType.INPUT_TEXT;
             }
@@ -154,7 +154,7 @@ export class FormService {
         const elementType = FormService.getElementType(propValue);
         let element: ComponentConfig | undefined = undefined;
         let labelElement: ComponentConfig | undefined = undefined;
-        if(elementType) {
+        if (elementType) {
             labelElement = {
                 elementType: ElementType.GENERAL,
                 id: `${propName}-label`,
@@ -178,10 +178,10 @@ export class FormService {
                 }
             };
 
-            if(elementType === ElementType.CONTAINER) {
+            if (elementType === ElementType.CONTAINER) {
                 element.elements = FormService.objToElements(propValue as WeakObject);
             }
-            if(elementType === ElementType.INPUT_NUMBER) {
+            if (elementType === ElementType.INPUT_NUMBER) {
                 /** @todo remove testcode after testing */
                 element.value = isNumber(propValue) ? propValue : 0;
                 element.options = <ObjectOf<InputNumber>>{
@@ -194,16 +194,16 @@ export class FormService {
         }
 
         return (labelElement && element) ? [labelElement, element] : undefined;
-        
+
     }
 
-    public static objToElements(obj: WeakObject)  {
+    public static objToElements(obj: WeakObject) {
         const elements: ComponentConfig[] = [];
-        for(const propName in obj) {
-            if(Object.hasOwn(obj, propName)) {
+        for (const propName in obj) {
+            if (Object.hasOwn(obj, propName)) {
                 const propValue = obj[propName];
                 const subElements = FormService.propToElement(propName, propValue);
-                if(subElements) {
+                if (subElements) {
                     elements.push(...subElements);
                 }
             }
@@ -213,10 +213,10 @@ export class FormService {
     }
 
     public static patchValues(formValues: WeakObject, target: WeakObject) {
-        for(const propName in formValues) {
+        for (const propName in formValues) {
             const formProp = formValues[propName];
             const targetProp = target[propName];
-            if(isWeakObject(formProp) && isWeakObject(targetProp)) {
+            if (isWeakObject(formProp) && isWeakObject(targetProp)) {
                 FormService.patchValues(formProp, targetProp);
             }
             else {
@@ -237,10 +237,10 @@ export class FormService {
 
     public static setValidators(validators: string[] | Record<string, FormValidator>, validatorFns?: FormValidator[]) {
 
-        if(isArray(validators)) {
+        if (isArray(validators)) {
             validatorFns ??= [];
             validators.forEach((name, index) => {
-                (index < validators.length && validatorFns) ? 
+                (index < validators.length && validatorFns) ?
                     FormService._validatorsFns.set(name, validatorFns[index]) :
                     FormService._validatorsFns.set(name, Validators.nullValidator);
             });
@@ -256,7 +256,7 @@ export class FormService {
         FormService._validatorsFns.set(name, validator);
     }
 
-    public static getStandardContainer({label, id, elements, options}: FSStdConParms): ContainerConfig {
+    public static getStandardContainer({ label, id, elements, options }: FSStdConParms): ContainerConfig {
         const element: ContainerConfig = {
             elementType: ElementType.CONTAINER,
             id,
@@ -272,14 +272,14 @@ export class FormService {
             }
         };
 
-        if(options) {
+        if (options) {
             Object.assign(element, options);
         }
 
         return element;
     }
 
-    public static getLabelElement({label, id, layoutStyleClass = 'col-3'}: FSLabelParms): ComponentConfig {
+    public static getLabelElement({ label, id, layoutStyleClass = 'col-3' }: FSLabelParms): ComponentConfig {
         id ??= `${label.toFormat('label')}-label`;
         return {
             elementType: ElementType.GENERAL,
@@ -291,7 +291,7 @@ export class FormService {
         };
     }
 
-    public static getDictionaryForm({value, label, id, options}: FSDictParms): DictionaryConfig {
+    public static getDictionaryForm({ value, label, id, options }: FSDictParms): DictionaryConfig {
         const config: DictionaryConfig = {
             elementType: ElementType.DICTIONARY,
             id: id ?? label ?? nanoid(),
@@ -307,8 +307,8 @@ export class FormService {
 
         options ??= {};
 
-        if(label) {
-            if(options.usePanel) {
+        if (label) {
+            if (options.usePanel) {
                 options.options ??= {};
                 options.options.header = label;
             }
@@ -332,12 +332,12 @@ export class FormService {
             }
         };
     }
-    
+
     public static getTextElement(
         propName: string,
         value: string,
-        layoutStyleClass: string = 'col-12', 
-        disabled: boolean = false, 
+        layoutStyleClass: string = 'col-12',
+        disabled: boolean = false,
         label?: string,
         listener?: BehaviorSubject<string>
     ): InputTextConfig {
@@ -357,22 +357,55 @@ export class FormService {
             externalListener$: listener,
             disabled,
         };
-    
+
+    }
+
+    public static getInputMaskElement(
+        propName: string,
+        value: string,
+        layoutStyleClass: string = 'col-12',
+        label?: string,
+        characterPattern: string = '[a-zA-Z0-9]',
+        umask: boolean = false,
+        disabled: boolean = false,
+    ): InputMaskConfig {
+
+        return {
+            elementType: ElementType.INPUT_MASK,
+            id: propName,
+            hasForm: true,
+            label,
+            value,
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            },
+            baseStyles: {
+                baseClass: 'w-full'
+            },
+            disabled,
+            options: {
+                maxlength: null,
+                characterPattern,
+                name: propName,
+                umask,
+            }
+        };
+
     }
 
     public static objToCharMap(obj: WeakObject): CharMap[] {
-        return Object.keys(obj).map((char) => <CharMap>{char});
+        return Object.keys(obj).map((char) => <CharMap>{ char });
     }
 
     public static getCustomKeysElement(
-        id: string, 
-        attachTo: string, 
+        id: string,
+        attachTo: string,
         charMap?: WeakObject | CharMap[],
         label?: string,
-        icon?: string, 
+        icon?: string,
         layoutStyleClass: string = 'col-2'
     ): CustomKeysConfig {
-        if(isWeakObject(charMap)) {
+        if (isWeakObject(charMap)) {
             charMap = FormService.objToCharMap(charMap);
         }
         return {
@@ -427,10 +460,10 @@ export class FormService {
             layoutStyles: {
                 baseClass: layoutClass
             },
-            onClickHandler: handler ?? (() => {}),
+            onClickHandler: handler ?? (() => { }),
         };
 
-        if(options) {
+        if (options) {
             Object.assign(config, options);
         }
 
@@ -440,8 +473,8 @@ export class FormService {
     public static getNumberElement(
         propName: string,
         value: number,
-        layoutStyleClass: string = 'col-12', 
-        disabled: boolean = false, 
+        layoutStyleClass: string = 'col-12',
+        disabled: boolean = false,
         label?: string,
     ): InputNumberConfig {
 
@@ -462,13 +495,13 @@ export class FormService {
             },
             disabled,
         };
-    
+
     }
 
     public static getPanelForm(
-        header: string, 
-        id: string, 
-        elements: ComponentConfig[], 
+        header: string,
+        id: string,
+        elements: ComponentConfig[],
         options?: Partial<PanelConfig>
     ): PanelConfig {
         const config: PanelConfig = {
@@ -485,11 +518,11 @@ export class FormService {
                 toggler: 'header',
                 collapsed: true,
                 header,
-                
+
             }
         };
 
-        if(options) {
+        if (options) {
             Object.assign(config, options);
         }
 
@@ -499,7 +532,7 @@ export class FormService {
     public static getListElement(label: string, value: string[], options?: Partial<ClickableListConfig>) {
         //const propValue = this[propName];
         const elements: ComponentConfig[] = [];
-        if(isStringArray(value)) {
+        if (isStringArray(value)) {
             const clickableList: ClickableListConfig = {
                 elementType: ElementType.CLICKABLE_LIST,
                 id: label,
@@ -507,27 +540,27 @@ export class FormService {
                 value: value,
                 orientation: 'vertical'
             };
-            if(options) {
+            if (options) {
                 Object.assign(clickableList, options);
             }
             elements.push(clickableList);
         }
-    
-        return FormService.getStandardContainer({label: label.toFormat('label'), id: label, elements});
-    
+
+        return FormService.getStandardContainer({ label: label.toFormat('label'), id: label, elements });
+
     }
-    
+
     // #endregion public methods
-    
-    
+
+
     // #region protected methods
-    
+
     // #endregion protected methods
-    
-    
+
+
     // #region private methods
-    
+
     // #endregion private methods
-    
-    
+
+
 }
