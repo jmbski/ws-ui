@@ -383,10 +383,10 @@ export class FormService {
             baseStyles: {
                 baseClass: 'w-full'
             },
-            disabled,
             options: {
                 maxlength: null,
                 characterPattern,
+                disabled,
                 name: propName,
                 unmask,
                 mask,
