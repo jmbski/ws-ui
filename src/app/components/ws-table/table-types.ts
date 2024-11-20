@@ -51,7 +51,7 @@ export interface TableConfig {
     filterFields?: string[];
     columnDefs: ColumnDefinition[];
     rowData: WeakObject[];
-    wrapperStyle: CssStyleObject;
+    wrapperStyle?: CssStyleObject;
 
     [key: string]: unknown;
 }
