@@ -15,6 +15,7 @@ export enum ElementType {
     GENERAL = 'general',
     HTML_EDITOR = 'html-editor',
     IMAGE = 'image',
+    INPUT_MASK = 'input-mask',
     INPUT_NUMBER = 'input-number',
     INPUT_PASSWORD = 'input-password',
     INPUT_SWITCH = 'input-switch',

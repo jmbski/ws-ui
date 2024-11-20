@@ -8,6 +8,7 @@ export * from './p-input-number';
 export * from './p-input-switch';
 export * from './p-input-text';
 export * from './p-input-text-area';
+export * from './p-inputmask';
 export * from './p-knob';
 export * from './p-multi-select-config';
 export * from './p-panel';

@@ -434,6 +434,19 @@ export interface InputPasswordConfig extends BaseComponentConfig {
     onClearHandler?: (event: unknown) => void;
 }
 
+
+export interface InputMaskConfig extends FormElementConfig {
+    elementType: ElementType.INPUT_MASK;
+    options?: PrimeConfigs.PInputmaskConfig;
+
+    onCompleteHandler?: (event: unknown) => void;
+    onFocusHandler?: (event: Event) => void;
+    onBlurHandler?: (event: Event) => void;
+    onInputHandler?: (event: Event) => void;
+    onKeydownHandler?: (event: Event) => void;
+    onClearHandler?: (event: unknown) => void;
+}
+
 /**
  * Union type of all possible element configs
  */
@@ -453,6 +466,7 @@ export type ComponentConfig =
     FormElementConfig |
     GeneralComponentConfig |
     HtmlEditorConfig |
+    InputMaskConfig |
     InputNumberConfig |
     InputPasswordConfig |
     InputSwitchConfig |

@@ -16,6 +16,7 @@ import { ElementType } from 'warskald-ui/models';
 import { GeneralComponent } from './general/general.component';
 import { HtmlEditorComponent } from './html-editor/html-editor.component';
 import { ImageComponent } from './image/image.component';
+import { InputMaskComponent } from './input-mask/input-mask.component';
 import { InputNumberComponent } from './input-number/input-number.component';
 import { InputPasswordComponent } from './input-password/input-password.component';
 import { InputSwitchComponent } from './input-switch/input-switch.component';
@@ -60,6 +61,7 @@ export * from './element-renderer/form-dialog';
 export * from './general/general.component';
 export * from './html-editor/html-editor.component';
 export * from './image/image.component';
+export * from './input-mask/input-mask.component';
 export * from './input-number/input-number.component';
 export * from './input-password/input-password.component';
 export * from './input-switch/input-switch.component';
@@ -101,6 +103,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     GeneralComponent,
     HtmlEditorComponent,
     ImageComponent,
+    InputMaskComponent,
     InputNumberComponent,
     InputPasswordComponent,
     InputSwitchComponent,
@@ -141,6 +144,7 @@ export const WsComponentMap: Record<string, Type<unknown>> = {
     [ElementType.GENERAL]: GeneralComponent,
     [ElementType.HTML_EDITOR]: HtmlEditorComponent,
     [ElementType.IMAGE]: ImageComponent,
+    [ElementType.INPUT_MASK]: InputMaskComponent,
     [ElementType.INPUT_NUMBER]: InputNumberComponent,
     [ElementType.INPUT_PASSWORD]: InputPasswordComponent,
     [ElementType.INPUT_SWITCH]: InputSwitchComponent,
