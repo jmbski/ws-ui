@@ -388,6 +388,7 @@ export class FormService {
                 characterPattern,
                 name: propName,
                 umask,
+                styleClass: 'w-full'
             }
         };
 
