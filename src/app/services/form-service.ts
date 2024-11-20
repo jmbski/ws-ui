@@ -1,7 +1,7 @@
 import { FormControl, Validators } from '@angular/forms';
 import { InputNumber } from 'primeng/inputnumber';
 import { BehaviorSubject } from 'rxjs';
-import { ButtonConfig, CharMap, ClickableListConfig, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, FSButtonParms, FSDictParms, FSLabelParms, FSStdConParms, GenericFunction, InputMaskConfig, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, WeakObject } from 'warskald-ui/models';
+import { ButtonConfig, CharMap, ClickableListConfig, ComponentConfig, ContainerConfig, CustomKeysConfig, DictionaryConfig, ElementType, FormValidator, FSButtonParms, FSDictParms, FSLabelParms, FSStdConParms, GenericFunction, InputMaskConfig, InputNumberConfig, InputTextConfig, MouseEventHandler, ObjectOf, PanelConfig, PCalendarConfig, WeakObject } from 'warskald-ui/models';
 import { exists, isArray, isBoolean, isNumber, isNumericString, isString, isStringArray, isWeakObject } from 'warskald-ui/type-guards';
 import { LoggableClass, LogLevels } from './_index';
 import { nanoid } from 'nanoid';
@@ -393,6 +393,39 @@ export class FormService {
                 placeholder: mask,
                 styleClass: 'w-full'
             }
+        };
+
+    }
+
+    public static getCalendarElement(
+        propName: string,
+        value: string,
+        layoutStyleClass: string = 'col-12',
+        label?: string,
+        dateFormat: string = 'mm/dd/yy',
+        options?: PCalendarConfig,
+    ): ComponentConfig {
+
+        return {
+            elementType: ElementType.CALENDAR,
+            id: propName,
+            hasForm: true,
+            label,
+            value,
+            layoutStyles: {
+                baseClass: layoutStyleClass
+            },
+            baseStyles: {
+                baseClass: 'w-full'
+            },
+            options: {
+                appendTo: 'body',
+                dateFormat,
+                inputStyleClass: 'w-full',
+                styleClass: 'w-full',
+                yearNavigator: true,
+                ...options
+            },
         };
 
     }
