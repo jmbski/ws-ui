@@ -389,7 +389,7 @@ export class FormService {
                 characterPattern,
                 name: propName,
                 umask,
-
+                mask,
                 styleClass: 'w-full'
             }
         };
