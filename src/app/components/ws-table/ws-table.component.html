@@ -72,7 +72,7 @@
                                 }
                             }
                             @default {
-                                <td [style]="col.style" [class]="col.conditiondalStyleClass != null ? col.conditionalStyleCLass(rowData[col.field]) : ''">{{ rowData[col.field] }}</td>
+                                <td [style]="col.style" [class]="col.conditionalStyleClass != null ? col.conditionalStyleClass(rowData[col.field]) : ''">{{ rowData[col.field] }}</td>
                             }
                         }
                     }
