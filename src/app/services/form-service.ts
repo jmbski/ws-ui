@@ -150,7 +150,7 @@ export class FormService {
         return undefined;
     }
 
-    public static propToElement(propName: string, propValue: unknown): ComponentConfig[] | undefined {
+    public static propToElement(propName: string, propValue: unknown, options?: Partial<ComponentConfig>): ComponentConfig[] | undefined {
         const elementType = FormService.getElementType(propValue);
         let element: ComponentConfig | undefined = undefined;
         let labelElement: ComponentConfig | undefined = undefined;
@@ -177,6 +177,7 @@ export class FormService {
                     styleClass: 'w-full'
                 }
             };
+            Object.assign(element, options);
 
             if (elementType === ElementType.CONTAINER) {
                 element.elements = FormService.objToElements(propValue as WeakObject);
@@ -197,12 +198,12 @@ export class FormService {
 
     }
 
-    public static objToElements(obj: WeakObject) {
+    public static objToElements(obj: WeakObject, commonOptions?: Partial<ComponentConfig>): ComponentConfig[] {
         const elements: ComponentConfig[] = [];
         for (const propName in obj) {
             if (Object.hasOwn(obj, propName)) {
                 const propValue = obj[propName];
-                const subElements = FormService.propToElement(propName, propValue);
+                const subElements = FormService.propToElement(propName, propValue, commonOptions);
                 if (subElements) {
                     elements.push(...subElements);
                 }
