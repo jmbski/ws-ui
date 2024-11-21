@@ -19,6 +19,7 @@ export interface ColumnDefinition {
     hidden?: boolean;
     frozen?: boolean;
     freezable?: boolean;
+    onClickAction?: (rowData: WeakObject) => void;
 }
 
 export interface TableData {

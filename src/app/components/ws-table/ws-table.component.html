@@ -59,6 +59,18 @@
                                     <img [src]="rowData[col.field]" alt="image" />
                                 </td>
                             }
+                            @case ('icon') {
+                                @if(col.onClickAction) {
+                                    <td>
+                                        <i [class]="rowData[col.field]" (click)="col.onClickAction(rowData)"></i>
+                                    </td>
+                                }
+                                @else {
+                                    <td>
+                                        <i [class]="rowData[col.field]"></i>
+                                    </td>
+                                }
+                            }
                             @default {
                                 <td>{{ rowData[col.field] }}</td>
                             }
