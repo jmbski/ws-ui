@@ -21,6 +21,7 @@ export interface ColumnDefinition {
     frozen?: boolean;
     freezable?: boolean;
     icon?: string;
+    cellFormatter?: (cellValue: unknown) => string;
     conditionalStyle?: (cellValue: unknown) => CssStyleObject;
     conditionalStyleClass?: (cellValue: unknown) => string;
     onClickAction?: (rowData: WeakObject) => void;
