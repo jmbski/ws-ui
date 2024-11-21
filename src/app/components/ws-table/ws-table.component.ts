@@ -97,6 +97,10 @@ export class WsTableComponent {
         return this.tableConfig?.wrapperStyle;
     }
 
+    get scrollHeight() {
+        return this.tableConfig?.scrollHeight;
+    }
+
     // #endregion getters/setters
 
 

@@ -59,6 +59,7 @@ export interface TableConfig {
     columnDefs: ColumnDefinition[];
     rowData: WeakObject[];
     wrapperStyle?: CssStyleObject;
+    scrollHeight?: string;
 
     [key: string]: unknown;
 }
