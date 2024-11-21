@@ -19,6 +19,7 @@ export interface ColumnDefinition {
     hidden?: boolean;
     frozen?: boolean;
     freezable?: boolean;
+    icon?: string;
     onClickAction?: (rowData: WeakObject) => void;
 }
 

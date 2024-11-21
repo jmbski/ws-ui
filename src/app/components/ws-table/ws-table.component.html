@@ -62,12 +62,12 @@
                             @case ('icon') {
                                 @if(col.onClickAction) {
                                     <td>
-                                        <i [class]="rowData[col.field]" (click)="col.onClickAction(rowData)"></i>
+                                        <i [class]="col.icon" (click)="col.onClickAction(rowData)"></i>
                                     </td>
                                 }
                                 @else {
                                     <td>
-                                        <i [class]="rowData[col.field]"></i>
+                                        <i [class]="col.icon"></i>
                                     </td>
                                 }
                             }
