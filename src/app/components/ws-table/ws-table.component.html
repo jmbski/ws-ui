@@ -76,10 +76,10 @@
                                     [style]="col.style" 
                                     [class]="col.conditionalStyleClass != null ? col.conditionalStyleClass(rowData[col.field]) : ''">
                                     @if(col.showTest ) {
-                                        formatter = {{col.cellFormmatter != null}}
+                                        formatter = {{col.cellFormatter != null}}
                                     }
-                                    @if(col.cellFormmatter != null) {
-                                        {{ col.cellFormmatter(rowData[col.field]) }}
+                                    @if(col.cellFormatter != null) {
+                                        {{ col.cellFormatter(rowData[col.field]) }}
                                     } 
                                     @else {
                                         {{ rowData[col.field] }}
