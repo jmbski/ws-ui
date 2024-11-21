@@ -55,24 +55,24 @@
                     @if(!col.hidden) {
                         @switch (col.type) {
                             @case ('image') {
-                                <td>
+                                <td [style]="col.style">
                                     <img [src]="rowData[col.field]" alt="image" />
                                 </td>
                             }
                             @case ('icon') {
                                 @if(col.onClickAction) {
-                                    <td>
+                                    <td [style]="col.style">
                                         <i [class]="col.icon" (click)="col.onClickAction(rowData)"></i>
                                     </td>
                                 }
                                 @else {
-                                    <td>
+                                    <td [style]="col.style">
                                         <i [class]="col.icon"></i>
                                     </td>
                                 }
                             }
                             @default {
-                                <td>{{ rowData[col.field] }}</td>
+                                <td [style]="col.style" [class]="col.conditiondalStyleClass != null ? col.conditionalStyleCLass(rowData[col.field]) : ''">{{ rowData[col.field] }}</td>
                             }
                         }
                     }

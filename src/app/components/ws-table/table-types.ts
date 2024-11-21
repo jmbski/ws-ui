@@ -13,13 +13,16 @@ export interface ColumnDefinition {
     filterOptions?: string[];
 
     width?: string;
-    style?: string;
+    style?: string | CssStyleObject;
+    styleClass?: string;
     resizable?: boolean;
     reorderable?: boolean;
     hidden?: boolean;
     frozen?: boolean;
     freezable?: boolean;
     icon?: string;
+    conditionalStyle?: (cellValue: unknown) => CssStyleObject;
+    conditionalStyleClass?: (cellValue: unknown) => string;
     onClickAction?: (rowData: WeakObject) => void;
 }
 
