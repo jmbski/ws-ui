@@ -11,6 +11,7 @@ export interface ColumnDefinition {
     filterMatchMode?: string;
     filterType?: string;
     filterOptions?: string[];
+    showTest?: boolean;
 
     width?: string;
     style?: string | CssStyleObject;

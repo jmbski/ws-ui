@@ -75,7 +75,9 @@
                                 <td 
                                     [style]="col.style" 
                                     [class]="col.conditionalStyleClass != null ? col.conditionalStyleClass(rowData[col.field]) : ''">
-                                    formatter = {{col.cellFormmatter != null}}
+                                    @if(col.showTest ) {
+                                        formatter = {{col.cellFormmatter != null}}
+                                    }
                                     @if(col.cellFormmatter != null) {
                                         {{ col.cellFormmatter(rowData[col.field]) }}
                                     } 
