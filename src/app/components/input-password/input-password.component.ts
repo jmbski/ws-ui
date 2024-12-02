@@ -126,6 +126,7 @@ export class InputPasswordComponent implements InputPasswordConfig, ControlValue
             this.onChanged(value);
             this.onTouched(value);
             this.writeValue(value);
+            this.cd.detectChanges();
         });
     }
 

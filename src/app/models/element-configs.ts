@@ -450,7 +450,7 @@ export interface InputMaskConfig extends FormElementConfig {
 /**
  * Union type of all possible element configs
  */
-export type ComponentConfig = 
+export type ComponentConfig =
     AccordionConfig |
     AutoCompleteConfig |
     ButtonConfig |
