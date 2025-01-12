@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { nanoid } from 'nanoid';
-import { 
+import {
     ElementType,
     StyleGroup,
-    TextBlockConfig, 
+    TextBlockConfig,
 } from 'warskald-ui/models';
 import { LogLevels, LoggableComponent, NgLogService, RegisterClassType, initStyleGroups } from 'warskald-ui/services';
+import { BaseWidget } from '../base-widget';
 
 
 @RegisterClassType(ElementType.TEXT_BLOCK)
@@ -26,7 +27,7 @@ import { LogLevels, LoggableComponent, NgLogService, RegisterClassType, initStyl
     styleUrl: './text-block.component.scss',
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TextBlockComponent implements TextBlockConfig {
+export class TextBlockComponent extends BaseWidget<string> implements TextBlockConfig {
 
     // #region public properties
 
@@ -39,25 +40,25 @@ export class TextBlockComponent implements TextBlockConfig {
     public bodyStyleClasses: string[] = [this.defaultBodyStyleClass];
 
     [key: string]: unknown;
-    
+
     // #endregion public properties
-    
-    
+
+
     // #region private properties
-    
+
     // #endregion private properties
-    
-    
+
+
     // #region getters/setters
 
     // #endregion getters/setters
-    
-    
+
+
     // #region standard inputs
-    @Input() id: string = nanoid();
+    //@Input() id: string = nanoid();
 
     @Input() escapeHTML: boolean = true;
-    
+
     @Input() elementType: ElementType.TEXT_BLOCK = ElementType.TEXT_BLOCK;
 
     @Input() body?: string = '';
@@ -72,55 +73,55 @@ export class TextBlockComponent implements TextBlockConfig {
 
     @Input() illuminatedBorder?: string = 'illuminated-border';
 
-    @Input() baseStyles?: StyleGroup = {};
+    //@Input() baseStyles?: StyleGroup = {};
 
     @Input() bodyStyles?: StyleGroup = {};
 
-    @Input() layoutStyles?: StyleGroup | undefined;
+    //@Input() layoutStyles?: StyleGroup | undefined;
 
-    @Input() actionID?: string;
-    
-    
+    //@Input() actionID?: string;
+
+
     // #endregion standard inputs
-    
-    
+
+
     // #region get/set inputs
 
     // #endregion get/set inputs
-    
-    
+
+
     // #region outputs, emitters, and event listeners
-    
+
     // #endregion outputs, emitters, and event listeners
-    
-    
+
+
     // #region viewchildren and contentchildren
 
     @ViewChild('body') bodyRef?: ElementRef;
-    
+
     // #endregion viewchildren and contentchildren
-    
-    
+
+
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
         public el: ElementRef,
     ) {
-        
+        super(cd);
     }
 
     ngOnInit() {
         initStyleGroups.bind(this)();
 
-        if(this.illuminated && this.value?.length > 0) {
+        if (this.illuminated && this.value?.length > 0) {
             this.illuminatedChar = this.value.charAt(0);
             this.body = this.value.substring(1);
         }
         else {
             this.body = this.value;
         }
-        if(this.bodyRef) {
-            if(this.escapeHTML) {
+        if (this.bodyRef) {
+            if (this.escapeHTML) {
                 (<HTMLElement>this.bodyRef.nativeElement).innerHTML = this.body;
             }
         }
@@ -128,21 +129,21 @@ export class TextBlockComponent implements TextBlockConfig {
     }
 
     // #endregion constructor and lifecycle hooks
-    
-    
+
+
     // #region public methods
-    
+
     // #endregion public methods
-    
-    
+
+
     // #region protected methods
-    
+
     // #endregion protected methods
-    
-    
+
+
     // #region private methods
-    
+
     // #endregion private methods
-    
-    
+
+
 }

@@ -3,9 +3,9 @@ import { ChangeDetectorRef, Component, TemplateRef, ViewChild } from '@angular/c
 import { RouterOutlet } from '@angular/router';
 import { LoremIpsum } from 'lorem-ipsum';
 import { ToastModule } from 'primeng/toast';
-import { 
-    BlockableUiComponent, 
-    DynamicComponent, 
+import {
+    BlockableUiComponent,
+    DynamicComponent,
     ElementRendererComponent,
     HtmlEditorComponent,
     ImageComponent,
@@ -30,12 +30,12 @@ import { BehaviorSubject } from 'rxjs';
 import { getFormDialog } from '../components/element-renderer/form-dialog';
 import { FilterService as PrimeFilterService } from 'primeng/api';
 
-const { 
+const {
     BUTTON_GROUP,
     CHECKBOX,
-    CONTAINER, 
-    TEXT_BLOCK, 
-    INPUT_TEXT 
+    CONTAINER,
+    TEXT_BLOCK,
+    INPUT_TEXT
 } = ElementType;
 
 export interface MegaMenuConfig {
@@ -138,7 +138,7 @@ export class ShowcaseComponent {
 
     public actionMap: FunctionMap = {
         submit: (data?: WeakObject) => {
-            
+
             console.log('submit', this.formGroup.value, data);
         },
         cancel: () => {
@@ -146,7 +146,7 @@ export class ShowcaseComponent {
         },
         addChar: (data?: WeakObject) => {
             const { target, char } = data ?? {};
-            if(isString(target) && isString(char)) {
+            if (isString(target) && isString(char)) {
                 const value = this.formGroup.get(target)?.value;
                 this.formGroup.get(target)?.setValue(value + char);
                 this.formGroup.updateValueAndValidity();
@@ -168,14 +168,17 @@ export class ShowcaseComponent {
     public autoSuggestions: SelectItem[] = [];
 
     public panelElements: ComponentConfig[] = [
-        FormService.getButtonElement({id: 'button_test', label: 'Test Button', layoutClass: 'col-2', 
-            handler: () => {console.log('test button clicked');}}),
-        
+        FormService.getButtonElement({
+            id: 'button_test', label: 'Test Button', layoutClass: 'col-2',
+            handler: () => { console.log('test button clicked'); }
+        }),
+
     ];
 
     public panelChanges$: BehaviorSubject<ComponentConfig[]> = new BehaviorSubject<ComponentConfig[]>(this.panelElements);
 
-    public testButton = FormService.getButtonElement({id: 'button_test', label: 'Test Button', layoutClass: 'col-2', 
+    public testButton = FormService.getButtonElement({
+        id: 'button_test', label: 'Test Button', layoutClass: 'col-2',
         handler: (event: MouseEvent) => {
             event.stopPropagation();
             const longStrList = Array.from({ length: 40 }, (_, i) => `Test ${i + 1}`);
@@ -210,15 +213,35 @@ export class ShowcaseComponent {
                 }
             ]
         },
-        FormService.getStandardContainer({label:'Showcase Components', id: 'container_1', elements: [
-            FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
-        ]}),
-        FormService.getButtonElement({id:'button_dlg', label:'Open Dialog', layoutClass: 'col-2', handler: () => this.openDialog()}),
+        FormService.getStandardContainer({
+            label: 'Showcase Components', id: 'container_1', elements: [
+                FormService.getGeneralElement('This showcase is a collection of components that can be used in the Warskald UI library.'),
+            ]
+        }),
+        FormService.getButtonElement({ id: 'button_dlg', label: 'Open Dialog', layoutClass: 'col-2', handler: () => this.openDialog() }),
         FormService.getPanelForm('test panel', 'panel_1', [], {
             headerContent: [this.testButton],
             headerType: 'components',
             contentChanges$: this.panelChanges$,
         }),
+        {
+            elementType: ElementType.CONTAINER,
+            id: 'test-container',
+            elements: [
+                {
+                    elementType: ElementType.TEXT_BLOCK,
+                    id: 'confirm-text',
+                    value: 'Remove definition from lexicon?'
+                }
+            ],
+            hasForm: true,
+            baseStyles: {
+                baseClass: 'h-full',
+            },
+            layoutStyles: {
+                baseClass: 'h-full'
+            }
+        }
     ];
 
     /* public formComponents: ComponentConfig[] = [
@@ -511,44 +534,44 @@ export class ShowcaseComponent {
             ]
         }
     ]; */
-    
+
     // #endregion public properties
-    
-    
+
+
     // #region private properties
-    
+
     // #endregion private properties
-    
-    
+
+
     // #region getters/setters
-    
+
     // #endregion getters/setters
-    
-    
+
+
     // #region standard inputs
-    
+
     // #endregion standard inputs
-    
-    
+
+
     // #region get/set inputs
-    
+
     // #endregion get/set inputs
-    
-    
+
+
     // #region outputs, emitters, and event listeners
-    
+
     // #endregion outputs, emitters, and event listeners
-    
-    
+
+
     // #region viewchildren and contentchildren
 
     @ViewChild('pageLayout') pageLayout?: PageLayoutComponent;
     @ViewChild('formComponent') formComponent?: ElementRendererComponent;
     @ViewChild('testContent') testContent?: TemplateRef<unknown>;
-    
+
     // #endregion viewchildren and contentchildren
-    
-    
+
+
     // #region constructor and lifecycle hooks
     constructor(
         public cd: ChangeDetectorRef,
@@ -557,7 +580,7 @@ export class ShowcaseComponent {
     ) {
         const arr = ['a', 'b', 'c'];
         const test = '[124, 45]';
-        
+
         const result = FilterService.checkFilter(test, isString, 'is');
         console.log('result:', result);
     }
@@ -571,15 +594,15 @@ export class ShowcaseComponent {
         this.cd.detectChanges();
 
         this.pageLayoutConfig = LayoutService.getLayout('showcase');
-        
+
     }
 
     ngAfterViewInit() {
     }
-    
+
     // #endregion constructor and lifecycle hooks
-    
-    
+
+
     // #region public methods
     getPanelForm(header: string, id: string, elements: ComponentConfig[]): PanelConfig {
         return {
@@ -601,7 +624,7 @@ export class ShowcaseComponent {
     }
 
     triggerGlow = FormService.triggerAnimation;
-      
+
     public openDialog() {
         /* const topRefs = Array.from(this.formComponent?.componentRefs ?? []);
         topRefs.forEach((ref) => {
@@ -613,8 +636,9 @@ export class ShowcaseComponent {
             test3: 3,
             test4: 1,
         };
-        
-        const formElement = FormService.getDictionaryForm({ value, label: 'Test Dictionary', id: 'dictionary_1', 
+
+        const formElement = FormService.getDictionaryForm({
+            value, label: 'Test Dictionary', id: 'dictionary_1',
             options: {
                 keyLabel: 'Syllable',
                 valueLabel: 'Weight',
@@ -636,18 +660,18 @@ export class ShowcaseComponent {
             ToastService.showInfo('Submitted');
         });
     }
-    
+
     // #endregion public methods
-    
-    
+
+
     // #region protected methods
-    
+
     // #endregion protected methods
-    
-    
+
+
     // #region private methods
-    
+
     // #endregion private methods
-    
-    
+
+
 }
